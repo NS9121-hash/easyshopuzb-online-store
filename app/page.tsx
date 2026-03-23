@@ -6,7 +6,6 @@ import { ProductCatalog } from '@/components/ProductCatalog'
 import { OrderForm } from '@/components/OrderForm'
 import { SuccessMessage } from '@/components/SuccessMessage'
 
-// Telegram username'ni shu yerga yozing (@ belgisiz)
 const TELEGRAM_USERNAME = 'samariddin_ai' 
 
 export default function Home() {
@@ -14,80 +13,69 @@ export default function Home() {
   const [isSuccessOpen, setIsSuccessOpen] = useState(false)
   const [selectedProduct, setSelectedProduct] = useState<Product | null>(null)
 
-  const handleBuy = (product: Product) => {
-    setSelectedProduct(product)
-    setIsOrderFormOpen(true)
-  }
-
-  const handleOrderSuccess = () => {
-    setIsOrderFormOpen(false)
-    setIsSuccessOpen(true)
-  }
-
   return (
-    <main className="min-h-screen bg-[#fafafa] text-[#1a1a1a]">
-      {/* Header */}
-      <header className="border-b border-gray-200 bg-white/80 backdrop-blur-md sticky top-0 z-40">
-        <div className="max-w-7xl mx-auto px-4 py-4 flex justify-between items-center">
-          <h1 className="text-xl font-bold tracking-tighter text-black">
-            EASYSHOP <span className="text-green-600">UZB</span>
+    <main className="min-h-screen bg-[#050505] text-white selection:bg-white selection:text-black">
+      {/* Orqa fon uchun animatsion doiralar (Apple style) */}
+      <div className="fixed inset-0 overflow-hidden pointer-events-none">
+        <div className="absolute top-[-10%] left-[-10%] w-[40%] h-[40%] bg-blue-600/20 blur-[120px] rounded-full"></div>
+        <div className="absolute bottom-[10%] right-[-5%] w-[30%] h-[50%] bg-purple-600/10 blur-[100px] rounded-full"></div>
+      </div>
+
+      {/* Header - Glassmorphism */}
+      <header className="border-b border-white/10 bg-black/20 backdrop-blur-xl sticky top-0 z-40">
+        <div className="max-w-7xl mx-auto px-6 py-4 flex justify-between items-center">
+          <h1 className="text-2xl font-bold tracking-tighter italic">
+            EASYSHOP<span className="text-blue-500">.UZB</span>
           </h1>
-          <div className="flex items-center gap-2">
-            <span className="w-2 h-2 bg-green-500 rounded-full animate-pulse"></span>
-            <p className="text-xs font-medium uppercase tracking-widest text-gray-500">Online Store</p>
-          </div>
+          <a 
+            href={`https://t.me/${TELEGRAM_USERNAME}`}
+            className="px-4 py-1.5 rounded-full bg-white/10 border border-white/20 text-xs font-medium backdrop-blur-md hover:bg-white hover:text-black transition-all"
+          >
+            ADMIN
+          </a>
         </div>
       </header>
 
       {/* Hero Section */}
-      <section className="max-w-7xl mx-auto px-4 py-16 text-center">
-        <h2 className="text-4xl sm:text-5xl font-extrabold text-black mb-6 tracking-tight">
-          Eksklyuziv To'plamlar
-        </h2>
-        <p className="text-gray-600 max-w-xl mx-auto text-lg leading-relaxed">
-          Premium sifatdagi kiyimlar. Dunyo bo'ylab yetkazib berish xizmati bilan.
-        </p>
-        <div className="mt-8 inline-block bg-black text-white px-6 py-2 rounded-full text-sm font-medium">
-          ✅ 7-15 kunda yetkazib beriladi
+      <section className="relative max-w-7xl mx-auto px-6 py-24 text-center">
+        <div className="inline-block px-4 py-1 mb-6 rounded-full bg-white/5 border border-white/10 text-[10px] uppercase tracking-[0.2em] text-blue-400 font-bold">
+          Premium Collection 2026
         </div>
+        <h2 className="text-5xl sm:text-7xl font-bold mb-8 tracking-tight bg-gradient-to-b from-white to-gray-500 bg-clip-text text-transparent">
+          Kelajak kiyimlari.
+        </h2>
+        <p className="text-gray-400 max-w-2xl mx-auto text-lg font-light leading-relaxed">
+          Sifat va innovatsiya uyg'unligi. Har bir detalda mukammallik.
+        </p>
       </section>
 
       {/* Products Section */}
-      <section className="max-w-7xl mx-auto px-4 py-12">
-        <div className="grid grid-cols-1 gap-y-10">
+      <section className="max-w-7xl mx-auto px-6 py-12">
+        <div className="p-8 rounded-[32px] bg-white/[0.02] border border-white/10 backdrop-blur-2xl shadow-2xl">
           <ProductCatalog
-            onBuy={handleBuy}
+            onBuy={(p) => { setSelectedProduct(p); setIsOrderFormOpen(true); }}
             isBlurred={false}
           />
         </div>
       </section>
 
       {/* Footer */}
-      <footer className="border-t border-gray-200 bg-white mt-20">
-        <div className="max-w-7xl mx-auto px-4 py-12 text-center">
-          <p className="text-sm text-gray-500">
-            © 2026 EASYSHOP UZB. Barcha huquqlar himoyalangan.
-          </p>
-          <div className="mt-4 flex justify-center gap-6">
-            <a href={`https://t.me/${TELEGRAM_USERNAME}`} className="text-gray-400 hover:text-black transition-colors">Telegram</a>
-            <a href="#" className="text-gray-400 hover:text-black transition-colors">Instagram</a>
-          </div>
-        </div>
+      <footer className="py-20 text-center border-t border-white/5 mt-20">
+        <p className="text-gray-600 text-sm font-light">
+          © 2026 EASYSHOP UZB. Designed for perfection.
+        </p>
       </footer>
 
-      {/* Order Dialog - Bu yerda 50% to'lov haqida yoziladi */}
+      {/* Dialogs */}
       <OrderForm
         isOpen={isOrderFormOpen}
         onClose={() => setIsOrderFormOpen(false)}
         product={selectedProduct}
-        onSuccess={handleOrderSuccess}
+        onSuccess={() => { setIsOrderFormOpen(false); setIsSuccessOpen(true); }}
         telegramUsername={TELEGRAM_USERNAME}
       />
 
-      <SuccessMessage
-        isOpen={isSuccessOpen}
-        onClose={() => setIsSuccessOpen(false)}
-      />
+      <SuccessMessage isOpen={isSuccessOpen} onClose={() => setIsSuccessOpen(false)} />
     </main>
   )
 }
