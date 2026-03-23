@@ -72,4 +72,12 @@ export default function Home() {
       />
     </main>
   )
+ // Buni <main> tegidan keyin darrov qo'shing
+<div className="fixed inset-0 z-0 overflow-hidden">
+  {/* Harakatlanuvchi rangli sharlar */}
+  <div className="absolute top-[-10%] left-[-10%] w-[500px] h-[500px] bg-blue-600/20 rounded-full blur-[120px] animate-[pulse_8s_infinite]"></div>
+  <div className="absolute bottom-[10%] right-[-10%] w-[400px] h-[400px] bg-purple-600/15 rounded-full blur-[100px] animate-[pulse_10s_infinite]"></div>
+  <div className="absolute top-[30%] right-[20%] w-[300px] h-[300px] bg-blue-400/10 rounded-full blur-[80px] animate-bounce" style={{ animationDuration: '15s' }}></div>
+</div>
+ 
 }
