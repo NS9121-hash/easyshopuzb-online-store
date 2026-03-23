@@ -14,7 +14,7 @@ export function SuccessMessage({ isOpen, onClose }: SuccessMessageProps) {
       <DialogContent className="w-full max-w-sm p-6">
         <DialogHeader>
           <DialogTitle className="text-center text-2xl">
-            <span className="text-4xl block mb-4">✓</span>
+            <span className="text-6xl block mb-4 text-green-500">✅</span>
             Order Accepted!
           </DialogTitle>
         </DialogHeader>
