@@ -1,157 +1,74 @@
 /* RESET & BASE */
-* {
-    margin: 0;
-    padding: 0;
-    box-sizing: border-box;
-    font-family: 'Segoe UI', Roboto, Helvetica, Arial, sans-serif;
-}
+* { margin: 0; padding: 0; box-sizing: border-box; font-family: 'Segoe UI', Roboto, Helvetica, Arial, sans-serif; }
+body { background-image: url('/IMG_2788.jpeg'); background-size: cover; background-position: center; background-repeat: no-repeat; background-attachment: fixed; min-height: 100vh; display: flex; justify-content: center; overflow-x: hidden; }
+.app-container { width: 100%; max-width: 1200px; min-height: 100vh; display: flex; flex-direction: column; padding: 20px 20px 140px 20px; position: relative; }
 
-body {
-    background-image: url('/IMG_2788.jpeg'); 
-    background-size: cover; 
-    background-position: center; 
-    background-repeat: no-repeat;
-    background-attachment: fixed; 
-    min-height: 100vh;
-    display: flex;
-    justify-content: center;
-    overflow-x: hidden;
-}
+/* HEADER */
+.header { text-align: center; margin-top: 10px; padding-top: env(safe-area-inset-top); z-index: 10; }
+.glass-text { font-size: clamp(32px, 6vw, 54px); font-weight: 900; letter-spacing: 2px; color: rgba(30, 40, 50, 0.4); text-shadow: -1px -2px 2px rgba(255, 255, 255, 0.8), 1px 2px 3px rgba(0, 0, 0, 0.5), 0px 8px 15px rgba(0, 0, 0, 0.2); }
+.gold-text { color: rgba(180, 140, 40, 0.7); text-shadow: -1px -2px 1px rgba(255, 255, 255, 0.8), 1px 2px 2px rgba(80, 50, 0, 0.6); }
+.subtitle { font-size: 10px; letter-spacing: 4px; color: rgba(0, 0, 0, 0.6); font-weight: 700; margin-top: 5px; }
 
-/* KONTEYNER - Desktop va Mobil moslashuv */
-.app-container {
-    width: 100%;
-    max-width: 1200px;
-    min-height: 100vh;
-    display: flex;
-    flex-direction: column;
-    padding: 20px 20px 140px 20px; /* Pastida tugmalar uchun joy */
-    position: relative;
-}
+/* MAIN */
+.main-content { flex: 1; display: flex; justify-content: center; align-items: center; }
 
-/* LOGOTIP - TEPADA VA MARKAZDA */
-.header { 
-    text-align: center; 
-    margin-top: 10px;
-    padding-top: env(safe-area-inset-top);
-    z-index: 10;
-}
-
-.glass-text {
-    font-size: clamp(32px, 6vw, 54px);
-    font-weight: 900;
-    letter-spacing: 2px;
-    color: rgba(30, 40, 50, 0.4); 
-    text-shadow: -1px -2px 2px rgba(255, 255, 255, 0.8), 1px 2px 3px rgba(0, 0, 0, 0.5), 0px 8px 15px rgba(0, 0, 0, 0.2);       
-}
-
-.gold-text { 
-    color: rgba(180, 140, 40, 0.7); 
-    text-shadow: -1px -2px 1px rgba(255, 255, 255, 0.8), 1px 2px 2px rgba(80, 50, 0, 0.6);
-}
-
-.subtitle { 
-    font-size: 10px; letter-spacing: 4px; color: rgba(0, 0, 0, 0.6); 
-    font-weight: 700; margin-top: 5px; 
-}
-
-/* MAIN CONTENT - MARKAZIY KARTA */
-.main-content {
-    flex: 1;
-    display: flex;
-    justify-content: center;
-    align-items: center;
-}
-
-/* WELCOME GLASS CARD (Yangilangan - Liquid Glass) */
+/* --------------------------------------------------- */
+/* HAQIQIY TINIQ LIQUID GLASS KARTA */
+/* --------------------------------------------------- */
 .welcome-glass-card {
-    background: linear-gradient(135deg, rgba(255, 255, 255, 0.15) 0%, rgba(255, 255, 255, 0) 100%);
-    backdrop-filter: blur(10px) brightness(1.05); -webkit-backdrop-filter: blur(10px) brightness(1.05);
+    background: linear-gradient(135deg, rgba(255, 255, 255, 0.1) 0%, rgba(255, 255, 255, 0.02) 100%);
+    backdrop-filter: blur(12px) saturate(120%);
+    -webkit-backdrop-filter: blur(12px) saturate(120%);
     border-radius: 40px; padding: 50px 30px; text-align: center;
-    border: 1px solid rgba(255, 255, 255, 0.3); 
-    border-top: 2px solid rgba(255, 255, 255, 0.8);
-    border-left: 2px solid rgba(255, 255, 255, 0.6);
-    box-shadow: 10px 15px 40px rgba(0,0,0,0.1), inset 2px 2px 10px rgba(255,255,255,0.6);
+    border: 1px solid rgba(255, 255, 255, 0.4);
+    border-top: 2px solid rgba(255, 255, 255, 0.9);
+    border-left: 2px solid rgba(255, 255, 255, 0.7);
+    box-shadow: 0 20px 40px rgba(0, 0, 0, 0.1), inset 0 0 20px rgba(255, 255, 255, 0.4);
     position: relative; overflow: hidden; width: 100%; max-width: 600px;
 }
 
-.welcome-glass-card::before {
+.welcome-glass-card::after {
     content: ''; position: absolute; top: 0; left: 0; width: 100%; height: 100%;
-    background: linear-gradient(115deg, rgba(255,255,255,0.7) 0%, transparent 40%);
-    pointer-events: none;
+    background: linear-gradient(105deg, rgba(255, 255, 255, 0.5) 0%, transparent 35%);
+    pointer-events: none; z-index: 0;
 }
 
-.welcome-heading {
-    font-size: clamp(16px, 4.5vw, 22px);
-    font-weight: 800; color: rgba(0, 0, 0, 0.65);
-    line-height: 1.6; text-shadow: 1px 1px 1px rgba(255, 255, 255, 0.8);
-}
+.welcome-heading { position: relative; z-index: 1; font-size: clamp(16px, 4.5vw, 22px); font-weight: 800; color: rgba(40, 50, 60, 0.8); line-height: 1.6; text-shadow: 1px 1px 1px rgba(255, 255, 255, 0.8); }
+.welcome-gold { display: block; font-size: clamp(28px, 8vw, 38px); color: #cca450; margin-bottom: 20px; text-shadow: 1px 1px 2px rgba(255, 255, 255, 0.9); }
 
-.welcome-gold {
-    display: block;
-    font-size: clamp(28px, 8vw, 38px);
-    color: rgba(180, 140, 40, 0.9); /* Yorqinroq tillarang */
-    margin-bottom: 20px;
-    text-shadow: 1px 1px 1px rgba(255, 255, 255, 0.8);
-}
+/* --------------------------------------------------- */
+/* BOTTOM NAVIGATION (Pufakchalar va Tilla Ikonkalar) */
+/* --------------------------------------------------- */
+.bottom-nav-wrapper { position: fixed; bottom: 20px; left: 50%; transform: translateX(-50%); width: 95%; max-width: 480px; z-index: 100; }
 
-/* BOTTOM NAVIGATION (Yangilangan) */
-.bottom-nav-wrapper {
-    position: fixed;
-    bottom: 20px;
-    left: 50%; transform: translateX(-50%);
-    width: 95%; max-width: 480px;
-    z-index: 100;
-}
-
-.glass-bottom-nav { 
-    display: flex; justify-content: space-around; align-items: flex-end; /* Ikonkalarni pufakchaga markazlaymiz */
-    padding: 10px 5px;
-    background: linear-gradient(135deg, rgba(255, 255, 255, 0.1) 0%, rgba(255, 255, 255, 0.02) 100%);
-    backdrop-filter: blur(15px) brightness(1.02); -webkit-backdrop-filter: blur(15px) brightness(1.02);
+.glass-bottom-nav {
+    display: flex; justify-content: space-around; align-items: flex-end; padding: 10px 5px;
+    background: rgba(255, 255, 255, 0.1);
+    backdrop-filter: blur(15px); -webkit-backdrop-filter: blur(15px);
     border-radius: 40px;
-    border: 1px solid rgba(255, 255, 255, 0.3); 
-    border-top: 2px solid rgba(255, 255, 255, 0.8);
-    box-shadow: 0 15px 35px rgba(0,0,0,0.2);
+    border: 1px solid rgba(255, 255, 255, 0.3); border-top: 1.5px solid rgba(255, 255, 255, 0.8);
+    box-shadow: 0 15px 35px rgba(0,0,0,0.1);
 }
 
-.glass-nav-item {
-    background: none; border: none; cursor: pointer;
-    display: flex; flex-direction: column; align-items: center; gap: 8px;
-    transition: 0.3s;
-}
+.glass-nav-item { background: none; border: none; cursor: pointer; display: flex; flex-direction: column; align-items: center; gap: 6px; transition: 0.3s; }
 
-/* SHISHASIMON PUFAKCHA Ikonkalar (Yangilangan) */
 .glass-nav-bubble {
     width: 50px; height: 50px; border-radius: 50%;
     display: flex; justify-content: center; align-items: center;
-    background: linear-gradient(135deg, rgba(255, 255, 255, 0.15) 0%, rgba(255, 255, 255, 0.05) 100%);
-    border: 1px solid rgba(255, 255, 255, 0.3); 
+    background: rgba(255, 255, 255, 0.15);
+    border: 1px solid rgba(255, 255, 255, 0.4); 
     border-top: 2px solid rgba(255, 255, 255, 0.9); 
-    border-left: 2px solid rgba(255, 255, 255, 0.7);
-    box-shadow: 2px 5px 10px rgba(0,0,0,0.1), inset 1px 1px 4px rgba(255,255,255,0.7);
-    color: rgba(180, 140, 40, 0.85); /* Tillaron Ikonkalar */
+    box-shadow: inset 2px 2px 6px rgba(255,255,255,0.6), 0 5px 10px rgba(0,0,0,0.05);
     transition: 0.3s;
-    overflow: hidden;
 }
 
-.glass-nav-bubble::after {
-    content: ''; position: absolute; top: 0; left: 0; width: 100%; height: 100%;
-    background: linear-gradient(135deg, rgba(255,255,255,0.7) 0%, transparent 40%);
-    pointer-events: none;
+/* IKONKA RANGI - MUHIM QISM !important bilan ko'kni o'chiramiz */
+.glass-nav-bubble svg {
+    color: #dfbb6c !important; 
+    stroke-width: 2px;
 }
 
-.nav-label {
-    font-size: 10px; font-weight: 700;
-    color: rgba(0, 0, 0, 0.6); /* Yozuv ham oq kvadrat emas, oddiy matn */
-    text-transform: uppercase; letter-spacing: 1px;
-}
+.nav-label { font-size: 10px; font-weight: 700; color: rgba(40, 50, 60, 0.8); text-transform: uppercase; letter-spacing: 1px; }
 
-/* Hover & Active Effects (Sichqoncha borganda yaltirashi) */
-.glass-nav-item:hover .glass-nav-bubble { 
-    background: rgba(255, 255, 255, 0.3); transform: translateY(-3px); 
-    color: rgba(220, 180, 80, 1); /* Yana ham yorqin tillarang */
-    box-shadow: 5px 10px 15px rgba(0,0,0,0.15), inset 1px 1px 4px rgba(255,255,255,1);
-}
-.glass-nav-item:hover .nav-label { color: rgba(180, 140, 40, 0.9); }
+.glass-nav-item:hover .glass-nav-bubble { transform: translateY(-3px); background: rgba(255, 255, 255, 0.3); box-shadow: inset 2px 2px 8px rgba(255,255,255,1), 0 8px 15px rgba(0,0,0,0.1); }
 .glass-nav-item:active { transform: scale(0.9); }
