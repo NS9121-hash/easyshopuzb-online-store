@@ -2,39 +2,59 @@ export default function Home() {
   return (
     <div className="app-container">
       
-      {/* Header qismi - Liquid Glass Yozuvi */}
+      {/* 1. LOGOTIP */}
       <header className="header">
         <h1 className="glass-text">EASYSHOP_<span className="gold-text">UZB</span></h1>
         <p className="subtitle">OSON ONLINE XARID</p>
       </header>
 
-      {/* Asosiy Qism (Hozircha bo'sh, bu yerga mahsulotlar/kiyimlar ro'yxati tushadi) */}
+      {/* 2. ASOSIY QISM */}
       <main className="main-content">
-        {/* Kelajakda mahsulotlar shu yerda paydo bo'ladi */}
+        <div className="welcome-card">
+          <h2 className="welcome-heading">
+            <span className="welcome-gold">ASSALOMU ALEYKUM</span>
+            <br />
+            ONLAYN DO'KONIMIZGA XUSH KELIBSIZ!
+          </h2>
+        </div>
       </main>
 
-      {/* Pastki navigatsiya menyusi - 4 ta tugma */}
+      {/* 3. NAVIGATSIYA - Ikonka + Yozuv */}
       <div className="bottom-nav-wrapper">
         <nav className="glass-bottom-nav">
-          {/* 1. Kiyimlar */}
-          <button className="glass-nav-btn" aria-label="Mahsulotlar">
-            👕
+          
+          {/* Kiyimlar */}
+          <button className="glass-nav-item">
+            <div className="glass-nav-btn">
+              <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><path d="M20.38 3.46L16 2a4 4 0 01-8 0L3.62 3.46a2 2 0 00-1.34 2.23l.58 3.47a1 1 0 00.99.84H6v10c0 1.1.9 2 2 2h8a2 2 0 002-2V10h2.15a1 1 0 00.99-.84l.58-3.47a2 2 0 00-1.34-2.23z"/></svg>
+            </div>
+            <span className="nav-label">Kiyimlar</span>
           </button>
           
-          {/* 2. Savat */}
-          <button className="glass-nav-btn" aria-label="Savat">
-            🛒
+          {/* Savat */}
+          <button className="glass-nav-item">
+            <div className="glass-nav-btn">
+              <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><circle cx="8" cy="21" r="1"/><circle cx="19" cy="21" r="1"/><path d="M2.05 2.05h2l2.66 12.42a2 2 0 002 1.58h9.78a2 2 0 001.95-1.57l1.65-7.43H5.12"/></svg>
+            </div>
+            <span className="nav-label">Savat</span>
           </button>
           
-          {/* 3. AI Yordamchi */}
-          <button className="glass-nav-btn" aria-label="AI Yordamchi">
-            ✨
+          {/* AI Yordamchi */}
+          <button className="glass-nav-item">
+            <div className="glass-nav-btn">
+              <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><path d="M12 3l1.91 5.81L20 10.75l-6.09 1.94L12 18.5l-1.91-5.81L4 10.75l6.09-1.94z"/><path d="M5 3l1 2 2 1-2 1-1 2-1-2-2-1 2-1z"/><path d="M19 17l1 2 2 1-2 1-1 2-1-2-2-1 2-1z"/></svg>
+            </div>
+            <span className="nav-label">AI</span>
           </button>
           
-          {/* 4. Profil */}
-          <button className="glass-nav-btn" aria-label="Profil">
-            👤
+          {/* Profil */}
+          <button className="glass-nav-item">
+            <div className="glass-nav-btn">
+              <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><path d="M19 21v-2a4 4 0 00-4-4H9a4 4 0 00-4 4v2"/><circle cx="12" cy="7" r="4"/></svg>
+            </div>
+            <span className="nav-label">Profil</span>
           </button>
+          
         </nav>
       </div>
 
