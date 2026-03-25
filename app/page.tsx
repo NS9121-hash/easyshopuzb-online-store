@@ -1,49 +1,18 @@
-"use client";
-import { useState, useEffect } from "react";
 import Link from "next/link";
 
 export default function Home() {
-  const [tilt, setTilt] = useState({ x: 0, y: 0 });
-
-  useEffect(() => {
-    if (typeof window !== "undefined") {
-      window.addEventListener("deviceorientation", handleOrientation);
-    }
-    return () => window.removeEventListener("deviceorientation", handleOrientation);
-  }, []);
-
-  const handleOrientation = (event: DeviceOrientationEvent) => {
-    let x = event.gamma || 0; 
-    let y = event.beta || 0;  
-
-    if (x > 30) x = 30; if (x < -30) x = -30;
-    if (y > 40) y = 40; if (y < 0) y = 0; 
-
-    setTilt({ x, y });
-  };
-
   return (
     <div className="app-container">
       
+      {/* 1. HEADER */}
       <header className="header">
         <h1 className="glass-text">EASYSHOP_<span className="gold-text">UZB</span></h1>
         <p className="subtitle">OSON ONLINE XARID</p>
       </header>
 
+      {/* 2. MAIN CONTENT (Tiniq Billur Karta) */}
       <main className="main-content">
         <div className="welcome-glass-card">
-          
-          {/* FIZIK TINIQ SUV EFFEKTI (Toza CSS) */}
-          <div 
-            className="water-layer-wrapper"
-            style={{ 
-              transform: `rotate(${-tilt.x}deg) translateY(${tilt.y * 0.4 - 20}px)` 
-            }}
-          >
-            <div className="water-wave-1"></div>
-            <div className="water-wave-2"></div>
-          </div>
-
           <div className="welcome-text-content">
             <h2 className="welcome-heading">
               <span className="welcome-gold">ASSALOMU ALEYKUM</span>
@@ -51,11 +20,10 @@ export default function Home() {
               ONLAYN DO'KONIMIZGA XUSH KELIBSIZ!
             </h2>
           </div>
-
         </div>
       </main>
 
-      {/* PASTKI MENYU */}
+      {/* 3. PASTKI NAVIGATSIYA */}
       <div className="bottom-nav-wrapper">
         <nav className="glass-bottom-nav">
           <Link href="/products" className="glass-nav-item">
@@ -81,7 +49,7 @@ export default function Home() {
           
           <Link href="/profile" className="glass-nav-item">
             <div className="glass-nav-btn">
-              <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><path d="M19 21v-2a4 4 0 00-4-4H9a4 4 0 00-4 4v2"/><circle cx="12" cy="7" r="4"/></svg>
+              <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><path d="M19 21v-2a4 4 0 00-4-4H9a4 4 0 00-4 4v2"/><circle cx="12" cy="7" r="4"/></svg>
             </div>
             <span className="nav-label">Profil</span>
           </Link>
