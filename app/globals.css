@@ -10,72 +10,84 @@ body {
 .app-container { width: 100%; max-width: 1200px; min-height: 100vh; display: flex; flex-direction: column; padding: 20px 20px 140px 20px; position: relative; overflow: hidden; }
 
 /* --------------------------------------------------- */
-/* HEADER & TOZA 3D MATNLAR (Loyqa soyalar olib tashlandi) */
+/* HEADER & SOF 3D MATNLAR (Chrome uchun optimallashtirilgan) */
 /* --------------------------------------------------- */
 .header { text-align: center; margin-top: 10px; padding-top: env(safe-area-inset-top); z-index: 10; }
 
 .glass-text { 
     font-size: clamp(32px, 6vw, 54px); font-weight: 900; letter-spacing: 2px; 
-    color: #0b5059; /* To'q nafis firuza */
-    /* Qora soya o'rniga, yorug'lik va yengil hajm (3D) beruvchi effekt */
-    text-shadow: 1px 1px 0px rgba(255,255,255,1), 2px 3px 5px rgba(0,0,0,0.15);
+    color: #1a8b9d; /* Ochiq firuza */
+    /* Qatlamli 3D soya - Chrome'da qoraymaydi, tiniq chiqadi */
+    text-shadow: 
+        0 1px 0 #136a78, 
+        0 2px 0 #0e505a, 
+        0 4px 5px rgba(0,0,0,0.2),
+        -1px -1px 0 rgba(255,255,255,0.8);
 }
 
 .gold-text { 
-    color: #c58a3a; /* Sof tillarang */
-    text-shadow: 1px 1px 0px rgba(255,255,255,1), 2px 3px 5px rgba(0,0,0,0.15);
+    color: #eab351; /* Yorqin tillarang */
+    text-shadow: 
+        0 1px 0 #c6943b, 
+        0 2px 0 #a97b2b, 
+        0 4px 5px rgba(0,0,0,0.2),
+        -1px -1px 0 rgba(255,255,255,0.8);
 }
 
-.subtitle { font-size: 10px; letter-spacing: 4px; color: #0b5059; font-weight: 800; margin-top: 5px; opacity: 0.8; }
+.subtitle { font-size: 10px; letter-spacing: 4px; color: #1a8b9d; font-weight: 800; margin-top: 5px; opacity: 0.9; }
 
 .main-content { flex: 1; display: flex; justify-content: center; align-items: center; }
 
 /* --------------------------------------------------- */
-/* TINIQ BILLUR KARTA (Tuman butunlay o'chirildi) */
+/* TINIQ BILLUR KARTA (Tuman effekti yo'q qilindi) */
 /* --------------------------------------------------- */
 .welcome-glass-card {
-    /* Fon deyarli ko'rinmas shaffof (0.02) qilib qo'yildi */
-    background: rgba(255, 255, 255, 0.02);
-    /* Blur ham mo'tadil qilindi */
-    backdrop-filter: blur(8px); 
-    -webkit-backdrop-filter: blur(8px);
+    /* Fonni shaffoflashtirdik (0.05) sut rangiga kirmasligi uchun */
+    background: rgba(255, 255, 255, 0.05);
+    backdrop-filter: blur(10px) saturate(120%); 
+    -webkit-backdrop-filter: blur(10px) saturate(120%);
     
-    border-radius: 40px; padding: 50px 20px; text-align: center;
+    border-radius: 35px; padding: 50px 20px; text-align: center;
     
-    /* Oynaning yaltiroq, nafis chetlari */
-    border: 1px solid rgba(255, 255, 255, 0.4);
-    border-top: 1.5px solid rgba(255, 255, 255, 0.9);
-    border-left: 1.5px solid rgba(255, 255, 255, 0.6);
-    box-shadow: 0 15px 35px rgba(0, 0, 0, 0.1);
+    /* Oynaning yaltiroq, qattiq chetlari */
+    border: 1px solid rgba(255, 255, 255, 0.2);
+    border-top: 1.5px solid rgba(255, 255, 255, 0.8);
+    border-left: 1.5px solid rgba(255, 255, 255, 0.5);
+    box-shadow: 0 15px 35px rgba(0, 0, 0, 0.1), inset 0 0 10px rgba(255,255,255,0.2);
     
     position: relative; overflow: hidden; width: 100%; max-width: 500px;
 }
 
-/* Oyna yuzasidagi yaltirash */
+/* Oyna yuzasidagi yaltirash (Oqartirib yubormasligi uchun nozik qilindi) */
 .welcome-glass-card::before {
     content: ''; position: absolute; top: 0; left: 0; width: 100%; height: 100%;
-    background: linear-gradient(110deg, rgba(255,255,255,0.4) 0%, transparent 30%);
+    background: linear-gradient(110deg, rgba(255,255,255,0.3) 0%, transparent 25%);
     pointer-events: none; z-index: 1;
 }
 
 .welcome-text-content { position: relative; z-index: 10; }
 
-/* Katta Oltin Matn (Toza va yorqin) */
+/* Katta Oltin Matn (3D, Chrome'da buzilmaydi) */
 .welcome-gold { 
     display: block; font-size: clamp(32px, 9vw, 42px); font-weight: 900;
     margin-bottom: 20px; letter-spacing: 2px; 
-    color: #dfbb6c;
-    text-shadow: 1px 1px 0px rgba(255,255,255,1), 2px 4px 6px rgba(0,0,0,0.15);
+    color: #eab351;
+    text-shadow: 
+        0 1px 0 #c6943b, 
+        0 2px 0 #a97b2b, 
+        0 3px 0 #8b631f,
+        0 6px 8px rgba(0,0,0,0.25),
+        -1px -1px 0 rgba(255,255,255,0.7);
 }
 
 .welcome-heading { 
     font-size: clamp(16px, 4.5vw, 22px); font-weight: 800; line-height: 1.6; 
-    color: #125b65;
-    text-shadow: 1px 1px 0px rgba(255,255,255,0.8);
+    color: rgba(255, 255, 255, 0.95);
+    text-shadow: 1px 1px 3px rgba(0,0,0,0.3);
 }
 
 /* --------------------------------------------------- */
-/* PASTKI NAVIGATSIYA (Kapsula shakli va shaffoflik) */
+/* PASTKI NAVIGATSIYA (Shaffof Kapsula) */
 /* --------------------------------------------------- */
 .bottom-nav-wrapper { 
     position: fixed; bottom: 25px; 
@@ -86,7 +98,8 @@ body {
 .glass-bottom-nav { 
     display: flex; justify-content: space-around; align-items: flex-end; padding: 12px 5px;
     background: rgba(255, 255, 255, 0.1); 
-    backdrop-filter: blur(15px); -webkit-backdrop-filter: blur(15px);
+    backdrop-filter: blur(15px) saturate(120%); 
+    -webkit-backdrop-filter: blur(15px) saturate(120%);
     border-radius: 40px; 
     border: 1px solid rgba(255, 255, 255, 0.3); border-top: 1.5px solid rgba(255, 255, 255, 0.8);
     box-shadow: 0 10px 30px rgba(0,0,0,0.1);
@@ -102,17 +115,17 @@ body {
 }
 
 .glass-nav-btn svg { 
-    color: #c58a3a !important; 
-    stroke-width: 2.5px; filter: drop-shadow(0px 1px 2px rgba(0,0,0,0.1)); position: relative; z-index: 1; 
+    color: #eab351 !important; 
+    stroke-width: 2.5px; filter: drop-shadow(0px 1px 2px rgba(0,0,0,0.2)); position: relative; z-index: 1; 
 }
 
 .nav-label { 
     font-size: 10px; font-weight: 800; 
-    color: #0b5059; 
+    color: #1a8b9d; 
     text-transform: uppercase; letter-spacing: 1px; 
 }
 
 .glass-nav-item:hover .glass-nav-btn { background: rgba(255, 255, 255, 0.3); transform: translateY(-3px); }
-.glass-nav-item:hover .glass-nav-btn svg { color: #dfbb6c !important; }
-.glass-nav-item:hover .nav-label { color: #dfbb6c; }
+.glass-nav-item:hover .glass-nav-btn svg { color: #fff !important; }
+.glass-nav-item:hover .nav-label { color: #eab351; }
 .glass-nav-item:active { transform: scale(0.9); }
