@@ -1,83 +1,90 @@
-'use client'
+// app/page.tsx
+'use client';
 
-import { useState } from 'react'
-import { ProductCatalog } from '@/components/ProductCatalog'
-import { OrderForm } from '@/components/OrderForm'
-
-const TELEGRAM_USERNAME = 'samariddin_ai' 
+import { useState } from 'react';
 
 export default function Home() {
-  const [isOrderFormOpen, setIsOrderFormOpen] = useState(false)
-  const [selectedProduct, setSelectedProduct] = useState<any>(null)
+  const [balance, setBalance] = useState(150000);
+  const goal = 500000;
+  const percentage = (balance / goal) * 100;
 
   return (
-    <main className="min-h-screen bg-[#000] text-white overflow-x-hidden">
-      {/* Liquid Glass effekti uchun orqa fondagi rangli sharlar */}
-      <div className="fixed inset-0 z-0">
-        <div className="absolute top-[-10%] left-[-10%] w-[500px] h-[500px] bg-blue-600/30 rounded-full blur-[120px] animate-pulse"></div>
-        <div className="absolute bottom-[10%] right-[-10%] w-[400px] h-[400px] bg-purple-600/20 rounded-full blur-[100px]"></div>
-        <div className="absolute top-[40%] left-[30%] w-[300px] h-[300px] bg-emerald-500/10 rounded-full blur-[80px]"></div>
+    // ORQA FON: Tilla va Oq aralash (Liquid Style)
+    <main className="min-h-screen p-6 md:p-12 font-sans overflow-hidden relative" 
+      style={{
+        background: 'radial-gradient(circle at top right, #fff9e6 0%, #ffffff 50%, #f3e5ab 100%)'
+      }}>
+      
+      {/* FONDIAGI SUYUQ SHAKLLAR */}
+      <div className="absolute top-[-10%] right-[-5%] w-[600px] h-[600px] bg-[#D4AF37]/10 rounded-full blur-[120px] animate-pulse"></div>
+      <div className="absolute bottom-[-10%] left-[-5%] w-[500px] h-[500px] bg-white rounded-full blur-[100px]"></div>
+
+      {/* ASOSIY KIRISH OYNASI (EASYSHOP_UZB) */}
+      <div className="relative z-10 flex flex-col items-center justify-center mb-16 mt-10">
+        <div className="p-10 rounded-[40px] border border-white/40 bg-white/20 backdrop-blur-2xl shadow-2xl text-center border-b-white/10 border-r-white/10">
+          <h1 className="text-6xl md:text-8xl font-black tracking-tighter text-[#D4AF37]" 
+            style={{ textShadow: '0 10px 20px rgba(212, 175, 55, 0.2)' }}>
+            EASYSHOP_UZB
+          </h1>
+          <p className="text-2xl md:text-3xl font-light text-gray-600 mt-2 tracking-[0.2em] uppercase">
+            Oson online xarid
+          </p>
+        </div>
       </div>
 
-      <div className="relative z-10">
-        {/* Header - Glassmorphism */}
-        <header className="sticky top-0 z-50 border-b border-white/10 bg-black/40 backdrop-blur-[20px] -webkit-backdrop-blur-[20px]">
-          <div className="max-w-7xl mx-auto px-6 py-4 flex justify-between items-center">
-            <h1 className="text-xl font-black tracking-tighter uppercase italic">
-              EASYSHOP<span className="text-blue-500">UZB</span>
-            </h1>
-            <div className="bg-white/10 px-3 py-1 rounded-full border border-white/10 text-[10px] font-bold">
-              ONLINE STORE
+      <div className="grid grid-cols-1 md:grid-cols-2 gap-10 relative z-10 max-w-6xl mx-auto">
+        
+        {/* 1. JORIY BALANS (SILLIQ BURCHAKLI LIQUID GLASS) */}
+        <div className="relative p-10 rounded-[35px] border border-white/60 bg-white/30 backdrop-blur-xl shadow-[0_20px_50px_rgba(0,0,0,0.05)] transition-all duration-500 hover:scale-[1.02]">
+          <div className="flex flex-col h-full justify-between">
+            <div>
+              <p className="text-sm font-bold text-[#A67C00] tracking-widest uppercase mb-2">Joriy Balans</p>
+              <h2 className="text-6xl font-bold tracking-tight text-gray-800">
+                {balance.toLocaleString('uz-UZ')}
+                <span className="text-2xl font-light text-gray-400 ml-3 text-[#D4AF37]">BALL</span>
+              </h2>
+            </div>
+
+            <div className="mt-10">
+              <div className="flex justify-between text-sm mb-2 font-medium text-gray-600">
+                <span>Maqsad: 500,000</span>
+                <span className="text-[#D4AF37]">{percentage}%</span>
+              </div>
+              {/* TILLA PROGRESS BAR */}
+              <div className="w-full h-4 bg-white/50 rounded-full border border-white overflow-hidden shadow-inner">
+                <div 
+                  className="h-full bg-gradient-to-r from-[#D4AF37] to-[#FFE08A] rounded-full transition-all duration-1000 shadow-[0_0_15px_rgba(212,175,55,0.5)]"
+                  style={{ width: `${percentage}%` }}
+                ></div>
+              </div>
             </div>
           </div>
-        </header>
+        </div>
 
-        {/* Hero Section */}
-        <section className="px-6 py-20 text-center">
-          <h2 className="text-6xl font-extrabold tracking-tighter mb-4 bg-gradient-to-b from-white to-white/40 bg-clip-text text-transparent italic">
-            PREMIUM STYLE.
-          </h2>
-          <p className="text-white/60 text-sm tracking-widest uppercase mb-8">Eksklyuziv to'plamlar faqat siz uchun</p>
-          <div className="inline-flex items-center gap-2 bg-green-500/10 border border-green-500/20 px-4 py-2 rounded-2xl text-green-400 text-xs font-bold">
-            <span>✅</span> 7-15 kunda yetkazib beriladi
+        {/* 2. AI VIRTUAL TRY-ON (SILLIQ OYNA) */}
+        <div className="relative p-10 rounded-[35px] border border-white/60 bg-white/30 backdrop-blur-xl shadow-[0_20px_50px_rgba(0,0,0,0.05)] text-center group cursor-pointer transition-all hover:bg-white/40">
+          <div className="w-20 h-20 bg-gradient-to-br from-[#D4AF37] to-[#FFE08A] rounded-2xl mx-auto mb-6 flex items-center justify-center shadow-lg group-hover:rotate-12 transition-transform">
+            <svg className="w-10 h-10 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+              <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={1.5} d="M3 9a2 2 0 012-2h.93a2 2 0 001.664-.89l.812-1.22A2 2 0 0110.07 4h3.86a2 2 0 011.664.89l.812 1.22A2 2 0 0018.07 7H19a2 2 0 012 2v9a2 2 0 01-2 2H5a2 2 0 01-2-2V9z" />
+              <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={1.5} d="M15 13a3 3 0 11-6 0 3 3 0 016 0z" />
+            </svg>
           </div>
-        </section>
-
-        {/* Catalog Container - Shishali quti */}
-        <section className="max-w-7xl mx-auto px-4 pb-20">
-          <div className="bg-white/[0.03] border border-white/10 backdrop-blur-[30px] rounded-[40px] p-8 shadow-2xl">
-            <ProductCatalog
-              onBuy={(p: any) => { setSelectedProduct(p); setIsOrderFormOpen(true); }}
-              isBlurred={false}
-            />
-          </div>
-        </section>
-
-        {/* Footer */}
-        <footer className="py-10 border-t border-white/5 text-center">
-          <div className="flex justify-center gap-8 mb-4">
-            <a href={`https://t.me/${TELEGRAM_USERNAME}`} className="text-xs text-white/40 hover:text-white">Telegram</a>
-            <a href="#" className="text-xs text-white/40 hover:text-white">Instagram</a>
-          </div>
-          <p className="text-[10px] text-white/20 uppercase tracking-[0.3em]">© 2026 EasyShop Uzb</p>
-        </footer>
+          <h3 className="text-2xl font-bold text-gray-800">AI Kiyib Ko'rish</h3>
+          <p className="text-gray-500 mt-2 font-light">O'z rasmingizni yuklang va natijani ko'ring</p>
+          <button className="mt-8 px-8 py-3 bg-[#D4AF37] text-white rounded-2xl font-bold shadow-lg hover:shadow-[#D4AF37]/40 transition-all active:scale-95">
+            Rasmni yuklash
+          </button>
+        </div>
       </div>
 
-      <OrderForm
-        isOpen={isOrderFormOpen}
-        onClose={() => setIsOrderFormOpen(false)}
-        product={selectedProduct}
-        onSuccess={() => setIsOrderFormOpen(false)}
-        telegramUsername={TELEGRAM_USERNAME}
-      />
+      {/* FOMO BANNER */}
+      <div className="mt-12 max-w-6xl mx-auto p-6 rounded-[30px] bg-white/40 border border-white/60 backdrop-blur-md flex items-center justify-between shadow-xl">
+        <div className="flex items-center gap-4">
+          <span className="text-3xl animate-bounce">🔥</span>
+          <p className="text-gray-700 font-medium">Faqat bugun: <span className="text-[#A67C00] font-bold">2 barobar ko'p ball!</span></p>
+        </div>
+        <div className="text-3xl font-mono font-black text-[#D4AF37]">00:59:59</div>
+      </div>
     </main>
-  )
- // Buni <main> tegidan keyin darrov qo'shing
-<div className="fixed inset-0 z-0 overflow-hidden">
-  {/* Harakatlanuvchi rangli sharlar */}
-  <div className="absolute top-[-10%] left-[-10%] w-[500px] h-[500px] bg-blue-600/20 rounded-full blur-[120px] animate-[pulse_8s_infinite]"></div>
-  <div className="absolute bottom-[10%] right-[-10%] w-[400px] h-[400px] bg-purple-600/15 rounded-full blur-[100px] animate-[pulse_10s_infinite]"></div>
-  <div className="absolute top-[30%] right-[20%] w-[300px] h-[300px] bg-blue-400/10 rounded-full blur-[80px] animate-bounce" style={{ animationDuration: '15s' }}></div>
-</div>
- 
+  );
 }
