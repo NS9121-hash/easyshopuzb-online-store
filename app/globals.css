@@ -7,7 +7,6 @@
 }
 
 body {
-    /* Orqa fondagi gradient rang */
     background: linear-gradient(135deg, #859c9f, #b7c7c9, #95abad);
     min-height: 100vh;
     display: flex;
@@ -15,7 +14,6 @@ body {
     align-items: center;
 }
 
-/* Mobil ilova o'lchami */
 .app-container {
     width: 100%;
     max-width: 400px;
@@ -28,183 +26,118 @@ body {
 }
 
 /* Header */
-.header {
-    text-align: center;
-    margin-bottom: 30px;
-    margin-top: 20px;
-    position: relative;
-    z-index: 2;
-}
+.header { text-align: center; margin-bottom: 30px; margin-top: 20px; position: relative; z-index: 2; }
+.logo-text { font-size: 24px; font-weight: 900; letter-spacing: 2px; color: #333; text-transform: uppercase; }
+.gold-text { color: #cca450; }
+.subtitle { font-size: 10px; letter-spacing: 4px; color: #555; margin-top: 5px; font-weight: 600; }
 
-.logo-text {
-    font-size: 24px;
-    font-weight: 900;
-    letter-spacing: 2px;
-    color: #333;
-    text-transform: uppercase;
-}
-
-.gold-text {
-    color: #cca450;
-}
-
-.subtitle {
-    font-size: 10px;
-    letter-spacing: 4px;
-    color: #555;
-    margin-top: 5px;
-    font-weight: 600;
-}
-
-/* TINIQ YALTIROQ SHISHA EFFEKTI (Crystal Clear Liquid Glass) */
+/* --------------------------------------------------- */
+/* BILLUR OYNA EFFEKTI (Crystal Clear Glass) */
+/* --------------------------------------------------- */
 .liquid-glass-card {
-    background: rgba(255, 255, 255, 0.03); /* Deyarli to'liq shaffof */
+    /* Fonni deyarli 100% shaffof qildik */
+    background: linear-gradient(135deg, rgba(255, 255, 255, 0.1) 0%, rgba(255, 255, 255, 0) 100%);
     
-    /* Blurni minimallashtirdik, toki plastik bo'lib qolmasin */
-    backdrop-filter: blur(2px) brightness(1.05); 
-    -webkit-backdrop-filter: blur(2px) brightness(1.05);
+    /* Faqatgina orqa fonni biroz yoritadi, xiralashtirmaydi */
+    backdrop-filter: brightness(1.05) contrast(1.02); 
+    -webkit-backdrop-filter: brightness(1.05) contrast(1.02);
     
-    /* O'tkir, yaltiroq qirralar */
-    border: 1px solid rgba(255, 255, 255, 0.3);
-    border-top: 1.5px solid rgba(255, 255, 255, 0.9); /* Tepadan kuchli nur */
-    border-left: 1.5px solid rgba(255, 255, 255, 0.6);
+    /* O'ta o'tkir shisha chetlari */
+    border: 1px solid rgba(255, 255, 255, 0.2);
+    border-top: 2px solid rgba(255, 255, 255, 0.9);
+    border-left: 2px solid rgba(255, 255, 255, 0.7);
     
     box-shadow: 
-        5px 15px 30px rgba(0, 0, 0, 0.15), /* Karta ostidagi chuqur soya */
-        inset 3px 3px 8px rgba(255, 255, 255, 0.7), /* Shisha qalinligi nuri */
-        inset -2px -2px 6px rgba(0, 0, 0, 0.05);
+        10px 10px 30px rgba(0, 0, 0, 0.1), /* Tashqi soya */
+        inset 2px 2px 5px rgba(255, 255, 255, 0.8), /* Ichki yuqori nur */
+        inset -3px -3px 10px rgba(0, 0, 0, 0.05); /* Ichki pastki soya */
         
     border-radius: 30px;
     padding: 30px;
     margin-bottom: 25px;
     position: relative;
-    overflow: hidden; /* Yaltiroq fon tashqariga chiqmasligi uchun */
+    overflow: hidden;
 }
 
-/* OYNAGI DIAGONAL PORLASH (Yaltiroq nur effekti - ENG ASOSIY QISM) */
+/* Qattiq, O'tkir Diagonal Porlash (Glare) */
 .liquid-glass-card::after {
     content: '';
     position: absolute;
-    top: 0;
-    left: 0;
-    width: 100%;
-    height: 100%;
-    /* Aynan oxirgi rasmdagi kabi tepa chap burchakdan tushgan nur */
+    top: 0; left: 0; width: 100%; height: 100%;
+    /* Keskin chiziq orqali haqiqiy oyna aksini yaratamiz */
     background: linear-gradient(
         115deg, 
         rgba(255, 255, 255, 0.6) 0%, 
-        rgba(255, 255, 255, 0.1) 25%, 
-        transparent 26%, 
+        rgba(255, 255, 255, 0.1) 30%, 
+        transparent 30.5%, /* Keskin tugash */
         transparent 100%
     );
-    pointer-events: none; /* Bosishga xalaqit bermaydi */
+    pointer-events: none;
     z-index: 0;
 }
 
-/* Matnlar yaltiroq nur tagida qolib ketmasligi uchun */
+/* Matnlar qatlamini ustiga chiqarish */
 .card-label, .balance-container, .glass-progress-track, .glass-icon-wrapper, .card-title, .card-subtitle {
     position: relative;
     z-index: 1;
 }
 
 /* Balans qismi */
-.card-label {
-    color: #cca450;
-    font-size: 12px;
-    font-weight: 700;
-    letter-spacing: 1px;
-    margin-bottom: 20px;
-}
-
-.balance-container {
-    display: flex;
-    justify-content: space-between;
-    align-items: flex-end;
-    margin-bottom: 30px;
-}
-
+.card-label { color: #cca450; font-size: 12px; font-weight: 700; letter-spacing: 1px; margin-bottom: 20px; }
+.balance-container { display: flex; justify-content: space-between; align-items: flex-end; margin-bottom: 30px; }
 .balance-numbers { display: flex; flex-direction: column; }
 .number { font-size: 48px; font-weight: 900; color: #222; line-height: 1.1; }
 .currency { font-size: 16px; font-weight: 700; color: #333; margin-bottom: 10px; }
 
 /* Progress Bar Glass */
 .glass-progress-track {
-    width: 100%;
-    height: 12px;
-    background: rgba(255, 255, 255, 0.05);
+    width: 100%; height: 12px;
+    background: rgba(0, 0, 0, 0.05);
     border-radius: 10px;
-    box-shadow: 
-        inset 1px 1px 3px rgba(0, 0, 0, 0.2),
-        inset -1px -1px 3px rgba(255, 255, 255, 0.5);
-    border: 1px solid rgba(255, 255, 255, 0.4);
+    box-shadow: inset 2px 2px 4px rgba(0, 0, 0, 0.1), inset -1px -1px 3px rgba(255, 255, 255, 0.8);
+    border-bottom: 1px solid rgba(255, 255, 255, 0.6);
     overflow: hidden;
 }
-
 .glass-progress-fill {
-    width: 35%; 
-    height: 100%;
+    width: 35%; height: 100%;
     background: linear-gradient(90deg, #dfbb6c, #e8c77b);
     border-radius: 10px;
-    box-shadow: inset 1px 1px 4px rgba(255, 255, 255, 0.9);
+    box-shadow: inset 1px 1px 3px rgba(255, 255, 255, 0.9);
 }
 
 /* AI Card */
 .ai-card { display: flex; flex-direction: column; align-items: center; text-align: center; padding: 25px; }
-
 .glass-icon-wrapper {
-    width: 60px;
-    height: 60px;
-    background: rgba(255, 255, 255, 0.05);
-    border-radius: 18px;
-    display: flex;
-    justify-content: center;
-    align-items: center;
-    margin-bottom: 15px;
-    border: 1px solid rgba(255,255,255,0.4);
-    border-top: 1.5px solid rgba(255,255,255,0.9);
-    box-shadow: 
-        5px 5px 15px rgba(0,0,0,0.1),
-        inset 2px 2px 6px rgba(255,255,255,0.8);
-    position: relative;
-    overflow: hidden;
+    width: 60px; height: 60px;
+    background: linear-gradient(135deg, rgba(255,255,255,0.2) 0%, rgba(255,255,255,0) 100%);
+    border-radius: 18px; display: flex; justify-content: center; align-items: center; margin-bottom: 15px;
+    border: 1px solid rgba(255,255,255,0.3); border-top: 1.5px solid rgba(255,255,255,0.9); border-left: 1.5px solid rgba(255,255,255,0.6);
+    box-shadow: 5px 5px 15px rgba(0,0,0,0.1), inset 2px 2px 4px rgba(255,255,255,0.8);
+    position: relative; overflow: hidden;
 }
-
 .glass-icon-wrapper::after {
     content: ''; position: absolute; top: 0; left: 0; width: 100%; height: 100%;
-    background: linear-gradient(135deg, rgba(255,255,255,0.6) 0%, rgba(255,255,255,0.1) 35%, transparent 36%);
+    background: linear-gradient(135deg, rgba(255,255,255,0.7) 0%, rgba(255,255,255,0.1) 35%, transparent 36%);
     pointer-events: none;
 }
-
 .emoji { font-size: 28px; position: relative; z-index: 1;}
 .card-title { font-size: 20px; font-weight: 800; color: #222; margin-bottom: 8px; }
 .card-subtitle { font-size: 12px; color: #555; font-weight: 500; }
 
-/* Pastki Navigatsiya (Pufakcha oynalar) */
-.glass-bottom-nav {
-    display: flex; justify-content: space-between; align-items: center;
-    margin-top: auto; padding: 10px 0; z-index: 2; position: relative;
-}
-
+/* Pastki Navigatsiya */
+.glass-bottom-nav { display: flex; justify-content: space-between; align-items: center; margin-top: auto; padding: 10px 0; z-index: 2; position: relative; }
 .glass-nav-btn {
-    width: 45px; height: 45px; border-radius: 50%; border: none;
-    background: rgba(255, 255, 255, 0.05);
-    border: 1px solid rgba(255, 255, 255, 0.3);
-    border-top: 1.5px solid rgba(255, 255, 255, 0.9);
-    box-shadow: 
-        3px 8px 15px rgba(0,0,0,0.1),
-        inset 2px 2px 6px rgba(255,255,255,0.8);
-    backdrop-filter: blur(2px);
-    color: #fff; font-size: 16px; font-weight: bold;
-    cursor: pointer; transition: all 0.2s ease;
-    display: flex; justify-content: center; align-items: center;
-    position: relative; overflow: hidden;
+    width: 45px; height: 45px; border-radius: 50%;
+    background: linear-gradient(135deg, rgba(255, 255, 255, 0.1) 0%, rgba(255, 255, 255, 0) 100%);
+    border: 1px solid rgba(255, 255, 255, 0.2); border-top: 1.5px solid rgba(255, 255, 255, 0.9); border-left: 1.5px solid rgba(255, 255, 255, 0.6);
+    box-shadow: 3px 8px 15px rgba(0,0,0,0.1), inset 2px 2px 4px rgba(255,255,255,0.9);
+    backdrop-filter: brightness(1.05); -webkit-backdrop-filter: brightness(1.05);
+    color: #fff; font-size: 16px; font-weight: bold; cursor: pointer; transition: all 0.2s ease;
+    display: flex; justify-content: center; align-items: center; position: relative; overflow: hidden;
 }
-
-/* Navigatsiya tugmalari uchun ham yaltiroq porlash */
 .glass-nav-btn::after {
     content: ''; position: absolute; top: 0; left: 0; width: 100%; height: 100%;
     background: linear-gradient(135deg, rgba(255,255,255,0.7) 0%, rgba(255,255,255,0.05) 40%, transparent 41%);
     pointer-events: none;
 }
-
 .glass-nav-btn:active { transform: scale(0.95); }
