@@ -1,4 +1,4 @@
-/* Asosiy sozlamalar */
+/* RESET & BASE */
 * {
     margin: 0;
     padding: 0;
@@ -7,7 +7,6 @@
 }
 
 body {
-    /* Siz yuklagan to'lqinli rasm */
     background-image: url('/IMG_2788.jpeg'); 
     background-size: cover; 
     background-position: center; 
@@ -15,117 +14,99 @@ body {
     background-attachment: fixed; 
     min-height: 100vh;
     display: flex;
-    justify-content: center; /* Markazga joylash */
+    justify-content: center;
+    overflow-x: hidden;
 }
 
-/* Moslashuvchan Konteyner (Kompyuter va Telefon uchun) */
 .app-container {
     width: 100%;
-    max-width: 1200px; /* Kompyuterda juda cho'zilib ketmasligi uchun */
+    max-width: 1200px;
     min-height: 100vh;
     display: flex;
     flex-direction: column;
-    padding: 30px 20px 100px 20px; /* Pastida tugmalar uchun joy qoldiramiz */
+    padding: 20px 20px 140px 20px;
     position: relative;
-    background: rgba(255, 255, 255, 0.02); 
 }
 
-/* Header (Yozuv eng tepaga chiqishi uchun to'g'rilandi) */
-.header { 
-    text-align: center; 
-    margin-bottom: 30px; 
-    margin-top: 20px; /* 20vh emas, endi oddiy 20px masofa */
-    padding-top: env(safe-area-inset-top); /* Telefon kamerasiga (chyolkaga) taqalib qolmasligi uchun */
-    position: relative; 
-    z-index: 2; 
-}
+/* HEADER */
+.header { text-align: center; margin-top: 10px; padding-top: env(safe-area-inset-top); z-index: 10; }
 
-/* --------------------------------------------------- */
-/* KONTRASTLI LIQUID GLASS Yozuv (Yaqqol ko'rinadigan) */
-/* --------------------------------------------------- */
 .glass-text {
-    font-size: clamp(32px, 5vw, 48px); 
+    font-size: clamp(32px, 6vw, 54px);
     font-weight: 900;
-    letter-spacing: 3px;
-    
-    /* Yozuv asosini to'qroq va shaffof (qoramtir oyna) qilamiz */
-    color: rgba(20, 30, 40, 0.4); 
-    
-    text-shadow: 
-        -1px -2px 2px rgba(255, 255, 255, 0.9),   
-        1px 2px 3px rgba(0, 0, 0, 0.6),         
-        0px 6px 15px rgba(0, 0, 0, 0.3);       
+    letter-spacing: 2px;
+    color: rgba(30, 40, 50, 0.4); 
+    text-shadow: -1px -2px 2px rgba(255, 255, 255, 0.8), 1px 2px 3px rgba(0, 0, 0, 0.5), 0px 8px 15px rgba(0, 0, 0, 0.2);       
 }
 
 .gold-text { 
-    color: rgba(200, 150, 50, 0.8); 
-    text-shadow: 
-        -1px -2px 2px rgba(255, 255, 255, 0.8), 
-        1px 2px 3px rgba(100, 60, 0, 0.8), 
-        0px 6px 15px rgba(0, 0, 0, 0.2);
+    color: rgba(180, 140, 40, 0.7); 
+    text-shadow: -1px -2px 1px rgba(255, 255, 255, 0.8), 1px 2px 2px rgba(80, 50, 0, 0.6);
 }
 
-.subtitle { 
-    font-size: 12px; 
-    letter-spacing: 5px; 
-    color: rgba(50, 50, 50, 0.7); 
-    margin-top: 10px; 
-    font-weight: 700; 
+.subtitle { font-size: 10px; letter-spacing: 4px; color: rgba(0, 0, 0, 0.6); font-weight: 700; margin-top: 5px; }
+
+/* MAIN CONTENT */
+.main-content { flex: 1; display: flex; justify-content: center; align-items: center; }
+
+.welcome-card {
+    background: linear-gradient(135deg, rgba(255, 255, 255, 0.15) 0%, rgba(255, 255, 255, 0.05) 100%);
+    backdrop-filter: blur(10px); -webkit-backdrop-filter: blur(10px);
+    border-radius: 40px; padding: 50px 30px; text-align: center;
+    border: 1px solid rgba(255, 255, 255, 0.3); border-top: 2px solid rgba(255, 255, 255, 0.8);
+    box-shadow: 0 20px 50px rgba(0,0,0,0.1), inset 2px 2px 10px rgba(255,255,255,0.5);
+    position: relative; overflow: hidden; width: 100%; max-width: 600px;
 }
 
-/* Asosiy qism (Kiyimlar joyi) */
-.main-content {
-    flex-grow: 1; /* Qolgan bo'sh joyni to'ldiradi */
-    width: 100%;
-}
+.welcome-heading { font-size: clamp(16px, 4.5vw, 24px); font-weight: 800; color: rgba(0, 0, 0, 0.65); line-height: 1.5; text-shadow: 1px 1px 1px rgba(255, 255, 255, 0.8); }
+.welcome-gold { display: block; font-size: clamp(28px, 8vw, 42px); color: rgba(160, 120, 20, 0.9); margin-bottom: 20px; }
 
-/* --------------------------------------------------- */
-/* PASTKI NAVIGATSIYA (Oyna Pufakchalari) */
-/* --------------------------------------------------- */
+/* BOTTOM NAVIGATION */
 .bottom-nav-wrapper {
     position: fixed;
     bottom: 25px;
     left: 50%;
     transform: translateX(-50%);
-    width: 100%;
-    max-width: 500px; /* Kompyuterda markazda ixcham turadi */
-    padding: 0 20px;
-    z-index: 10;
+    width: 95%;
+    max-width: 480px;
+    z-index: 100;
 }
 
 .glass-bottom-nav { 
     display: flex; 
-    justify-content: space-around; /* 4 ta tugma bir xil masofada turadi */
-    align-items: center; 
+    justify-content: space-around;
+    padding: 12px 10px;
+    background: rgba(255, 255, 255, 0.1);
+    backdrop-filter: blur(20px); -webkit-backdrop-filter: blur(20px);
+    border-radius: 35px;
+    border: 1px solid rgba(255, 255, 255, 0.3);
+    box-shadow: 0 15px 35px rgba(0,0,0,0.2);
+}
+
+.glass-nav-item {
+    background: none; border: none; cursor: pointer;
+    display: flex; flex-direction: column; align-items: center; gap: 5px;
+    transition: 0.3s;
 }
 
 .glass-nav-btn {
-    width: 55px; 
-    height: 55px; 
-    border-radius: 50%; border: none;
-    background: linear-gradient(135deg, rgba(255, 255, 255, 0.15) 0%, rgba(255, 255, 255, 0.05) 100%);
-    border: 1px solid rgba(255, 255, 255, 0.4); 
-    border-top: 2px solid rgba(255, 255, 255, 1); 
-    border-left: 2px solid rgba(255, 255, 255, 0.8);
-    box-shadow: 3px 8px 15px rgba(0,0,0,0.15), inset 2px 2px 4px rgba(255,255,255,1);
-    backdrop-filter: blur(4px) brightness(1.05); 
-    -webkit-backdrop-filter: blur(4px) brightness(1.05);
-    color: #fff; font-size: 22px; cursor: pointer; transition: all 0.2s ease;
-    display: flex; justify-content: center; align-items: center; position: relative; overflow: hidden;
+    width: 45px; height: 45px; border-radius: 50%;
+    display: flex; justify-content: center; align-items: center;
+    background: rgba(255, 255, 255, 0.1);
+    border: 1px solid rgba(255, 255, 255, 0.2);
+    color: rgba(255, 255, 255, 0.85);
+    transition: 0.3s;
 }
 
-.glass-nav-btn::after {
-    content: ''; position: absolute; top: 0; left: 0; width: 100%; height: 100%;
-    background: linear-gradient(135deg, rgba(255,255,255,0.7) 0%, rgba(255,255,255,0.05) 40%, transparent 41%);
-    pointer-events: none;
+.nav-label {
+    font-size: 10px;
+    font-weight: 700;
+    color: rgba(0, 0, 0, 0.6);
+    text-transform: uppercase;
+    letter-spacing: 1px;
 }
 
-.glass-nav-btn:active { transform: scale(0.92); }
-
-/* Kompyuter uchun qoidalarni o'zgartirish */
-@media (min-width: 768px) {
-    .glass-nav-btn:hover {
-        transform: translateY(-5px); 
-        box-shadow: 5px 12px 20px rgba(0,0,0,0.2), inset 2px 2px 4px rgba(255,255,255,1);
-    }
-}
+/* Hover & Active Effects */
+.glass-nav-item:hover .glass-nav-btn { background: rgba(255, 255, 255, 0.3); transform: translateY(-3px); color: #dfbb6c; }
+.glass-nav-item:hover .nav-label { color: #dfbb6c; }
+.glass-nav-item:active { transform: scale(0.9); }
