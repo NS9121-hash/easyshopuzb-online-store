@@ -1,124 +1,113 @@
-/* RESET & BASE - O'zgarishsiz */
-* {
-    margin: 0;
-    padding: 0;
-    box-sizing: border-box;
-    font-family: 'Segoe UI', Roboto, Helvetica, Arial, sans-serif;
-}
+/* RESET & BASE */
+* { margin: 0; padding: 0; box-sizing: border-box; font-family: 'Segoe UI', Roboto, Helvetica, Arial, sans-serif; }
+body { background-image: url('/IMG_2788.jpeg'); background-size: cover; background-position: center; background-repeat: no-repeat; background-attachment: fixed; min-height: 100vh; display: flex; justify-content: center; overflow-x: hidden; }
+.app-container { width: 100%; max-width: 1200px; min-height: 100vh; display: flex; flex-direction: column; padding: 20px 20px 140px 20px; position: relative; }
 
-body {
-    /* Siz yuklagan to'lqinli rasm - O'zgarishsiz */
-    background-image: url('/IMG_2788.jpeg'); 
-    background-size: cover; 
-    background-position: center; 
-    background-repeat: no-repeat;
-    background-attachment: fixed; 
-    min-height: 100vh;
-    display: flex;
-    justify-content: center;
-}
+/* HEADER */
+.header { text-align: center; margin-top: 10px; padding-top: env(safe-area-inset-top); z-index: 10; }
+.glass-text { font-size: clamp(32px, 6vw, 54px); font-weight: 900; letter-spacing: 2px; color: rgba(30, 40, 50, 0.2); text-shadow: -1px -2px 2px rgba(255, 255, 255, 1), 1px 2px 4px rgba(0, 0, 0, 0.4), 0px 8px 15px rgba(0, 0, 0, 0.2); }
+.gold-text { color: #cca450; text-shadow: -1px -2px 1px rgba(255, 255, 255, 0.9), 1px 2px 3px rgba(80, 50, 0, 0.6); }
+.subtitle { font-size: 10px; letter-spacing: 4px; color: rgba(0, 0, 0, 0.8); font-weight: 800; margin-top: 5px; }
 
-.app-container {
-    width: 100%;
-    max-width: 1200px;
-    min-height: 100vh;
-    display: flex;
-    flex-direction: column;
-    padding: 20px 20px 140px 20px;
-    position: relative;
-    /* Fon ustidagi yengil suyuq parda */
-    background: rgba(18, 53, 58, 0.05); 
-}
-
-/* HEADER - O'zgarishsiz */
-.header { text-align: center; margin-bottom: 20px; margin-top: 20px; padding-top: env(safe-area-inset-top); position: relative; z-index: 2; }
-.glass-text { font-size: clamp(32px, 5vw, 48px); font-weight: 900; letter-spacing: 2px; color: rgba(30, 40, 50, 0.4); text-shadow: -1px -2px 2px rgba(255, 255, 255, 0.9), 1px 2px 3px rgba(0, 0, 0, 0.6), 0px 6px 15px rgba(0, 0, 0, 0.3); }
-.gold-text { color: rgba(200, 150, 50, 0.8); text-shadow: -1px -2px 2px rgba(255, 255, 255, 0.8), 1px 2px 3px rgba(100, 60, 0, 0.8), 0px 6px 15px rgba(0, 0, 0, 0.2); }
-.subtitle { font-size: 10px; letter-spacing: 5px; color: rgba(50, 50, 50, 0.7); margin-top: 10px; font-weight: 700; }
-
-/* MAIN CONTENT - Markazga joylash - O'zgarishsiz */
-.main-content {
-    flex-grow: 1; 
-    width: 100%;
-    display: flex;
-    justify-content: center;
-    align-items: center;
-}
+/* MAIN CONTENT */
+.main-content { flex: 1; display: flex; justify-content: center; align-items: center; }
 
 /* --------------------------------------------------- */
-/* ULTRA LIQUID GLASS (Muz emas, Suyuqlik effekti) */
+/* TINIQ BILLUR KARTA (Ichida suv bo'lishi uchun maxsus) */
 /* --------------------------------------------------- */
 .welcome-glass-card {
-    /* Blur (xiralik) butunlay olib tashlandi */
-    backdrop-filter: none;
-    -webkit-backdrop-filter: none;
-    
-    /* Fon orqali rasm juda tiniq ko'rinishi kerak */
-    background: transparent;
-    
-    /* Suyuqlik tomchisi kabi silliq va o'tkir chetlar */
-    border: none;
-    
-    /* Suyuqlik chuqurligini va yorug'lik qaytarishini yaratish (Haqiqiy liquid neon/aqua effekt) */
-    box-shadow: 
-        /* 1. Karta ichidagi chuqur suv osti yashil-ko'k jilosi */
-        inset 0 0 60px rgba(18, 53, 58, 0.6),
-        /* 2. Karta ichidagi tillarang jilo (yorug'lik suyuqlikda sinishi) */
-        inset 0 0 30px rgba(200, 150, 50, 0.3),
-        /* 3. Chetlaridagi o'ta o'tkir tillarang/yashil yoritish (Caustic light) */
-        0 0 1px 1.5px rgba(200, 150, 50, 0.7),
-        0 0 10px 4px rgba(18, 53, 58, 0.4),
-        /* 4. Tashqi tarqalgan jilo (Suyuqlik porlashi) */
-        0 0 40px rgba(18, 53, 58, 0.3);
-
-    border-radius: 40px; /* Silliqroq chetlar */
-    padding: 60px 20px; /* Kattaroq maydon */
-    text-align: center;
-    position: relative;
-    width: 100%;
-    max-width: 500px;
-    
-    /* Harakatlanayotgan yorug'lik effekti (caustics) uchun */
-    overflow: hidden;
+    background: rgba(255, 255, 255, 0.02);
+    backdrop-filter: blur(3px); -webkit-backdrop-filter: blur(3px);
+    border-radius: 35px; padding: 60px 20px; text-align: center;
+    border: 1px solid rgba(255, 255, 255, 0.4);
+    border-top: 2.5px solid rgba(255, 255, 255, 1);
+    border-left: 2px solid rgba(255, 255, 255, 0.8);
+    box-shadow: 10px 20px 40px rgba(0, 0, 0, 0.15), inset 2px 2px 10px rgba(255, 255, 255, 0.7);
+    position: relative; overflow: hidden; width: 100%; max-width: 600px;
 }
 
-/* SUYUQLIK HARAKATI (Har safar yangilanganda jilo o'zgarib turadi) */
-.welcome-glass-card::before {
-    content: '';
+/* --------------------------------------------------- */
+/* FIZIK SUV EFFEKTI (Giroskopga ulangan) */
+/* --------------------------------------------------- */
+.water-layer-wrapper {
     position: absolute;
-    top: -100%; left: -100%; width: 300%; height: 300%;
-    /* Caustic (suv osti yorug'lik naqshi) simulyatsiyasi */
-    background: radial-gradient(circle at center, rgba(200, 150, 50, 0.3), transparent 20%),
-                radial-gradient(circle at center, rgba(18, 53, 58, 0.2), transparent 40%),
-                radial-gradient(circle at center, white, transparent 2%);
-    background-size: 60px 60px, 120px 120px, 15px 15px;
-    background-position: -50px -50px, -20px -20px, 0 0;
-    mix-blend-mode: color-dodge; /* Yorug'likni fon rasmi bilan chiroyli aralashtirish */
-    opacity: 0.6;
-    pointer-events: none;
+    bottom: -60%; 
+    left: -50%;
+    width: 200%;
+    height: 200%;
     z-index: 0;
+    /* Suvning silliq oqishi uchun */
+    transition: transform 0.2s cubic-bezier(0.25, 0.46, 0.45, 0.94);
 }
 
-/* Matnlar uchun jilo */
-.welcome-heading {
-    position: relative;
-    z-index: 1;
-    font-size: clamp(18px, 4.5vw, 24px);
-    font-weight: 800;
-    line-height: 1.6;
-    color: #1a2a3a;
-    text-shadow: 1px 1px 1px rgba(255, 255, 255, 0.7);
-    letter-spacing: 2px;
+.water-wave-1, .water-wave-2 {
+    position: absolute;
+    top: 50%; left: 0; width: 100%; height: 100%;
+    /* Suv rangi: Feruza-havorang */
+    background: linear-gradient(180deg, rgba(30, 180, 180, 0.4) 0%, rgba(10, 80, 90, 0.7) 100%);
+    border-radius: 40% 45% 40% 45%;
+    animation: wave 6s infinite linear;
+    box-shadow: inset 0 15px 30px rgba(255,255,255,0.6);
+    backdrop-filter: blur(2px);
 }
 
-.welcome-gold {
-    display: block;
-    font-size: clamp(28px, 6vw, 40px);
-    color: #dfbb6c;
-    text-shadow: -1px -2px 2px rgba(255, 255, 255, 0.8), 1px 2px 3px rgba(100, 60, 0, 0.8), 0px 4px 10px rgba(0, 0, 0, 0.2);
-    margin-bottom: 15px;
-    letter-spacing: 3px;
+.water-wave-2 {
+    background: linear-gradient(180deg, rgba(20, 140, 150, 0.3) 0%, rgba(10, 60, 70, 0.9) 100%);
+    border-radius: 45% 40% 45% 40%;
+    animation: wave 5s infinite linear reverse;
+    top: 52%;
 }
 
-/* Pastki Navigatsiya - Suyuq tomchi uslubida o'zgarishsiz */
-.bottom-nav-wrapper { display: none; } /* Markazni bo'shatish uchun - bu shunchaki oyna, kiyimlar ro'yxatiga o'tilganda menyu chiqadi */
+@keyframes wave {
+    0% { transform: rotate(0deg); }
+    100% { transform: rotate(360deg); }
+}
+
+/* Yozuvlar suv ustida turishi uchun */
+.welcome-text-content { position: relative; z-index: 10; }
+.welcome-heading { font-size: clamp(16px, 4.5vw, 22px); font-weight: 800; color: rgba(255, 255, 255, 0.95); line-height: 1.6; text-shadow: 1px 1px 4px rgba(0, 0, 0, 0.3); }
+.welcome-gold { display: block; font-size: clamp(28px, 8vw, 38px); color: #dfbb6c; margin-bottom: 20px; letter-spacing: 1px; text-shadow: -1px -1px 2px rgba(255, 255, 255, 0.9), 2px 3px 5px rgba(0, 0, 0, 0.5); }
+
+/* iOS uchun tugma */
+.gyro-btn {
+    background: rgba(255, 255, 255, 0.2); border: 1px solid rgba(255, 255, 255, 0.8); color: #fff;
+    padding: 10px 20px; border-radius: 30px; margin-bottom: 20px; cursor: pointer;
+    backdrop-filter: blur(5px); font-weight: bold; font-size: 14px;
+    box-shadow: 0 4px 10px rgba(0,0,0,0.1); transition: 0.3s;
+}
+.gyro-btn:active { transform: scale(0.95); }
+
+/* --------------------------------------------------- */
+/* PASTKI NAVIGATSIYA (YORQIN VA TINIQ) */
+/* --------------------------------------------------- */
+.bottom-nav-wrapper { position: fixed; bottom: 25px; left: 50%; transform: translateX(-50%); width: 95%; max-width: 480px; z-index: 100; }
+.glass-bottom-nav {
+    display: flex; justify-content: space-around; align-items: flex-end; padding: 12px 5px;
+    background: rgba(255, 255, 255, 0.05); backdrop-filter: blur(8px); -webkit-backdrop-filter: blur(8px);
+    border-radius: 40px; border: 1px solid rgba(255, 255, 255, 0.2); border-top: 1.5px solid rgba(255, 255, 255, 0.7);
+    box-shadow: 0 15px 35px rgba(0,0,0,0.1);
+}
+.glass-nav-item { background: none; border: none; cursor: pointer; display: flex; flex-direction: column; align-items: center; gap: 6px; transition: 0.3s; }
+.glass-nav-bubble {
+    width: 50px; height: 50px; border-radius: 50%; display: flex; justify-content: center; align-items: center;
+    background: rgba(255, 255, 255, 0.05); border: 1px solid rgba(255, 255, 255, 0.4); 
+    border-top: 2px solid rgba(255, 255, 255, 1); border-left: 2px solid rgba(255, 255, 255, 0.8);
+    box-shadow: inset 1px 1px 5px rgba(255,255,255,0.8), 3px 5px 12px rgba(0,0,0,0.1);
+    transition: 0.3s; position: relative; overflow: hidden;
+}
+
+/* YORQIN TILLARANG IKONKALAR (Qorayish olib tashlandi!) */
+.glass-nav-bubble svg {
+    color: #dfbb6c !important; 
+    stroke-width: 2.5px;
+    /* Qora soya o'rniga o'zining yorqin tillarang nuri qo'yildi */
+    filter: drop-shadow(0px 1px 3px rgba(223, 187, 108, 0.6)); 
+    position: relative; z-index: 1;
+}
+
+.nav-label { font-size: 10px; font-weight: 900; color: #1a2a3a; text-transform: uppercase; letter-spacing: 1.5px; text-shadow: 0px 1px 2px rgba(255, 255, 255, 1); }
+
+.glass-nav-item:hover .glass-nav-bubble { transform: translateY(-4px); background: rgba(255, 255, 255, 0.2); box-shadow: inset 1px 1px 8px rgba(255,255,255,1), 0 10px 20px rgba(0,0,0,0.15); }
+.glass-nav-item:hover .glass-nav-bubble svg { color: #fff !important; filter: drop-shadow(0px 2px 5px rgba(255, 255, 255, 0.8)); }
+.glass-nav-item:hover .nav-label { color: #cca450; }
+.glass-nav-item:active { transform: scale(0.9); }
