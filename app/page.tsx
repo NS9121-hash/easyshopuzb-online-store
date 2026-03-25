@@ -4,13 +4,13 @@ export default function Home() {
   return (
     <div className="app-container">
       
-      {/* 1. HEADER */}
+      {/* 1. HEADER (Deep Cyan va Gold) */}
       <header className="header">
         <h1 className="glass-text">EASYSHOP_<span className="gold-text">UZB</span></h1>
         <p className="subtitle">OSON ONLINE XARID</p>
       </header>
 
-      {/* 2. MAIN CONTENT (Tiniq Billur Karta) */}
+      {/* 2. MAIN CONTENT (Orqa fonsiz, faqat 3D matnlar) */}
       <main className="main-content">
         <div className="welcome-glass-card">
           <div className="welcome-text-content">
