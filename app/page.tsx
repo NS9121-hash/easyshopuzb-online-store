@@ -1,4 +1,48 @@
+"use client";
+import { useState, useEffect } from "react";
+
 export default function Home() {
+  const [tilt, setTilt] = useState({ x: 0, y: 0 });
+  const [hasPermission, setHasPermission] = useState(false);
+  const [isIOS, setIsIOS] = useState(false);
+
+  useEffect(() => {
+    // Qurilma iOS ekanligini va giroskop ruxsat so'rashni talab qilishini tekshirish
+    if (typeof window !== "undefined" && typeof (window as any).DeviceOrientationEvent !== "undefined" && typeof (window as any).DeviceOrientationEvent.requestPermission === "function") {
+      setIsIOS(true);
+    } else {
+      // Android va boshqa qurilmalarda ruxsat shart emas, avtomat ishlaydi
+      setHasPermission(true);
+      window.addEventListener("deviceorientation", handleOrientation);
+    }
+    return () => window.removeEventListener("deviceorientation", handleOrientation);
+  }, []);
+
+  const handleOrientation = (event: DeviceOrientationEvent) => {
+    let x = event.gamma || 0; // Chapga-o'ngga egilish (-90 dan 90 gacha)
+    let y = event.beta || 0;  // Oldinga-orqaga egilish (-180 dan 180 gacha)
+
+    // Suyuqlik to'kilib ketmasligi uchun egilish burchagini cheklaymiz
+    if (x > 50) x = 50;
+    if (x < -50) x = -50;
+    if (y > 60) y = 60;
+    if (y < 0) y = 0; // Faqat pastga egilganda ishlaydi
+
+    setTilt({ x, y });
+  };
+
+  const requestAccess = async () => {
+    try {
+      const permission = await (window as any).DeviceOrientationEvent.requestPermission();
+      if (permission === "granted") {
+        setHasPermission(true);
+        window.addEventListener("deviceorientation", handleOrientation);
+      }
+    } catch (error) {
+      console.error("Giroskopga ruxsat olinmadi", error);
+    }
+  };
+
   return (
     <div className="app-container">
       
@@ -8,18 +52,39 @@ export default function Home() {
         <p className="subtitle">OSON ONLINE XARID</p>
       </header>
 
-      {/* 2. MAIN CONTENT (Liquid Glass Karta) */}
+      {/* 2. MAIN CONTENT (Harakatlanuvchi Suyuqlik) */}
       <main className="main-content">
         <div className="welcome-glass-card">
-          <h2 className="welcome-heading">
-            <span className="welcome-gold">ASSALOMU ALEYKUM</span>
-            <br />
-            ONLAYN DO'KONIMIZGA XUSH KELIBSIZ!
-          </h2>
+          
+          {/* FIZIK HARAKATLANUVCHI SUV QATLAMI */}
+          <div 
+            className="water-layer-wrapper"
+            style={{ 
+              transform: `rotate(${-tilt.x}deg) translateY(${tilt.y * 0.6 - 20}px)` 
+            }}
+          >
+            <div className="water-wave-1"></div>
+            <div className="water-wave-2"></div>
+          </div>
+
+          {/* MATNLAR */}
+          <div className="welcome-text-content">
+            {isIOS && !hasPermission && (
+              <button onClick={requestAccess} className="gyro-btn">
+                🌊 Suv effektini yoqish
+              </button>
+            )}
+            <h2 className="welcome-heading">
+              <span className="welcome-gold">ASSALOMU ALEYKUM</span>
+              <br />
+              ONLAYN DO'KONIMIZGA XUSH KELIBSIZ!
+            </h2>
+          </div>
+
         </div>
       </main>
 
-      {/* 3. BOTTOM NAV (Shisha va Tillarang Ikonkalar) */}
+      {/* 3. BOTTOM NAV (Yorqin Tillarang Ikonkalar) */}
       <div className="bottom-nav-wrapper">
         <nav className="glass-bottom-nav">
           
