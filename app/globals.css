@@ -30,11 +30,12 @@ body {
     background: rgba(255, 255, 255, 0.02); 
 }
 
-/* Header */
+/* Header (Yozuv eng tepaga chiqishi uchun to'g'rilandi) */
 .header { 
     text-align: center; 
     margin-bottom: 30px; 
-    margin-top: 20vh; /* Ekranning yuqoriroq qismida turishi uchun */
+    margin-top: 20px; /* 20vh emas, endi oddiy 20px masofa */
+    padding-top: env(safe-area-inset-top); /* Telefon kamerasiga (chyolkaga) taqalib qolmasligi uchun */
     position: relative; 
     z-index: 2; 
 }
