@@ -12,37 +12,33 @@ body {
 /* HEADER */
 .header { text-align: center; margin-top: 10px; padding-top: env(safe-area-inset-top); z-index: 10; }
 .glass-text { font-size: clamp(32px, 6vw, 54px); font-weight: 900; letter-spacing: 2px; color: rgba(20, 30, 40, 0.2); text-shadow: -1px -2px 2px rgba(255, 255, 255, 0.8), 1px 2px 3px rgba(0, 0, 0, 0.5), 0px 8px 15px rgba(0, 0, 0, 0.2); }
-.gold-text { color: rgba(180, 140, 40, 0.8); text-shadow: -1px -2px 1px rgba(255, 255, 255, 0.8), 1px 2px 2px rgba(80, 50, 0, 0.6); }
+.gold-text { color: #cca450; text-shadow: -1px -2px 1px rgba(255, 255, 255, 0.8), 1px 2px 2px rgba(80, 50, 0, 0.6); }
 .subtitle { font-size: 10px; letter-spacing: 4px; color: rgba(0, 0, 0, 0.6); font-weight: 700; margin-top: 5px; }
 
 .main-content { flex: 1; display: flex; justify-content: center; align-items: center; }
 
 /* --------------------------------------------------- */
-/* TINIQ BILLUR KARTA (Crystal Clear Glass) */
+/* TINIQ KARTA (BLUR OLIB TASHLANGAN - Siz aytgandek) */
 /* --------------------------------------------------- */
 .welcome-glass-card {
-    /* Oqartirib yubormaydigan tiniqlik (blursiz) */
     background: linear-gradient(135deg, rgba(255, 255, 255, 0.05) 0%, rgba(255, 255, 255, 0) 100%);
     
-    /* BLUR OLIB TASHLANDI ! (Siz xohlagandek) */
+    /* BLUR MUTLAQO YO'Q */
     backdrop-filter: none; 
     -webkit-backdrop-filter: none;
     
     border-radius: 35px; padding: 60px 20px; text-align: center;
-    
-    /* Shishaning o'tkir qirralari va porlashi */
     border: 1px solid rgba(255, 255, 255, 0.3);
     border-top: 2px solid rgba(255, 255, 255, 0.9);
     border-left: 2px solid rgba(255, 255, 255, 0.7);
     box-shadow: 0 15px 35px rgba(0, 0, 0, 0.1), inset 0 0 15px rgba(255, 255, 255, 0.1);
-    
     position: relative; overflow: hidden; width: 100%; max-width: 500px;
 }
 
-/* O'tkir chaqnash (Specular Glare) - Kartani ko'rinishini ta'minlaydi */
+/* Oynadagi o'tkir chaqnash */
 .welcome-glass-card::before {
     content: ''; position: absolute; top: 0; left: 0; width: 100%; height: 100%;
-    background: linear-gradient(110deg, rgba(255, 255, 255, 0.6) 0%, rgba(255, 255, 255, 0.1) 20%, transparent 21%);
+    background: linear-gradient(105deg, rgba(255, 255, 255, 0.5) 0%, rgba(255, 255, 255, 0.05) 20%, transparent 21%);
     pointer-events: none; z-index: 1;
 }
 
@@ -51,26 +47,53 @@ body {
 .welcome-gold { display: block; font-size: clamp(28px, 8vw, 38px); color: #dfbb6c; margin-bottom: 20px; letter-spacing: 1px; text-shadow: -1px -2px 1px rgba(255, 255, 255, 0.9), 1px 2px 3px rgba(100, 60, 0, 0.6); }
 
 /* --------------------------------------------------- */
-/* PASTKI NAVIGATSIYA (O'ZGARTIRILMADI !) */
+/* PASTKI NAVIGATSIYA (SAFARI XATOSI TO'G'IRLANDI) */
 /* --------------------------------------------------- */
-.bottom-nav-wrapper { position: fixed; bottom: 25px; left: 50%; transform: translateX(-50%); width: 95%; max-width: 480px; z-index: 100; }
+.bottom-nav-wrapper { 
+    position: fixed; 
+    bottom: 25px; 
+    
+    /* MUHIM: Ekranga yopishib qolmasligi uchun 20px bo'shliq qoldiramiz */
+    left: 20px; 
+    right: 20px; 
+    width: auto; 
+    margin: 0 auto; 
+    max-width: 440px; 
+    z-index: 100; 
+}
+
 .glass-bottom-nav { 
     display: flex; justify-content: space-around; align-items: flex-end; padding: 10px 5px;
-    background: linear-gradient(135deg, rgba(255, 255, 255, 0.1) 0%, rgba(255, 255, 255, 0.02) 100%);
-    backdrop-filter: blur(15px) brightness(1.02); -webkit-backdrop-filter: blur(15px) brightness(1.02);
-    border-radius: 40px; border: 1px solid rgba(255, 255, 255, 0.3); border-top: 2px solid rgba(255, 255, 255, 0.8);
-    box-shadow: 0 15px 35px rgba(0,0,0,0.2);
+    background: rgba(255, 255, 255, 0.1);
+    backdrop-filter: blur(15px); 
+    -webkit-backdrop-filter: blur(15px);
+    
+    border-radius: 50px; /* Mukammal yumaloqlik */
+    border: 1px solid rgba(255, 255, 255, 0.3); 
+    border-top: 1.5px solid rgba(255, 255, 255, 0.8);
+    box-shadow: 0 15px 35px rgba(0,0,0,0.15);
+
+    /* MUHIM: Safari'da qirrali bo'lib qolmasligi uchun fix */
+    overflow: hidden;
+    -webkit-transform: translateZ(0);
+    transform: translateZ(0);
 }
+
 .glass-nav-item { background: none; border: none; cursor: pointer; text-decoration: none; display: flex; flex-direction: column; align-items: center; gap: 8px; transition: 0.3s; }
+
+/* Tiniq ikonkalar pufakchasi */
 .glass-nav-btn {
     width: 45px; height: 45px; border-radius: 50%; display: flex; justify-content: center; align-items: center;
-    background: linear-gradient(135deg, rgba(255, 255, 255, 0.2) 0%, rgba(255, 255, 255, 0.05) 100%);
+    background: rgba(255, 255, 255, 0.15);
     border: 1px solid rgba(255, 255, 255, 0.3); border-top: 2px solid rgba(255, 255, 255, 0.9); border-left: 2px solid rgba(255, 255, 255, 0.7);
-    box-shadow: 2px 5px 10px rgba(0,0,0,0.1), inset 1px 1px 4px rgba(255,255,255,0.7); color: rgba(255, 255, 255, 0.95); transition: 0.3s; overflow: hidden;
+    box-shadow: 2px 5px 10px rgba(0,0,0,0.1), inset 1px 1px 4px rgba(255,255,255,0.7); transition: 0.3s; overflow: hidden; position: relative;
 }
+
 .glass-nav-btn::after { content: ''; position: absolute; top: 0; left: 0; width: 100%; height: 100%; background: linear-gradient(135deg, rgba(255,255,255,0.7) 0%, transparent 40%); pointer-events: none; }
 .glass-nav-btn svg { color: #dfbb6c !important; stroke-width: 2.5px; filter: drop-shadow(0px 1px 3px rgba(223, 187, 108, 0.6)); position: relative; z-index: 1; }
-.nav-label { font-size: 10px; font-weight: 700; color: rgba(0, 0, 0, 0.6); text-transform: uppercase; letter-spacing: 1px; }
-.glass-nav-item:hover .glass-nav-btn { background: rgba(255, 255, 255, 0.4); transform: translateY(-3px); color: #dfbb6c; box-shadow: 5px 10px 15px rgba(0,0,0,0.15), inset 1px 1px 4px rgba(255,255,255,1); }
-.glass-nav-item:hover .nav-label { color: #dfbb6c; }
+.nav-label { font-size: 10px; font-weight: 800; color: rgba(20, 30, 40, 0.7); text-transform: uppercase; letter-spacing: 1px; }
+
+.glass-nav-item:hover .glass-nav-btn { background: rgba(255, 255, 255, 0.3); transform: translateY(-3px); box-shadow: 5px 10px 15px rgba(0,0,0,0.15), inset 1px 1px 4px rgba(255,255,255,1); }
+.glass-nav-item:hover .glass-nav-btn svg { color: #cca450 !important; filter: drop-shadow(0px 1px 2px rgba(0, 0, 0, 0.2)); }
+.glass-nav-item:hover .nav-label { color: #cca450; }
 .glass-nav-item:active { transform: scale(0.9); }
