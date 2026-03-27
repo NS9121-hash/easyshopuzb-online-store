@@ -8,41 +8,44 @@ body {
 
 .app-container { width: 100%; min-height: 100vh; display: flex; flex-direction: column; padding: 20px; }
 
-.header { text-align: center; margin: 20px 0; }
-.glass-text { font-size: 36px; font-weight: 900; color: #fff; text-shadow: 0 5px 15px rgba(0,0,0,0.2); }
+.header { text-align: center; margin-top: 30px; }
+.glass-text { font-size: 34px; font-weight: 900; color: #fff; text-shadow: 0 4px 10px rgba(0,0,0,0.3); }
 .gold-text { color: #eab351; }
-.subtitle { font-size: 10px; letter-spacing: 4px; color: #1a8b9d; font-weight: bold; }
+.subtitle { font-size: 10px; letter-spacing: 4px; color: #1a8b9d; font-weight: 800; }
 
 .main-content { flex: 1; display: flex; justify-content: center; align-items: center; }
 
-/* RAMKA - O'lchami to'g'rilandi */
+/* RAMKA ICHIDAGI VIDEO FON */
 .welcome-glass-card {
-    width: 100%; max-width: 380px; height: 420px;
+    width: 100%; max-width: 380px; height: 450px;
     background: rgba(255, 255, 255, 0.1);
     backdrop-filter: blur(10px);
-    border-radius: 40px; border: 1px solid rgba(255,255,255,0.3);
+    border-radius: 40px; 
+    border: 1.5px solid rgba(255, 255, 255, 0.4);
     position: relative; overflow: hidden;
-    display: flex; flex-direction: column; justify-content: center; align-items: center;
-    box-shadow: 0 20px 40px rgba(0,0,0,0.1);
+    display: flex; justify-content: center; align-items: center;
+    box-shadow: 0 20px 40px rgba(0,0,0,0.2);
 }
 
-.hidden { opacity: 0; }
-.fade-in { opacity: 1; transition: opacity 1.5s; }
-
-.webgl-canvas-container { position: absolute; top: 0; left: 0; width: 100%; height: 100%; z-index: 0; }
+.background-video {
+    position: absolute;
+    top: 0; left: 0; width: 100%; height: 100%;
+    object-fit: cover; /* Video ramkani to'liq qoplaydi */
+    z-index: 1;
+    opacity: 0.6; /* Suv tiniqroq ko'rinishi uchun */
+}
 
 .welcome-text-content { position: relative; z-index: 10; text-align: center; pointer-events: none; }
-.welcome-gold { font-size: 32px; font-weight: 900; color: #eab351; text-shadow: 0 2px 10px rgba(0,0,0,0.3); }
-.welcome-heading { font-size: 14px; color: #fff; line-height: 1.8; margin-top: 10px; }
+.welcome-gold { font-size: 30px; font-weight: 900; color: #eab351; text-shadow: 0 2px 8px rgba(0,0,0,0.6); }
+.welcome-heading { font-size: 14px; color: #fff; font-weight: 700; line-height: 1.6; margin-top: 15px; text-shadow: 0 2px 5px rgba(0,0,0,0.5); }
 
-/* NAVIGATSIYA - Ikonkalar uchun */
 .bottom-nav-wrapper { position: fixed; bottom: 30px; left: 50%; transform: translateX(-50%); width: 90%; max-width: 450px; }
 .glass-bottom-nav { 
-    display: flex; justify-content: space-around; padding: 15px; 
-    background: rgba(255,255,255,0.2); backdrop-filter: blur(15px);
-    border-radius: 30px; border: 1px solid rgba(255,255,255,0.3);
+    display: flex; justify-content: space-around; padding: 12px; 
+    background: rgba(255, 255, 255, 0.25); backdrop-filter: blur(20px);
+    border-radius: 35px; border: 1px solid rgba(255, 255, 255, 0.4);
 }
 
-.glass-nav-item { text-decoration: none; display: flex; flex-direction: column; align-items: center; gap: 5px; }
-.glass-nav-btn { width: 45px; height: 45px; display: flex; justify-content: center; align-items: center; background: rgba(255,255,255,0.1); border-radius: 50%; }
-.nav-label { font-size: 10px; font-weight: bold; color: #1a8b9d; }
+.glass-nav-item { display: flex; flex-direction: column; align-items: center; gap: 6px; }
+.glass-nav-btn { width: 48px; height: 48px; display: flex; justify-content: center; align-items: center; background: rgba(255, 255, 255, 0.15); border-radius: 50%; border: 1px solid rgba(255,255,255,0.2); }
+.nav-label { font-size: 10px; font-weight: 800; color: #1a8b9d; }
