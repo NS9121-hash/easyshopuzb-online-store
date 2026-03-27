@@ -10,28 +10,23 @@ body {
 .app-container { width: 100%; max-width: 1200px; min-height: 100vh; display: flex; flex-direction: column; padding: 20px 20px 140px 20px; position: relative; overflow: hidden; }
 
 /* --------------------------------------------------- */
-/* HEADER & SOF 3D MATNLAR (Chrome uchun optimallashtirilgan) */
+/* TEPADAGI MUZLAGAN MATNLAR (FROZEN TEXT) */
 /* --------------------------------------------------- */
 .header { text-align: center; margin-top: 10px; padding-top: env(safe-area-inset-top); z-index: 10; }
 
 .glass-text { 
     font-size: clamp(32px, 6vw, 54px); font-weight: 900; letter-spacing: 2px; 
-    color: #1a8b9d; /* Ochiq firuza */
-    /* Qatlamli 3D soya - Chrome'da qoraymaydi, tiniq chiqadi */
-    text-shadow: 
-        0 1px 0 #136a78, 
-        0 2px 0 #0e505a, 
-        0 4px 5px rgba(0,0,0,0.2),
-        -1px -1px 0 rgba(255,255,255,0.8);
+    /* Muzlagan billur gradienti */
+    background: linear-gradient(135deg, #ffffff 0%, #dcf4f2 40%, #1a8b9d 100%);
+    -webkit-background-clip: text; -webkit-text-fill-color: transparent;
+    text-shadow: -1px -1px 1px rgba(255,255,255,0.9), 1px 2px 2px rgba(0,0,0,0.3);
 }
 
 .gold-text { 
-    color: #eab351; /* Yorqin tillarang */
-    text-shadow: 
-        0 1px 0 #c6943b, 
-        0 2px 0 #a97b2b, 
-        0 4px 5px rgba(0,0,0,0.2),
-        -1px -1px 0 rgba(255,255,255,0.8);
+    /* Muzlagan tillarang */
+    background: linear-gradient(135deg, #ffffff 0%, #fff3c4 30%, #eab351 100%);
+    -webkit-background-clip: text; -webkit-text-fill-color: transparent;
+    text-shadow: -1px -1px 1px rgba(255,255,255,0.9), 1px 2px 2px rgba(80,50,0,0.4);
 }
 
 .subtitle { font-size: 10px; letter-spacing: 4px; color: #1a8b9d; font-weight: 800; margin-top: 5px; opacity: 0.9; }
@@ -39,51 +34,48 @@ body {
 .main-content { flex: 1; display: flex; justify-content: center; align-items: center; }
 
 /* --------------------------------------------------- */
-/* TINIQ BILLUR KARTA (Tuman effekti yo'q qilindi) */
+/* TINIQ RAMKA (Blur butunlay yo'q, faqat cheti qoldi) */
 /* --------------------------------------------------- */
 .welcome-glass-card {
-    /* Fonni shaffoflashtirdik (0.05) sut rangiga kirmasligi uchun */
-    background: rgba(255, 255, 255, 0.05);
-    backdrop-filter: blur(10px) saturate(120%); 
-    -webkit-backdrop-filter: blur(10px) saturate(120%);
+    /* Orqa fon tamoman shaffof! Suv aniq ko'rinishi uchun */
+    background: transparent;
+    backdrop-filter: none; 
+    -webkit-backdrop-filter: none;
     
-    border-radius: 35px; padding: 50px 20px; text-align: center;
+    border-radius: 40px; padding: 50px 20px; text-align: center;
     
-    /* Oynaning yaltiroq, qattiq chetlari */
-    border: 1px solid rgba(255, 255, 255, 0.2);
-    border-top: 1.5px solid rgba(255, 255, 255, 0.8);
-    border-left: 1.5px solid rgba(255, 255, 255, 0.5);
-    box-shadow: 0 15px 35px rgba(0, 0, 0, 0.1), inset 0 0 10px rgba(255,255,255,0.2);
+    /* Shisha idish kabi o'tkir chetlar */
+    border: 1px solid rgba(255, 255, 255, 0.4);
+    border-top: 2px solid rgba(255, 255, 255, 1);
+    border-left: 2px solid rgba(255, 255, 255, 0.8);
+    box-shadow: 0 20px 40px rgba(0, 0, 0, 0.3), inset 0 0 15px rgba(255,255,255,0.4);
     
     position: relative; overflow: hidden; width: 100%; max-width: 500px;
 }
 
-/* Oyna yuzasidagi yaltirash (Oqartirib yubormasligi uchun nozik qilindi) */
-.welcome-glass-card::before {
-    content: ''; position: absolute; top: 0; left: 0; width: 100%; height: 100%;
-    background: linear-gradient(110deg, rgba(255,255,255,0.3) 0%, transparent 25%);
-    pointer-events: none; z-index: 1;
+/* SUV KONTEYNERI (Karta ichida) */
+.webgl-canvas-container {
+    position: absolute; top: 0; left: 0; width: 100%; height: 100%; z-index: 0;
+    border-radius: inherit; overflow: hidden; /* Suv ramkadan chiqib ketmaydi */
 }
 
-.welcome-text-content { position: relative; z-index: 10; }
+/* Yozuvlar suv ustida ko'rinishi uchun */
+.welcome-text-content { position: relative; z-index: 10; pointer-events: none; }
 
-/* Katta Oltin Matn (3D, Chrome'da buzilmaydi) */
+/* SUV USTIDAGI MUZLAGAN MATN */
 .welcome-gold { 
     display: block; font-size: clamp(32px, 9vw, 42px); font-weight: 900;
     margin-bottom: 20px; letter-spacing: 2px; 
-    color: #eab351;
-    text-shadow: 
-        0 1px 0 #c6943b, 
-        0 2px 0 #a97b2b, 
-        0 3px 0 #8b631f,
-        0 6px 8px rgba(0,0,0,0.25),
-        -1px -1px 0 rgba(255,255,255,0.7);
+    background: linear-gradient(135deg, #ffffff 0%, #ffdf91 40%, #c6943b 100%);
+    -webkit-background-clip: text; -webkit-text-fill-color: transparent;
+    text-shadow: -1px -1px 2px rgba(255,255,255,1), 2px 4px 6px rgba(0,0,0,0.5);
 }
 
 .welcome-heading { 
     font-size: clamp(16px, 4.5vw, 22px); font-weight: 800; line-height: 1.6; 
-    color: rgba(255, 255, 255, 0.95);
-    text-shadow: 1px 1px 3px rgba(0,0,0,0.3);
+    background: linear-gradient(135deg, #ffffff 0%, #e0f2f1 50%, #80cbc4 100%);
+    -webkit-background-clip: text; -webkit-text-fill-color: transparent;
+    text-shadow: 1px 2px 4px rgba(0,0,0,0.6);
 }
 
 /* --------------------------------------------------- */
@@ -114,18 +106,10 @@ body {
     box-shadow: 2px 5px 10px rgba(0,0,0,0.05), inset 1px 1px 4px rgba(255,255,255,0.5); transition: 0.3s; overflow: hidden; position: relative;
 }
 
-.glass-nav-btn svg { 
-    color: #eab351 !important; 
-    stroke-width: 2.5px; filter: drop-shadow(0px 1px 2px rgba(0,0,0,0.2)); position: relative; z-index: 1; 
-}
+.glass-nav-btn svg { color: #eab351 !important; stroke-width: 2.5px; filter: drop-shadow(0px 1px 2px rgba(0,0,0,0.2)); position: relative; z-index: 1; transition: 0.3s; }
+.nav-label { font-size: 10px; font-weight: 800; color: #1a8b9d; text-transform: uppercase; letter-spacing: 1px; transition: 0.3s; }
 
-.nav-label { 
-    font-size: 10px; font-weight: 800; 
-    color: #1a8b9d; 
-    text-transform: uppercase; letter-spacing: 1px; 
-}
-
-.glass-nav-item:hover .glass-nav-btn { background: rgba(255, 255, 255, 0.3); transform: translateY(-3px); }
-.glass-nav-item:hover .glass-nav-btn svg { color: #fff !important; }
+.glass-nav-item:hover .glass-nav-btn { background: rgba(255, 255, 255, 0.3); transform: translateY(-5px); box-shadow: 0 8px 15px rgba(0,0,0,0.2); }
+.glass-nav-item:hover .glass-nav-btn svg { color: #fff !important; transform: scale(1.1); }
 .glass-nav-item:hover .nav-label { color: #eab351; }
 .glass-nav-item:active { transform: scale(0.9); }
