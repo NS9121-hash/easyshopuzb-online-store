@@ -1,18 +1,99 @@
+"use client";
+import { useEffect, useRef } from "react";
 import Link from "next/link";
 
 export default function Home() {
+  const mountRef = useRef<HTMLDivElement>(null);
+
+  useEffect(() => {
+    let isMounted = true;
+    
+    // Three.js ni brauzerda yuklash
+    import("three").then(async (THREE) => {
+      if (!isMounted) return;
+      const { Water } = await import("three/examples/jsm/objects/Water.js");
+
+      if (!mountRef.current) return;
+
+      const scene = new THREE.Scene();
+      const camera = new THREE.PerspectiveCamera(55, mountRef.current.clientWidth / mountRef.current.clientHeight, 1, 2000);
+      camera.position.set(0, 15, 50); // Suvga teparoqdan qarash
+
+      // Fonni butunlay shaffof qilish (alpha: true)
+      const renderer = new THREE.WebGLRenderer({ antialias: true, alpha: true });
+      renderer.setPixelRatio(window.devicePixelRatio);
+      renderer.setSize(mountRef.current.clientWidth, mountRef.current.clientHeight);
+      mountRef.current.appendChild(renderer.domElement);
+
+      const sun = new THREE.Vector3(0, 10, 0);
+      const waterGeometry = new THREE.PlaneGeometry(500, 500);
+      
+      // Suvning to'lqin teksturasi (tayyor onlayn rasm)
+      const textureLoader = new THREE.TextureLoader();
+      textureLoader.crossOrigin = 'Anonymous';
+      const waterNormals = textureLoader.load(
+        'https://raw.githubusercontent.com/mrdoob/three.js/master/examples/textures/waternormals.jpg',
+        function (texture) {
+          texture.wrapS = texture.wrapT = THREE.RepeatWrapping;
+        }
+      );
+
+      const water = new Water(waterGeometry, {
+        textureWidth: 512,
+        textureHeight: 512,
+        waterNormals: waterNormals,
+        sunDirection: sun,
+        sunColor: 0xffffff,
+        waterColor: 0x125b65, // Saytga mos firuza suyuqlik
+        distortionScale: 3.7,
+        fog: scene.fog !== undefined
+      });
+
+      water.rotation.x = -Math.PI / 2;
+      scene.add(water);
+
+      const animate = () => {
+        requestAnimationFrame(animate);
+        water.material.uniforms['time'].value += 1.0 / 60.0; // To'lqinlanish tezligi
+        renderer.render(scene, camera);
+      };
+      animate();
+
+      const handleResize = () => {
+        if (!mountRef.current) return;
+        camera.aspect = mountRef.current.clientWidth / mountRef.current.clientHeight;
+        camera.updateProjectionMatrix();
+        renderer.setSize(mountRef.current.clientWidth, mountRef.current.clientHeight);
+      };
+      window.addEventListener("resize", handleResize);
+
+      return () => {
+        window.removeEventListener("resize", handleResize);
+        if (mountRef.current && renderer.domElement) {
+            mountRef.current.removeChild(renderer.domElement);
+        }
+        renderer.dispose();
+      };
+    });
+    
+    return () => { isMounted = false; };
+  }, []);
+
   return (
     <div className="app-container">
       
-      {/* 1. HEADER (Deep Cyan va Gold combination) */}
       <header className="header">
         <h1 className="glass-text">EASYSHOP_<span className="gold-text">UZB</span></h1>
         <p className="subtitle">OSON ONLINE XARID</p>
       </header>
 
-      {/* 2. MAIN CONTENT (Yumshoq, tiniq "Liquid Pool" Billur Panel) */}
       <main className="main-content">
         <div className="welcome-glass-card">
+          
+          {/* JONLI SUV KONTEYNERI */}
+          <div ref={mountRef} className="webgl-canvas-container"></div>
+
+          {/* SUV USTIDAGI MUZLAGAN MATNLAR */}
           <div className="welcome-text-content">
             <h2 className="welcome-heading">
               <span className="welcome-gold">ASSALOMU ALEYKUM</span>
@@ -23,7 +104,7 @@ export default function Home() {
         </div>
       </main>
 
-      {/* 3. PASTKI NAVIGATSIYA (Shaffof Billur Pufakchalar va Tillarang Metall) */}
+      {/* PASTKI NAVIGATSIYA */}
       <div className="bottom-nav-wrapper">
         <nav className="glass-bottom-nav">
           <Link href="/products" className="glass-nav-item">
