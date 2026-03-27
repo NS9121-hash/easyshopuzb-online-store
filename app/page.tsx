@@ -8,148 +8,119 @@ export default function Home() {
 
   useEffect(() => {
     let isMounted = true;
-    let renderer: any = null;
-    let mountNode = mountRef.current;
+    let renderer: any;
+    let frameId: any;
 
-    if (!mountNode) return;
+    const init3D = async () => {
+      // Kutubxonalarni dinamik yuklash
+      const THREE = await import("three");
+      const { Water } = await import("three-stdlib");
 
-    // 1. Kutubxonalarni faqat brauzerda yuklash (Vercel ERROR bermasligi uchun kafolat!)
-    Promise.all([
-      import("three"),
-      import("three-stdlib")
-    ]).then(([THREE, { Water }]) => {
-      if (!isMounted) return;
+      if (!isMounted || !mountRef.current) return;
 
-      const width = mountNode!.clientWidth;
-      const height = mountNode!.clientHeight;
+      const width = mountRef.current.clientWidth;
+      const height = mountRef.current.clientHeight;
 
-      // 2. SAHNA VA KAMERA (Kamera to'g'ridan-to'g'ri idishga qaraydi)
       const scene = new THREE.Scene();
+      
+      // Kamera aynan ramka markaziga qaraydi
       const camera = new THREE.PerspectiveCamera(55, width / height, 1, 1000);
-      camera.position.set(0, 0, height / 1.2); // Dengiz emas, idish effektini beradi
+      camera.position.set(0, 0, 350); 
 
       renderer = new THREE.WebGLRenderer({ antialias: true, alpha: true });
-      renderer.setPixelRatio(window.devicePixelRatio);
       renderer.setSize(width, height);
-      mountNode!.appendChild(renderer.domElement);
+      renderer.setPixelRatio(window.devicePixelRatio);
+      mountRef.current.appendChild(renderer.domElement);
 
-      const ambientLight = new THREE.AmbientLight(0xffffff, 1);
-      scene.add(ambientLight);
-
-      // 3. IDISH ICHIDAGI SUV (Tekislik aynan ramka o'lchamida qirqiladi)
+      // Suv tekisligi ramka o'lchamida
       const waterGeometry = new THREE.PlaneGeometry(width * 1.5, height * 1.5);
       
-      const textureLoader = new THREE.TextureLoader();
-      textureLoader.crossOrigin = 'Anonymous';
-      const waterNormals = textureLoader.load(
-          'https://raw.githubusercontent.com/mrdoob/three.js/master/examples/textures/waternormals.jpg',
-          (texture) => { texture.wrapS = texture.wrapT = THREE.RepeatWrapping; }
-      );
-
       const water = new Water(waterGeometry, {
         textureWidth: 512,
         textureHeight: 512,
-        waterNormals: waterNormals,
+        waterNormals: new THREE.TextureLoader().load(
+          'https://raw.githubusercontent.com/mrdoob/three.js/master/examples/textures/waternormals.jpg',
+          (t) => { t.wrapS = t.wrapT = THREE.RepeatWrapping; }
+        ),
         sunDirection: new THREE.Vector3(0, 0, 1),
         sunColor: 0xffffff,
-        waterColor: 0x1a8b9d, // Tiniq firuza suv
-        distortionScale: 6.0, // To'lqinlar oynaga urilayotgandek bo'lishi uchun
+        waterColor: 0x0077be, // Tiniq ko'k suv
+        distortionScale: 5.0,
       });
 
-      // Diqqat: Suvni yotqizmadik (rotation qilinmadi), shuning uchun u dengiz emas, devor (idish ichi) bo'lib turadi.
       scene.add(water);
 
-      // 4. JONLANTIRISH
-      function animate() {
+      const animate = () => {
         if (!isMounted) return;
-        requestAnimationFrame(animate);
-        if (water) {
-          (water.material as any).uniforms['time'].value += 1.0 / 60.0;
-        }
-        if (renderer) {
-          renderer.render(scene, camera);
-        }
-      }
+        water.material.uniforms['time'].value += 1.0 / 60.0;
+        renderer.render(scene, camera);
+        frameId = requestAnimationFrame(animate);
+      };
+      
       animate();
       setIsReady(true);
+    };
 
-      // 5. O'LCHAM O'ZGARGANDA MOSLASH
-      const handleResize = () => {
-        if (!mountNode || !renderer || !camera) return;
-        const newW = mountNode.clientWidth;
-        const newH = mountNode.clientHeight;
-        camera.aspect = newW / newH;
-        camera.position.set(0, 0, newH / 1.2);
-        camera.updateProjectionMatrix();
-        renderer.setSize(newW, newH);
-      };
-      window.addEventListener("resize", handleResize);
-    }).catch(err => console.error("3D Yuklashda xato:", err));
+    init3D();
 
     return () => {
       isMounted = false;
-      if (mountNode && renderer) {
-        mountNode.removeChild(renderer.domElement);
+      cancelAnimationFrame(frameId);
+      if (renderer) {
+        renderer.dispose();
       }
-      renderer?.dispose();
     };
   }, []);
 
   return (
-    <div className="app-container">
+    <div className="app-container" style={{ minHeight: "100vh", position: "relative", overflow: "hidden" }}>
       
-      <header className="header">
-        <h1 className="glass-text">EASYSHOP_<span className="gold-text">UZB</span></h1>
-        <p className="subtitle">OSON ONLINE XARID</p>
+      <header className="header" style={{ textAlign: "center", paddingTop: "50px", position: "relative", zIndex: 10 }}>
+        <h1 className="glass-text" style={{ fontSize: "42px", fontWeight: "900" }}>EASYSHOP_<span style={{ color: "#eab351" }}>UZB</span></h1>
+        <p style={{ letterSpacing: "5px", color: "rgba(0,0,0,0.5)", fontSize: "12px" }}>OSON ONLINE XARID</p>
       </header>
 
-      <main className="main-content">
-        <div className="welcome-glass-card">
+      <main style={{ display: "flex", justifyContent: "center", alignItems: "center", paddingTop: "40px" }}>
+        <div className="welcome-glass-card" style={{
+          width: "90%", maxWidth: "400px", height: "450px",
+          borderRadius: "40px", border: "1px solid rgba(255,255,255,0.4)",
+          position: "relative", overflow: "hidden",
+          background: "rgba(255, 255, 255, 0.1)", // Qora rang olib tashlandi
+          boxShadow: "0 25px 50px rgba(0,0,0,0.15)",
+          backdropFilter: "blur(5px)"
+        }}>
           
-          {/* TINIQ SUV IDISHI */}
-          <div ref={mountRef} className="webgl-canvas-container" style={{ opacity: isReady ? 1 : 0, transition: "opacity 1.5s ease-in-out" }}></div>
+          {/* JONLI SUV (Faqat yuklanganda ko'rinadi) */}
+          <div ref={mountRef} style={{
+            position: "absolute", top: 0, left: 0, width: "100%", height: "100%",
+            zIndex: 0, opacity: isReady ? 1 : 0, transition: "opacity 2s"
+          }} />
 
-          {/* MUZLAGAN TILLARANG MATNLAR */}
-          <div className="welcome-text-content">
-            <h2 className="welcome-heading">
-              <span className="welcome-gold">ASSALOMU ALEYKUM</span>
-              <br />
-              ONLAYN DO'KONIMIZGA XUSH KELIBSIZ!
+          {/* MATNLAR */}
+          <div style={{ position: "relative", zIndex: 1, textAlign: "center", paddingTop: "140px", pointerEvents: "none" }}>
+            <h2 style={{ fontSize: "36px", fontWeight: "900", color: "#fff", textShadow: "0 4px 10px rgba(0,0,0,0.3)" }}>
+              ASSALOMU <br/> ALEYKUM
             </h2>
+            <p style={{ fontSize: "14px", marginTop: "40px", color: "rgba(255,255,255,0.8)", fontWeight: "600" }}>
+              ONLAYN DO'KONIMIZGA XUSH KELIBSIZ!
+            </p>
           </div>
         </div>
       </main>
 
+      {/* NAVIGATSIYA */}
       <div className="bottom-nav-wrapper">
-        <nav className="glass-bottom-nav">
-          <Link href="/products" className="glass-nav-item">
-            <div className="glass-nav-btn">
-              <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><path d="M20.38 3.46L16 2a4 4 0 01-8 0L3.62 3.46a2 2 0 00-1.34 2.23l.58 3.47a1 1 0 00.99.84H6v10c0 1.1.9 2 2 2h8a2 2 0 002-2V10h2.15a1 1 0 00.99-.84l.58-3.47a2 2 0 00-1.34-2.23z"/></svg>
-            </div>
-            <span className="nav-label">Kiyimlar</span>
-          </Link>
-          
-          <Link href="/cart" className="glass-nav-item">
-            <div className="glass-nav-btn">
-              <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><circle cx="8" cy="21" r="1"/><circle cx="19" cy="21" r="1"/><path d="M2.05 2.05h2l2.66 12.42a2 2 0 002 1.58h9.78a2 2 0 001.95-1.57l1.65-7.43H5.12"/></svg>
-            </div>
-            <span className="nav-label">Savat</span>
-          </Link>
-          
-          <Link href="/ai-stylist" className="glass-nav-item">
-            <div className="glass-nav-btn">
-              <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><path d="M12 3l1.91 5.81L20 10.75l-6.09 1.94L12 18.5l-1.91-5.81L4 10.75l6.09-1.94z"/><path d="M5 3l1 2 2 1-2 1-1 2-1-2-2-1 2-1z"/><path d="M19 17l1 2 2 1-2 1-1 2-1-2-2-1 2-1z"/></svg>
-            </div>
-            <span className="nav-label">AI</span>
-          </Link>
-          
-          <Link href="/profile" className="glass-nav-item">
-            <div className="glass-nav-btn">
-              <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><path d="M19 21v-2a4 4 0 00-4-4H9a4 4 0 00-4 4v2"/><circle cx="12" cy="7" r="4"/></svg>
-            </div>
-            <span className="nav-label">Profil</span>
-          </Link>
-        </nav>
+         <div style={{
+           display: "flex", justifyContent: "space-around", padding: "15px",
+           background: "rgba(255,255,255,0.2)", backdropFilter: "blur(15px)",
+           borderRadius: "30px", border: "1px solid rgba(255,255,255,0.3)",
+           margin: "0 20px"
+         }}>
+           <span style={{ color: "#1a8b9d", fontWeight: "800" }}>KIYIMLAR</span>
+           <span style={{ color: "#1a8b9d", fontWeight: "800" }}>SAVAT</span>
+           <span style={{ color: "#1a8b9d", fontWeight: "800" }}>AI</span>
+           <span style={{ color: "#1a8b9d", fontWeight: "800" }}>PROFIL</span>
+         </div>
       </div>
 
     </div>
