@@ -1,8 +1,6 @@
 "use client";
 import { useEffect, useRef, useState } from "react";
 import Link from "next/link";
-import * as THREE from "three";
-import { Water } from "three-stdlib";
 
 export default function Home() {
   const mountRef = useRef<HTMLDivElement>(null);
@@ -10,86 +8,86 @@ export default function Home() {
 
   useEffect(() => {
     let isMounted = true;
-    let water: Water | null = null;
-    let renderer: THREE.WebGLRenderer | null = null;
+    let renderer: any = null;
     let mountNode = mountRef.current;
 
     if (!mountNode) return;
 
-    // --- 1. SAHNA VA KAMERA SOZLAMALARI ---
-    const scene = new THREE.Scene();
-    const camera = new THREE.PerspectiveCamera(55, mountNode.clientWidth / mountNode.clientHeight, 1, 20000);
-    camera.position.set(0, 5, 25); // Suvni tomosha qilish uchun optimal burchak
-
-    // Fonni butunlay shaffof qilish (alpha: true)
-    renderer = new THREE.WebGLRenderer({ antialias: true, alpha: true });
-    renderer.setPixelRatio(window.devicePixelRatio);
-    renderer.setSize(mountNode.clientWidth, mountNode.clientHeight);
-    mountNode.appendChild(renderer.domElement);
-
-    // --- 2. YORUG'LIK VA QUVVAT ---
-    const ambientLight = new THREE.AmbientLight(0xffffff, 0.9);
-    scene.add(ambientLight);
-
-    const directionalLight = new THREE.Vector3(0, 10, 0); // Suvga tushadigan nur
-    
-    // --- 3. SUV YUZASI VA TO'LQINLAR ---
-    const waterGeometry = new THREE.PlaneGeometry(1000, 1000);
-    
-    // To'lqin shaklini (texture) internetdan ishonchli yuklab olish
-    const textureLoader = new THREE.TextureLoader();
-    textureLoader.crossOrigin = 'Anonymous';
-    const waterNormals = textureLoader.load(
-        'https://raw.githubusercontent.com/mrdoob/three.js/master/examples/textures/waternormals.jpg',
-        (texture) => { texture.wrapS = texture.wrapT = THREE.RepeatWrapping; }
-    );
-
-    const waterOptions = {
-      textureWidth: 512,
-      textureHeight: 512,
-      waterNormals: waterNormals,
-      sunDirection: directionalLight,
-      sunColor: 0xffffff,
-      waterColor: 0x1a8b9d, // Sayt uslubidagi firuza rang
-      distortionScale: 3.7, // To'lqinlanish kuchi
-      fog: scene.fog !== undefined
-    };
-
-    water = new Water(waterGeometry, waterOptions);
-    water.rotation.x = -Math.PI / 2; // Suv yotishi (gorizontal)
-    scene.add(water);
-
-    // --- 4. ANIMATSIYA DASTURI ---
-    function animate() {
+    // 1. Kutubxonalarni faqat brauzerda yuklash (Vercel ERROR bermasligi uchun kafolat!)
+    Promise.all([
+      import("three"),
+      import("three-stdlib")
+    ]).then(([THREE, { Water }]) => {
       if (!isMounted) return;
-      requestAnimationFrame(animate);
+
+      const width = mountNode!.clientWidth;
+      const height = mountNode!.clientHeight;
+
+      // 2. SAHNA VA KAMERA (Kamera to'g'ridan-to'g'ri idishga qaraydi)
+      const scene = new THREE.Scene();
+      const camera = new THREE.PerspectiveCamera(55, width / height, 1, 1000);
+      camera.position.set(0, 0, height / 1.2); // Dengiz emas, idish effektini beradi
+
+      renderer = new THREE.WebGLRenderer({ antialias: true, alpha: true });
+      renderer.setPixelRatio(window.devicePixelRatio);
+      renderer.setSize(width, height);
+      mountNode!.appendChild(renderer.domElement);
+
+      const ambientLight = new THREE.AmbientLight(0xffffff, 1);
+      scene.add(ambientLight);
+
+      // 3. IDISH ICHIDAGI SUV (Tekislik aynan ramka o'lchamida qirqiladi)
+      const waterGeometry = new THREE.PlaneGeometry(width * 1.5, height * 1.5);
       
-      if (water) {
-        // Suvning to'lqinlanishi tezligi
-        (water.material as any).uniforms['time'].value += 1.0 / 60.0;
+      const textureLoader = new THREE.TextureLoader();
+      textureLoader.crossOrigin = 'Anonymous';
+      const waterNormals = textureLoader.load(
+          'https://raw.githubusercontent.com/mrdoob/three.js/master/examples/textures/waternormals.jpg',
+          (texture) => { texture.wrapS = texture.wrapT = THREE.RepeatWrapping; }
+      );
+
+      const water = new Water(waterGeometry, {
+        textureWidth: 512,
+        textureHeight: 512,
+        waterNormals: waterNormals,
+        sunDirection: new THREE.Vector3(0, 0, 1),
+        sunColor: 0xffffff,
+        waterColor: 0x1a8b9d, // Tiniq firuza suv
+        distortionScale: 6.0, // To'lqinlar oynaga urilayotgandek bo'lishi uchun
+      });
+
+      // Diqqat: Suvni yotqizmadik (rotation qilinmadi), shuning uchun u dengiz emas, devor (idish ichi) bo'lib turadi.
+      scene.add(water);
+
+      // 4. JONLANTIRISH
+      function animate() {
+        if (!isMounted) return;
+        requestAnimationFrame(animate);
+        if (water) {
+          (water.material as any).uniforms['time'].value += 1.0 / 60.0;
+        }
+        if (renderer) {
+          renderer.render(scene, camera);
+        }
       }
-      
-      if (renderer) {
-        renderer.render(scene, camera);
-      }
-    }
-    animate();
+      animate();
+      setIsReady(true);
 
-    setIsReady(true); // Suv tayyor bo'lgach ko'rsatish
+      // 5. O'LCHAM O'ZGARGANDA MOSLASH
+      const handleResize = () => {
+        if (!mountNode || !renderer || !camera) return;
+        const newW = mountNode.clientWidth;
+        const newH = mountNode.clientHeight;
+        camera.aspect = newW / newH;
+        camera.position.set(0, 0, newH / 1.2);
+        camera.updateProjectionMatrix();
+        renderer.setSize(newW, newH);
+      };
+      window.addEventListener("resize", handleResize);
+    }).catch(err => console.error("3D Yuklashda xato:", err));
 
-    // --- 5. OYNA O'ZGARSA MOSLASH ---
-    const handleResize = () => {
-      if (!mountNode || !renderer || !camera) return;
-      camera.aspect = mountNode.clientWidth / mountNode.clientHeight;
-      camera.updateProjectionMatrix();
-      renderer.setSize(mountNode.clientWidth, mountNode.clientHeight);
-    };
-    window.addEventListener("resize", handleResize);
-
-    // --- TOZALASH (Xato bermasligi uchun) ---
     return () => {
       isMounted = false;
-      window.removeEventListener("resize", handleResize);
       if (mountNode && renderer) {
         mountNode.removeChild(renderer.domElement);
       }
@@ -108,10 +106,10 @@ export default function Home() {
       <main className="main-content">
         <div className="welcome-glass-card">
           
-          {/* THREE.JS JONLI SUV KONTEYNERI */}
-          <div ref={mountRef} className="webgl-canvas-container" style={{ opacity: isReady ? 1 : 0, transition: "opacity 1s" }}></div>
+          {/* TINIQ SUV IDISHI */}
+          <div ref={mountRef} className="webgl-canvas-container" style={{ opacity: isReady ? 1 : 0, transition: "opacity 1.5s ease-in-out" }}></div>
 
-          {/* SUV USTIDAGI MUZLAGAN MATNLAR */}
+          {/* MUZLAGAN TILLARANG MATNLAR */}
           <div className="welcome-text-content">
             <h2 className="welcome-heading">
               <span className="welcome-gold">ASSALOMU ALEYKUM</span>
@@ -122,7 +120,6 @@ export default function Home() {
         </div>
       </main>
 
-      {/* PASTKI NAVIGATSIYA */}
       <div className="bottom-nav-wrapper">
         <nav className="glass-bottom-nav">
           <Link href="/products" className="glass-nav-item">
