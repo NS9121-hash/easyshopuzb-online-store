@@ -1,82 +1,100 @@
 "use client";
-import { useEffect, useRef } from "react";
+import { useEffect, useRef, useState } from "react";
 import Link from "next/link";
+import * as THREE from "three";
+import { Water } from "three-stdlib";
 
 export default function Home() {
   const mountRef = useRef<HTMLDivElement>(null);
+  const [isReady, setIsReady] = useState(false);
 
   useEffect(() => {
     let isMounted = true;
+    let water: Water | null = null;
+    let renderer: THREE.WebGLRenderer | null = null;
+    let mountNode = mountRef.current;
+
+    if (!mountNode) return;
+
+    // --- 1. SAHNA VA KAMERA SOZLAMALARI ---
+    const scene = new THREE.Scene();
+    const camera = new THREE.PerspectiveCamera(55, mountNode.clientWidth / mountNode.clientHeight, 1, 20000);
+    camera.position.set(0, 5, 25); // Suvni tomosha qilish uchun optimal burchak
+
+    // Fonni butunlay shaffof qilish (alpha: true)
+    renderer = new THREE.WebGLRenderer({ antialias: true, alpha: true });
+    renderer.setPixelRatio(window.devicePixelRatio);
+    renderer.setSize(mountNode.clientWidth, mountNode.clientHeight);
+    mountNode.appendChild(renderer.domElement);
+
+    // --- 2. YORUG'LIK VA QUVVAT ---
+    const ambientLight = new THREE.AmbientLight(0xffffff, 0.9);
+    scene.add(ambientLight);
+
+    const directionalLight = new THREE.Vector3(0, 10, 0); // Suvga tushadigan nur
     
-    // Three.js ni brauzerda yuklash
-    import("three").then(async (THREE) => {
-      if (!isMounted) return;
-      const { Water } = await import("three/examples/jsm/objects/Water.js");
-
-      if (!mountRef.current) return;
-
-      const scene = new THREE.Scene();
-      const camera = new THREE.PerspectiveCamera(55, mountRef.current.clientWidth / mountRef.current.clientHeight, 1, 2000);
-      camera.position.set(0, 15, 50); // Suvga teparoqdan qarash
-
-      // Fonni butunlay shaffof qilish (alpha: true)
-      const renderer = new THREE.WebGLRenderer({ antialias: true, alpha: true });
-      renderer.setPixelRatio(window.devicePixelRatio);
-      renderer.setSize(mountRef.current.clientWidth, mountRef.current.clientHeight);
-      mountRef.current.appendChild(renderer.domElement);
-
-      const sun = new THREE.Vector3(0, 10, 0);
-      const waterGeometry = new THREE.PlaneGeometry(500, 500);
-      
-      // Suvning to'lqin teksturasi (tayyor onlayn rasm)
-      const textureLoader = new THREE.TextureLoader();
-      textureLoader.crossOrigin = 'Anonymous';
-      const waterNormals = textureLoader.load(
+    // --- 3. SUV YUZASI VA TO'LQINLAR ---
+    const waterGeometry = new THREE.PlaneGeometry(1000, 1000);
+    
+    // To'lqin shaklini (texture) internetdan ishonchli yuklab olish
+    const textureLoader = new THREE.TextureLoader();
+    textureLoader.crossOrigin = 'Anonymous';
+    const waterNormals = textureLoader.load(
         'https://raw.githubusercontent.com/mrdoob/three.js/master/examples/textures/waternormals.jpg',
-        function (texture) {
-          texture.wrapS = texture.wrapT = THREE.RepeatWrapping;
-        }
-      );
+        (texture) => { texture.wrapS = texture.wrapT = THREE.RepeatWrapping; }
+    );
 
-      const water = new Water(waterGeometry, {
-        textureWidth: 512,
-        textureHeight: 512,
-        waterNormals: waterNormals,
-        sunDirection: sun,
-        sunColor: 0xffffff,
-        waterColor: 0x125b65, // Saytga mos firuza suyuqlik
-        distortionScale: 3.7,
-        fog: scene.fog !== undefined
-      });
+    const waterOptions = {
+      textureWidth: 512,
+      textureHeight: 512,
+      waterNormals: waterNormals,
+      sunDirection: directionalLight,
+      sunColor: 0xffffff,
+      waterColor: 0x1a8b9d, // Sayt uslubidagi firuza rang
+      distortionScale: 3.7, // To'lqinlanish kuchi
+      fog: scene.fog !== undefined
+    };
 
-      water.rotation.x = -Math.PI / 2;
-      scene.add(water);
+    water = new Water(waterGeometry, waterOptions);
+    water.rotation.x = -Math.PI / 2; // Suv yotishi (gorizontal)
+    scene.add(water);
 
-      const animate = () => {
-        requestAnimationFrame(animate);
-        water.material.uniforms['time'].value += 1.0 / 60.0; // To'lqinlanish tezligi
+    // --- 4. ANIMATSIYA DASTURI ---
+    function animate() {
+      if (!isMounted) return;
+      requestAnimationFrame(animate);
+      
+      if (water) {
+        // Suvning to'lqinlanishi tezligi
+        (water.material as any).uniforms['time'].value += 1.0 / 60.0;
+      }
+      
+      if (renderer) {
         renderer.render(scene, camera);
-      };
-      animate();
+      }
+    }
+    animate();
 
-      const handleResize = () => {
-        if (!mountRef.current) return;
-        camera.aspect = mountRef.current.clientWidth / mountRef.current.clientHeight;
-        camera.updateProjectionMatrix();
-        renderer.setSize(mountRef.current.clientWidth, mountRef.current.clientHeight);
-      };
-      window.addEventListener("resize", handleResize);
+    setIsReady(true); // Suv tayyor bo'lgach ko'rsatish
 
-      return () => {
-        window.removeEventListener("resize", handleResize);
-        if (mountRef.current && renderer.domElement) {
-            mountRef.current.removeChild(renderer.domElement);
-        }
-        renderer.dispose();
-      };
-    });
-    
-    return () => { isMounted = false; };
+    // --- 5. OYNA O'ZGARSA MOSLASH ---
+    const handleResize = () => {
+      if (!mountNode || !renderer || !camera) return;
+      camera.aspect = mountNode.clientWidth / mountNode.clientHeight;
+      camera.updateProjectionMatrix();
+      renderer.setSize(mountNode.clientWidth, mountNode.clientHeight);
+    };
+    window.addEventListener("resize", handleResize);
+
+    // --- TOZALASH (Xato bermasligi uchun) ---
+    return () => {
+      isMounted = false;
+      window.removeEventListener("resize", handleResize);
+      if (mountNode && renderer) {
+        mountNode.removeChild(renderer.domElement);
+      }
+      renderer?.dispose();
+    };
   }, []);
 
   return (
@@ -90,8 +108,8 @@ export default function Home() {
       <main className="main-content">
         <div className="welcome-glass-card">
           
-          {/* JONLI SUV KONTEYNERI */}
-          <div ref={mountRef} className="webgl-canvas-container"></div>
+          {/* THREE.JS JONLI SUV KONTEYNERI */}
+          <div ref={mountRef} className="webgl-canvas-container" style={{ opacity: isReady ? 1 : 0, transition: "opacity 1s" }}></div>
 
           {/* SUV USTIDAGI MUZLAGAN MATNLAR */}
           <div className="welcome-text-content">
