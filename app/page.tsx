@@ -13,7 +13,7 @@ export default function Home() {
       <main className="main-content">
         <div className="welcome-glass-card">
           
-          {/* 🌊 FAQAT RAMKA ICHIDA HARAKATLANADIGAN VIDEO */}
+          {/* 🌊 SIZ YUKLAGAN MAXSUS VIDEO */}
           <video 
             autoPlay 
             loop 
@@ -21,8 +21,8 @@ export default function Home() {
             playsInline 
             className="background-video-inner"
           >
-            {/* MANA SHU YERGA O'ZINGIZ YUKLAGAN VIDEO NOMINI YOZING: */}
-            <source src="/video-nomi.mp4" type="video/mp4" />
+            {/* Video nomi aynan siz aytgandek va to'g'ri manzilda: */}
+            <source src="/-1880952146411559581.mp4" type="video/mp4" />
           </video>
 
           {/* SUV USTIDAGI MATNLAR */}
