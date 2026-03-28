@@ -13,17 +13,16 @@ export default function Home() {
       <main className="main-content">
         <div className="welcome-glass-card">
           
-          {/* 🌊 TAYYOR SUV VIDEOSI (FONDA) */}
+          {/* 🌊 FAQAT RAMKA ICHIDA HARAKATLANADIGAN VIDEO */}
           <video 
             autoPlay 
             loop 
             muted 
             playsInline 
-            className="background-video"
+            className="background-video-inner"
           >
-            <source src="https://assets.mixkit.co/videos/preview/mixkit-clear-water-in-a-swimming-pool-1165-large.mp4" type="video/mp4" />
-            {/* Agar video yuklanmasa, rasm ko'rinadi */}
-            <img src="https://images.unsplash.com/photo-1518152006812-edab29b069ac?q=80&w=1000&auto=format&fit=crop" alt="Water" />
+            {/* MANA SHU YERGA O'ZINGIZ YUKLAGAN VIDEO NOMINI YOZING: */}
+            <source src="/video-nomi.mp4" type="video/mp4" />
           </video>
 
           {/* SUV USTIDAGI MATNLAR */}
@@ -37,7 +36,7 @@ export default function Home() {
         </div>
       </main>
 
-      {/* NAVIGATSIYA */}
+      {/* PASTKI NAVIGATSIYA */}
       <div className="bottom-nav-wrapper">
         <nav className="glass-bottom-nav">
           {[
