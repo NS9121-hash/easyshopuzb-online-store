@@ -1,90 +1,96 @@
-* { margin: 0; padding: 0; box-sizing: border-box; font-family: sans-serif; }
+* { margin: 0; padding: 0; box-sizing: border-box; font-family: 'Segoe UI', Roboto, Helvetica, Arial, sans-serif; }
 
 body {
     background-image: url('/IMG_2788.jpeg'); 
-    background-size: cover; background-position: center; background-attachment: fixed;
+    background-size: cover; background-position: center; background-attachment: fixed; 
     min-height: 100vh;
+    background-color: #1a3a3a; /* Zaxira fon */
 }
 
-.app-container { width: 100%; min-height: 100vh; display: flex; flex-direction: column; padding: 20px; }
+.app-container { 
+    width: 100%; min-height: 100vh; display: flex; flex-direction: column; 
+    padding: 20px; padding-top: 40px; /* Tepadagi yozuv kesilmasligi uchun */
+}
 
-.header { text-align: center; margin: 20px 0; }
-.glass-text { font-size: 36px; font-weight: 900; color: #fff; text-shadow: 0 5px 15px rgba(0,0,0,0.2); }
+/* HEADER */
+.header { text-align: center; margin-bottom: 10px; z-index: 10; }
+.glass-text { font-size: clamp(32px, 6vw, 42px); font-weight: 900; color: #fff; text-shadow: 0 4px 15px rgba(0,0,0,0.3); }
 .gold-text { color: #eab351; }
-.subtitle { font-size: 10px; letter-spacing: 4px; color: #1a8b9d; font-weight: bold; }
+.subtitle { 
+    font-size: 11px; letter-spacing: 5px; color: #1a8b9d; font-weight: 900; 
+    margin-top: 5px; background: rgba(255,255,255,0.6); 
+    padding: 4px 15px; border-radius: 20px; display: inline-block;
+}
 
-.main-content { flex: 1; display: flex; justify-content: center; align-items: center; }
+.main-content { 
+    flex: 1; display: flex; justify-content: center; align-items: center; 
+    width: 100%; padding-bottom: 100px; 
+}
 
-/* --- ❄️ PREMIUM BILLUR OYNA IDISH (RAMKA) --- */
+/* --- 💎 HAQIQIY QALIN BILLUR RAMKA --- */
 .welcome-glass-card {
-    width: 100%; max-width: 380px; height: 420px;
+    width: 90%; max-width: 380px; height: 420px;
     
-    /* 1. SHAFFOFLIK VA BLUR QO'SHILDI ! */
-    background: rgba(255, 255, 255, 0.15); /* Yengil shaffof oq fon */
-    backdrop-filter: blur(15px); /* Orqa fonni billur kabi xiralashtirish */
-    -webkit-backdrop-filter: blur(15px); /* iPhone uchun */
+    /* Shishaning o'z foni va xiraligi (blur) */
+    background: rgba(255, 255, 255, 0.1); 
+    backdrop-filter: blur(8px); 
+    -webkit-backdrop-filter: blur(8px);
     
-    border-radius: 40px; 
-    border: 2px solid rgba(255, 255, 255, 0.4); /* Chetlarini aniq billur kabi qilamiz */
+    border-radius: 40px;
+    /* Qalin oyna effekti (tepa va chap yorug'roq) */
+    border: 1px solid rgba(255, 255, 255, 0.2);
+    border-top: 3px solid rgba(255, 255, 255, 0.7);
+    border-left: 2px solid rgba(255, 255, 255, 0.4);
     
-    position: relative; overflow: hidden;
+    position: relative;
+    overflow: hidden;
+    -webkit-mask-image: -webkit-radial-gradient(white, black);
+    transform: translateZ(0);
+
     display: flex; flex-direction: column; justify-content: center; align-items: center;
     
-    /* Billur jilosini beradigan box-shadow ( specular glaring ) */
-    box-shadow: 
-        inset 0 0 30px rgba(18, 53, 58, 0.3), /* Suyuqlik chuqurligi */
-        0 0 1px 1.5px rgba(200, 150, 50, 0.7), /* Burchaklardagi tillarang specularity */
-        0 0 10px 4px rgba(18, 53, 58, 0.3), /* Suyuqlik porlashi */
-        0 0 40px rgba(18, 53, 58, 0.2); /* Tashqi tarqalgan jilo */
-    
-    transform: translateZ(0);
+    /* Ichki va tashqi oyna soyalari */
+    box-shadow: 0 30px 60px rgba(0,0,0,0.3), inset 0 0 30px rgba(255,255,255,0.4);
 }
 
-/* Suyuqlik cheti kabi diagonal o'tkir jilo (glaring) */
+/* Oynaning yuzasidagi yorug'lik jilosi (Shine effect) */
 .welcome-glass-card::before {
-    content: '';
-    position: absolute;
-    top: 0; left: 0; width: 100%; height: 100%;
-    /* O'tkir diagonal porlash */
-    background: linear-gradient(110deg, rgba(255, 255, 255, 0.7) 0%, rgba(255, 255, 255, 0) 10%, transparent 11%);
-    border-radius: inherit;
-    pointer-events: none; z-index: 1;
+    content: ''; position: absolute; top: 0; left: 0; width: 100%; height: 100%;
+    background: linear-gradient(135deg, rgba(255,255,255,0.4) 0%, rgba(255,255,255,0) 40%, transparent 100%);
+    z-index: 1; pointer-events: none;
 }
 
-/* 🌊 SIZ YUKLAGAN REAL VIDEO (Oyna ortida chayqaladi) */
+/* 🌊 VIDEO - Endi shishaning orqasida ko'rinadi */
 .background-video-inner {
-    position: absolute;
-    top: 0; left: 0; width: 100%; height: 100%;
+    position: absolute; top: 0; left: 0; width: 100%; height: 100%;
     object-fit: cover;
-    z-index: 0; /* Matnlarning orqasiga o'tkaziladi */
-    
-    /* 2. VIDEONING SHAFFOFLIGI KAMAJTIRILDI ! */
-    opacity: 0.5; /* Suv tiniqroq ko'rinishi uchun uni orqa fondagi blurga qo'shamiz */
-    
-    filter: saturate(1.5) brightness(1.1); /* Rangni premium firuza qilish */
+    z-index: -1; 
+    /* Videoni biroz shaffof qilamiz, shunda oyna ekanligi bilinadi */
+    opacity: 0.8; 
+    filter: brightness(0.9) contrast(1.1);
 }
 
-/* Matnlar suyuqlik ustida tiniq ko'rinishi uchun */
-.welcome-text-content { position: relative; z-index: 10; text-align: center; pointer-events: none; }
-.welcome-gold { 
-    font-size: 32px; font-weight: 900; color: #eab351; 
-    /* Muzlagan tillarang metal kabi porlash */
-    text-shadow: 
-        -1px -2px 2px rgba(255, 255, 255, 0.8), 
-        1px 2px 3px rgba(100, 60, 0, 0.8),
-        0px 4px 10px rgba(0, 0, 0, 0.2);
-}
-.welcome-heading { font-size: 14px; color: #fff; line-height: 1.8; margin-top: 10px; font-weight: bold; }
+/* MATNLAR */
+.welcome-text-content { position: relative; z-index: 10; text-align: center; width: 100%; padding: 0 10px; }
+.welcome-gold { font-size: clamp(28px, 7vw, 36px); font-weight: 900; color: #eab351; text-shadow: 0 4px 15px rgba(0,0,0,0.6); }
+.welcome-heading { font-size: clamp(13px, 4vw, 15px); color: #fff; line-height: 1.6; margin-top: 15px; font-weight: 800; text-shadow: 0 2px 8px rgba(0,0,0,0.8); }
 
-/* NAVIGATSIYA - Billur Ikonkalar */
-.bottom-nav-wrapper { position: fixed; bottom: 30px; left: 50%; transform: translateX(-50%); width: 90%; max-width: 450px; }
+/* --- 🧊 PASTKI NAVIGATSIYA (Oppoq fon o'chirilib, shisha qulflandi) --- */
+.bottom-nav-wrapper { position: fixed; bottom: 25px; left: 50%; transform: translateX(-50%); width: 90%; max-width: 450px; z-index: 100; }
 .glass-bottom-nav { 
-    display: flex; justify-content: space-around; padding: 15px; 
-    background: rgba(255, 255, 255, 0.1); backdrop-filter: blur(20px); -webkit-backdrop-filter: blur(20px);
-    border-radius: 30px; border: 1px solid rgba(255, 255, 255, 0.3); border-top: 2px solid rgba(255,255,255,0.8);
-    box-shadow: 0 15px 35px rgba(0,0,0,0.2);
+    display: flex; justify-content: space-around; padding: 12px; 
+    /* !important orqali oppoq fonni majburan o'chiramiz */
+    background: rgba(255, 255, 255, 0.15) !important; 
+    backdrop-filter: blur(20px) !important; -webkit-backdrop-filter: blur(20px) !important;
+    border-radius: 35px; border: 1.5px solid rgba(255, 255, 255, 0.4);
+    box-shadow: 0 20px 40px rgba(0,0,0,0.2);
 }
 
-.glass-nav-item { text-decoration: none; display: flex; flex-direction: column; align-items: center; gap: 8px; }
-.glass-nav-btn { width: 45px; height: 45px; display: flex; justify-content: center; align-items: center; background: rgba(255, 255, 255, 0.15); border-radius: 50%; border: 1px solid rgba(255,255,255,0.2); border-top: 2px solid rgba(255,255,255,0.8); }
-.nav-label { font-size: 10px; font-weight: bold; color: #1a8b9d; }
+.glass-nav-item { display: flex; flex-direction: column; align-items: center; gap: 6px; text-decoration: none; }
+.glass-nav-btn { 
+    width: 48px; height: 48px; display: flex; justify-content: center; align-items: center; 
+    background: rgba(255, 255, 255, 0.2); border-radius: 50%; 
+    border: 1px solid rgba(255,255,255,0.4); box-shadow: inset 0 0 10px rgba(255,255,255,0.3);
+}
+/* Ikonka matnlari oq rangga o'tkazildi, yaxshiroq ko'rinishi uchun */
+.nav-label { font-size: 11px; font-weight: 900; color: #fff; text-shadow: 0 2px 4px rgba(0,0,0,0.5); }
