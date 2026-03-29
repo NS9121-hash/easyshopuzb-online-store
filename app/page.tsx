@@ -1,102 +1,149 @@
-import { createClient } from '@supabase/supabase-js';
-
-// Bazaga ulanish
-const supabase = createClient(
-  "https://muwjzycdzavfmasbnsl.supabase.co",
-  "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6Im11d2p6eWNkemF2Zm1hc2Juc2JsIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NzQyNjI5MDMsImV4cCI6MjA4OTgzODkwM30.z-TZQXxK_ERd3c9e7U4jCes_bwMOFVM8g5kJ1RejZQU"
-);
-
-// Keshni o'chirish (Ma'lumot doim yangilanadi)
-export const revalidate = 0;
-
-export default async function Home() {
-  // Bazadan ma'lumotlarni olinishi
-  // UI uchun mahsulotlar hozircha kerak emas, lekin struktura uchun qoldiramiz
-  const { data: products } = await supabase.from('products').select('*');
-
+export default function Home() {
   return (
-    <main className="min-h-screen relative text-white font-sans overflow-hidden">
-      {/* 🖼️ ORQA FON RASMI */}
-      <div className="fixed inset-0 -z-10 bg-[#0a1122]">
-        <img
-          src="/public/background.png" // Bu image_20.png loyihada deb taxmin qilamiz
-          alt="Background"
-          className="object-cover w-full h-full opacity-70"
-        />
+    <div style={{
+      position: 'relative',
+      minHeight: '100vh',
+      width: '100vw',
+      overflow: 'hidden',
+      backgroundColor: '#050b14',
+      fontFamily: 'system-ui, -apple-system, sans-serif',
+      color: 'white'
+    }}>
+      
+      {/* 🖼️ ASOSIY ORQA FON RASMI */}
+      <div style={{
+        position: 'absolute', top: 0, left: 0, right: 0, bottom: 0,
+        backgroundImage: "url('/IMG_2933.jpeg')",
+        backgroundSize: 'cover',
+        backgroundPosition: 'center',
+        zIndex: 0
+      }}>
+        {/* Rasmni biroz qoraytirish */}
+        <div style={{ position: 'absolute', inset: 0, backgroundColor: 'rgba(0,0,0,0.6)' }}></div>
       </div>
 
-      {/* 👑 TEPADAGI YOZUVLAR */}
-      <header className="flex flex-col items-center pt-10 pb-4 z-10 relative">
-        <h1 className="text-3xl font-extrabold tracking-tighter text-white">
-          EASYSHOP_<span className="text-[#fbbf24]">UZB</span>
-        </h1>
-        <p className="text-[11px] font-semibold text-white tracking-[6px] mt-1 opacity-90 uppercase">
-          OSON ONLINE XARID
-        </p>
-      </header>
+      {/* 🏠 ASOSIY KONTENT */}
+      <div style={{
+        position: 'relative',
+        zIndex: 10,
+        display: 'flex',
+        flexDirection: 'column',
+        alignItems: 'center',
+        height: '100vh',
+        paddingTop: '60px'
+      }}>
 
-      {/* 🌊 O'RTADAGI KATTA KARTA */}
-      <div className="flex flex-col items-center justify-center pt-8 pb-32 z-10 relative px-6">
-        <div className="w-full max-w-[380px] aspect-[4/5] rounded-[40px] overflow-hidden relative border border-white/20 shadow-2xl">
-          <img
-            src="/public/water-intro.png" // Internetdan topilgan o'xshash suv tasviri
-            alt="Welcome Water"
-            className="object-cover w-full h-full"
-          />
-          {/* Suv ustiga overlay matnlar o'qilishi uchun */}
-          <div className="absolute inset-0 bg-black/20"></div>
+        {/* 👑 TEPADAGI YOZUVLAR */}
+        <header style={{ textAlign: 'center', marginBottom: '40px' }}>
+          <h1 style={{ fontSize: '32px', fontWeight: '900', margin: 0, letterSpacing: '1px' }}>
+            EASYSHOP_<span style={{ color: '#fbbf24' }}>UZB</span>
+          </h1>
+          <p style={{ fontSize: '11px', fontWeight: '600', letterSpacing: '4px', marginTop: '5px', color: '#e2e8f0' }}>
+            OSON ONLINE XARID
+          </p>
+        </header>
 
-          <div className="absolute inset-0 flex flex-col items-center justify-center text-center px-6">
-            <h2 className="text-3xl font-extrabold tracking-tighter text-[#fbbf24]">
-              ASSALOMU ALEYKUM
-            </h2>
-            <p className="text-[13px] font-semibold text-white mt-4 leading-5">
-              ONLAYN DO'KONIMIZGA XUSH KELIBSIZ!
-            </p>
+        {/* 🌊 O'RTADAGI RAMKA VA ICHIDAGI VIDEO */}
+        <div style={{
+          width: '85%',
+          maxWidth: '350px',
+          aspectRatio: '4/5',
+          borderRadius: '35px',
+          position: 'relative',
+          overflow: 'hidden',
+          display: 'flex',
+          flexDirection: 'column',
+          justifyContent: 'center',
+          alignItems: 'center',
+          boxShadow: '0 20px 40px rgba(0,0,0,0.5)',
+          border: '1px solid rgba(255,255,255,0.2)'
+        }}>
+          {/* 📹 RAMKA ICHIDAGI VIDEO */}
+          <video
+            autoPlay
+            muted
+            loop
+            playsInline
+            style={{
+              position: 'absolute',
+              top: 0, left: 0, width: '100%', height: '100%',
+              objectFit: 'cover',
+              zIndex: 0
+            }}
+          >
+            <source src="/-1880952146411559581.mp4" type="video/mp4" />
+          </video>
+          
+          {/* Yozuvlar o'qilishi uchun videoni biroz qoraytiramiz */}
+          <div style={{ position: 'absolute', inset: 0, backgroundColor: 'rgba(0,10,30,0.3)', zIndex: 1 }}></div>
+
+          {/* RAMKA ICHIDAGI MATN */}
+          <h2 style={{
+            position: 'relative', zIndex: 2, color: '#fbbf24', fontSize: '28px', fontWeight: '800', textAlign: 'center',
+            textShadow: '0 4px 10px rgba(0,0,0,0.8)', padding: '0 20px'
+          }}>
+            ASSALOMU ALEYKUM
+          </h2>
+          <p style={{
+            position: 'relative', zIndex: 2, color: '#ffffff', fontSize: '13px', fontWeight: '600', textAlign: 'center',
+            marginTop: '10px', textShadow: '0 2px 5px rgba(0,0,0,0.8)', padding: '0 30px', lineHeight: '1.5'
+          }}>
+            ONLAYN DO'KONIMIZGA XUSH KELIBSIZ!
+          </p>
+        </div>
+
+        {/* 📱 PASTDAGI MENYU (Glassmorphism) */}
+        <div style={{
+          position: 'absolute',
+          bottom: '30px',
+          width: '90%',
+          maxWidth: '380px',
+          height: '75px',
+          borderRadius: '40px',
+          backgroundColor: 'rgba(255, 255, 255, 0.15)',
+          backdropFilter: 'blur(20px)',
+          WebkitBackdropFilter: 'blur(20px)',
+          border: '1px solid rgba(255, 255, 255, 0.2)',
+          display: 'flex',
+          justifyContent: 'space-around',
+          alignItems: 'center',
+          boxShadow: '0 10px 30px rgba(0,0,0,0.5)'
+        }}>
+          
+          {/* Kiyimlar */}
+          <div style={{ display: 'flex', flexDirection: 'column', alignItems: 'center', gap: '4px' }}>
+            <div style={{ padding: '8px', backgroundColor: 'rgba(255,255,255,0.1)', borderRadius: '50%' }}>
+               <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="#fbbf24" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round"><path d="M20.38 3.46 16 2a8.5 8.5 0 0 1-8 0L3.62 3.46a2 2 0 0 0-1.34 2.23l.58 3.47a1 1 0 0 0 .99.84H6v10c0 1.1.9 2 2 2h8a2 2 0 0 0 2-2V10h2.15a1 1 0 0 0 .99-.84l.58-3.47a2 2 0 0 0-1.34-2.23z"/></svg>
+            </div>
+            <span style={{ fontSize: '10px', color: '#fbbf24', fontWeight: '700' }}>Kiyimlar</span>
           </div>
+
+          {/* Savat */}
+          <div style={{ display: 'flex', flexDirection: 'column', alignItems: 'center', gap: '4px' }}>
+            <div style={{ padding: '8px', borderRadius: '50%' }}>
+               <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="rgba(255,255,255,0.7)" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round"><circle cx="8" cy="21" r="1"/><circle cx="19" cy="21" r="1"/><path d="M2.05 2.05h2l2.66 12.42a2 2 0 0 0 2 1.58h9.78a2 2 0 0 0 1.95-1.57l1.65-7.43H5.12"/></svg>
+            </div>
+            <span style={{ fontSize: '10px', color: 'rgba(255,255,255,0.7)', fontWeight: '600' }}>Savat</span>
+          </div>
+
+          {/* AI */}
+          <div style={{ display: 'flex', flexDirection: 'column', alignItems: 'center', gap: '4px' }}>
+            <div style={{ padding: '8px', borderRadius: '50%' }}>
+              <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="rgba(255,255,255,0.7)" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round"><path d="m12 3-1.912 5.813a2 2 0 0 1-1.275 1.275L3 12l5.813 1.912a2 2 0 0 1 1.275 1.275L12 21l1.912-5.813a2 2 0 0 1 1.275-1.275L21 12l-5.813-1.912a2 2 0 0 1-1.275-1.275L12 3Z"/></svg>
+            </div>
+            <span style={{ fontSize: '10px', color: 'rgba(255,255,255,0.7)', fontWeight: '600' }}>AI</span>
+          </div>
+
+          {/* Profil */}
+          <div style={{ display: 'flex', flexDirection: 'column', alignItems: 'center', gap: '4px' }}>
+            <div style={{ padding: '8px', borderRadius: '50%' }}>
+               <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="rgba(255,255,255,0.7)" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round"><path d="M19 21v-2a4 4 0 0 0-4-4H9a4 4 0 0 0-4 4v2"/><circle cx="12" cy="7" r="4"/></svg>
+            </div>
+            <span style={{ fontSize: '10px', color: 'rgba(255,255,255,0.7)', fontWeight: '600' }}>Profil</span>
+          </div>
+
         </div>
       </div>
-
-      {/* 📱 PASTDAGI MENYU (Bottom Navigation Bar) */}
-      <div className="fixed bottom-0 inset-x-0 flex justify-center pb-8 z-20 px-6">
-        <div className="bg-white/10 backdrop-blur-3xl rounded-full border border-white/20 shadow-2xl px-6 py-3 w-full max-w-[400px]">
-          <div className="flex justify-between items-center">
-            {/* Kiyimlar */}
-            <div className="flex flex-col items-center cursor-pointer">
-              <div className="p-3 bg-white/10 rounded-full border border-white/10">
-                <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="#fbbf24" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round"><path d="M20.38 3.46 16 2a8.5 8.5 0 0 1-8 0L3.62 3.46a2 2 0 0 0-1.34 2.23l.58 3.47a1 1 0 0 0 .99.84H6v10c0 1.1.9 2 2 2h8a2 2 0 0 0 2-2V10h2.15a1 1 0 0 0 .99-.84l.58-3.47a2 2 0 0 0-1.34-2.23z"/></svg>
-              </div>
-              <span className="text-[10px] font-bold text-[#fbbf24] mt-2">Kiyimlar</span>
-            </div>
-
-            {/* Savat */}
-            <div className="flex flex-col items-center cursor-pointer relative">
-              <div className="p-3 bg-white/5 rounded-full border border-white/5">
-                <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="white" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><circle cx="8" cy="21" r="1"/><circle cx="19" cy="21" r="1"/><path d="M2.05 2.05h2l2.66 12.42a2 2 0 0 0 2 1.58h9.78a2 2 0 0 0 1.95-1.57l1.65-7.43H5.12"/></svg>
-                {/* Savat sanog'i */}
-                <div className="absolute top-1 right-1 bg-[#fbbf24] text-black rounded-full text-[9px] font-black w-4 h-4 flex items-center justify-center">0</div>
-              </div>
-              <span className="text-[10px] font-bold text-white/70 mt-2">Savat</span>
-            </div>
-
-            {/* AI */}
-            <div className="flex flex-col items-center cursor-pointer">
-              <div className="p-3 bg-white/5 rounded-full border border-white/5">
-                <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="white" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><path d="m12 3-1.912 5.813a2 2 0 0 1-1.275 1.275L3 12l5.813 1.912a2 2 0 0 1 1.275 1.275L12 21l1.912-5.813a2 2 0 0 1 1.275-1.275L21 12l-5.813-1.912a2 2 0 0 1-1.275-1.275L12 3Z"/></svg>
-              </div>
-              <span className="text-[10px] font-bold text-white/70 mt-2">AI</span>
-            </div>
-
-            {/* Profil */}
-            <div className="flex flex-col items-center cursor-pointer">
-              <div className="p-3 bg-white/5 rounded-full border border-white/5">
-                <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="white" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><path d="M19 21v-2a4 4 0 0 0-4-4H9a4 4 0 0 0-4 4v2"/><circle cx="12" cy="7" r="4"/></svg>
-              </div>
-              <span className="text-[10px] font-bold text-white/70 mt-2">Profil</span>
-            </div>
-          </div>
-        </div>
-      </div>
-    </main>
+    </div>
   );
 }
