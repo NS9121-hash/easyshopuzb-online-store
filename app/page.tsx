@@ -14,23 +14,25 @@ export default function Home() {
   const [count, setCount] = useState(1);
   const videoRef = useRef<HTMLVideoElement>(null);
 
-  // 🚀 VIDEONI TEZKOR ISHGA TUSHIRISH
-  useEffect(() => {
-    if (videoRef.current) {
-      videoRef.current.defaultMuted = true;
-      videoRef.current.play().catch(() => {});
-    }
+  const fetchItems = async () => {
+    const { data } = await supabase.from('Clothes').select('*').order('created_at', { ascending: false });
+    if (data) setItems(data);
+  };
 
-    const fetchItems = async () => {
-      const { data } = await supabase.from('Clothes').select('*').order('created_at', { ascending: false });
-      if (data) setItems(data);
-    };
+  useEffect(() => {
     fetchItems();
 
+    // 🔥 REALTIME: HAM QO'SHISH, HAM O'CHIRISHNI TEKSHIRADI
     const channel = supabase.channel('realtime_clothes')
       .on('postgres_changes', { event: 'INSERT', schema: 'public', table: 'Clothes' }, (payload) => {
         setItems((prev) => [payload.new, ...prev]);
-      }).subscribe();
+      })
+      .on('postgres_changes', { event: 'DELETE', schema: 'public', table: 'Clothes' }, (payload) => {
+        // Botdan o'chirilsa, saytdagi ro'yxatdan ham olib tashlaydi
+        setItems((prev) => prev.filter(item => item.id !== payload.old.id));
+      })
+      .subscribe();
+
     return () => { supabase.removeChannel(channel); };
   }, []);
 
@@ -43,7 +45,7 @@ export default function Home() {
       padding: '40px 0 120px 0', boxSizing: 'border-box'
     }}>
 
-      {/* 🖼️ DOIMIY ORQA FON */}
+      {/* 🖼️ BACKGROUND */}
       <div style={{ position: 'absolute', inset: 0, backgroundImage: "url('/IMG_2933.jpeg')", backgroundSize: 'cover', backgroundPosition: 'center', zIndex: 0 }}></div>
 
       <header style={{ textAlign: 'center', marginBottom: '30px', zIndex: 10 }}>
@@ -53,55 +55,52 @@ export default function Home() {
         <p style={{ fontSize: '11px', fontWeight: '700', color: '#e2e8f0', letterSpacing: '4px', marginTop: '5px' }}>OSON ONLINE XARID</p>
       </header>
 
-      {/* 🔄 KONTENT KONTEYNERI */}
       <div style={{ width: '90%', maxWidth: '500px', zIndex: 10, position: 'relative' }}>
         
-        {/* --- 🌊 HOME TAB (STABIL VA TEZKOR) --- */}
+        {/* --- 🌊 HOME TAB --- */}
         <div style={{
           display: activeTab === 'Home' ? 'flex' : 'none',
           width: '100%', aspectRatio: '4/5', borderRadius: '35px', position: 'relative',
           overflow: 'hidden', border: '1.5px solid rgba(255,255,255,0.2)',
           boxShadow: '0 25px 50px rgba(0,0,0,0.5)',
           flexDirection: 'column', justifyContent: 'center', alignItems: 'center',
-          background: "url('/IMG_2933.jpeg') center/cover" // VIDEO YUKLANGUNCHA SHU TURADI
+          background: "url('/IMG_2933.jpeg') center/cover"
         }}>
-          <video 
-            ref={videoRef}
-            autoPlay muted loop playsInline 
-            preload="auto"
-            style={{ position: 'absolute', inset: 0, width: '100%', height: '100%', objectFit: 'cover' }}
-          >
+          <video ref={videoRef} autoPlay muted loop playsInline preload="auto" style={{ position: 'absolute', inset: 0, width: '100%', height: '100%', objectFit: 'cover' }}>
             <source src="/-1880952146411559581.mp4" type="video/mp4" />
           </video>
-
-          <h2 style={{ position: 'relative', zIndex: 2, color: '#fbbf24', fontSize: '28px', fontWeight: '900', textAlign: 'center', textShadow: '2px 2px 20px black', margin: 0 }}>
-            ASSALOMU ALEYKUM
-          </h2>
-          <p style={{ position: 'relative', zIndex: 2, color: 'white', fontSize: '11px', fontWeight: '700', textAlign: 'center', marginTop: '10px', textShadow: '2px 2px 15px black', letterSpacing: '2px', textTransform: 'uppercase' }}>
-            ONLAYN KIYIM DO'KONIMIZGA XUSH KELIBSIZ
-          </p>
+          <h2 style={{ position: 'relative', zIndex: 2, color: '#fbbf24', fontSize: '28px', fontWeight: '900', textAlign: 'center', textShadow: '2px 2px 20px black', margin: 0 }}>ASSALOMU ALEYKUM</h2>
+          <p style={{ position: 'relative', zIndex: 2, color: 'white', fontSize: '11px', fontWeight: '700', textAlign: 'center', marginTop: '10px', textShadow: '2px 2px 15px black', letterSpacing: '1px', textTransform: 'uppercase' }}>ONLAYN KIYIM DO'KONIMIZGA XUSH KELIBSIZ</p>
         </div>
 
-        {/* --- 🛍️ KIYIMLAR --- */}
+        {/* --- 🛍️ KIYIMLAR RO'YXATI --- */}
         {activeTab === 'Kiyimlar' && (
           <div style={{ display: 'grid', gridTemplateColumns: 'repeat(2, 1fr)', gap: '15px', animation: 'fadeIn 0.3s ease' }}>
             {items.map((item) => (
-              <div key={item.id} onClick={() => { setSelectedProduct(item); setCount(1); }} style={{ background: 'rgba(255, 255, 255, 0.08)', backdropFilter: 'blur(20px)', borderRadius: '25px', border: '1px solid rgba(255,255,255,0.2)', overflow: 'hidden' }}>
-                <img src={item.image_url} alt={item.name} style={{ width: '100%', aspectRatio: '1/1', objectFit: 'cover' }} />
-                <div style={{ padding: '12px' }}>
+              <div key={item.id} style={{ background: 'rgba(255, 255, 255, 0.08)', backdropFilter: 'blur(20px)', borderRadius: '25px', border: '1px solid rgba(255,255,255,0.2)', overflow: 'hidden', display: 'flex', flexDirection: 'column' }}>
+                <img src={item.image_url} alt={item.name} onClick={() => { setSelectedProduct(item); setCount(1); }} style={{ width: '100%', aspectRatio: '1/1', objectFit: 'cover', cursor: 'pointer' }} />
+                <div style={{ padding: '12px', display: 'flex', flexDirection: 'column', flex: 1 }}>
                   <div style={{ color: '#fbbf24', fontSize: '18px', fontWeight: '800' }}>{item.price?.toLocaleString()} <span style={{fontSize: '9px'}}>so'm</span></div>
                   <p style={{ color: 'white', fontSize: '11px', margin: '5px 0', height: '2.4em', overflow: 'hidden' }}>{item.name}</p>
+                  
+                  {/* 🆕 KATALOGDAGI TUGMANI QAYTARDIM */}
+                  <button 
+                    onClick={() => { setSelectedProduct(item); setCount(1); }}
+                    style={{ marginTop: '10px', width: '100%', padding: '8px', backgroundColor: '#5A31F4', color: 'white', border: 'none', borderRadius: '12px', fontSize: '10px', fontWeight: '700', cursor: 'pointer' }}
+                  >
+                    BUYURTMA BERISH
+                  </button>
                 </div>
               </div>
             ))}
           </div>
         )}
 
-        {/* BOSHQA TABLAR */}
-        {activeTab === 'Savat' && <div style={{ color: 'white', textAlign: 'center', padding: '50px', background: 'rgba(255,255,255,0.05)', borderRadius: '30px', backdropFilter: 'blur(20px)' }}>SAVATCHANGIZ BO'SH</div>}
+        {activeTab === 'Savat' && <div style={{ color: 'white', textAlign: 'center', padding: '50px', background: 'rgba(255, 255, 255, 0.05)', borderRadius: '30px', backdropFilter: 'blur(20px)' }}>SAVATCHANGIZ BO'SH</div>}
+        {activeTab === 'Yoqtirganlar' && <div style={{ color: 'white', textAlign: 'center', padding: '50px' }}>YOQTIRGANLAR RO'YXATI BO'SH</div>}
       </div>
 
-      {/* 🛍️ MODAL */}
+      {/* 🛍️ MODAL (MAHSULOT SAHIFASI) */}
       {selectedProduct && (
         <div style={{ position: 'fixed', inset: 0, backgroundColor: 'white', zIndex: 1000, display: 'flex', flexDirection: 'column', animation: 'slideUp 0.3s ease-out' }}>
           <div style={{ position: 'relative', width: '100%', aspectRatio: '4/5' }}>
@@ -119,7 +118,6 @@ export default function Home() {
                 <button onClick={() => setCount(count+1)} style={{ border: 'none', width: '45px', height: '45px', fontSize: '24px', background: 'none' }}>+</button>
               </div>
               <button onClick={() => { setSelectedProduct(null); setActiveTab('Savat'); }} style={{ flex: 1, height: '54px', backgroundColor: '#E5E1FF', color: '#5A31F4', border: 'none', borderRadius: '18px', fontWeight: '800', fontSize: '16px', display: 'flex', alignItems: 'center', justifyContent: 'center', gap: '10px' }}>
-                <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5"><path d="M6 2L3 6v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2V6l-3-4Z"/><path d="M16 10a4 4 0 0 1-8 0"/></svg>
                 O'TISH
               </button>
             </div>
@@ -132,7 +130,7 @@ export default function Home() {
         {[
           { id: 'Home', name: 'ASOSIY', icon: 'm3 9 9-7 9 7v11a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z' },
           { id: 'Kiyimlar', name: 'KIYIMLAR', icon: 'M20.38 3.46 16 2a8.5 8.5 0 0 1-8 0L3.62 3.46a2 2 0 0 0-1.34 2.23l.58 3.47a1 1 0 0 0 .99.84H6v10c0 1.1.9 2 2 2h8a2 2 0 0 0 2-2V10h2.15a1 1 0 0 0 .99-.84l.58-3.47a2 2 0 0 0-1.34-2.23z' },
-          { id: 'Yurak', name: 'YOQTIRGANLAR', icon: 'M20.84 4.61a5.5 5.5 0 0 0-7.78 0L12 5.67l-1.06-1.06a5.5 5.5 0 0 0-7.78 7.78l1.06 1.06L12 21.23l7.78-7.78 1.06-1.06a5.5 5.5 0 0 0 0-7.78z' },
+          { id: 'Yoqtirganlar', name: 'YOQTIRGANLAR', icon: 'M20.84 4.61a5.5 5.5 0 0 0-7.78 0L12 5.67l-1.06-1.06a5.5 5.5 0 0 0-7.78 7.78l1.06 1.06L12 21.23l7.78-7.78 1.06-1.06a5.5 5.5 0 0 0 0-7.78z' },
           { id: 'Savat', name: 'SAVAT', icon: 'M8 21a1 1 0 1 0 0-2 1 1 0 0 0 0 2zM19 21a1 1 0 1 0 0-2 1 1 0 0 0 0 2zM2.05 2.05h2l2.66 12.42a2 2 0 0 0 2 1.58h9.78a2 2 0 0 0 1.95-1.57l1.65-7.43H5.12' },
           { id: 'AI', name: 'AI', icon: 'm12 3-1.912 5.813a2 2 0 0 1-1.275 1.275L3 12l5.813 1.912a2 2 0 0 1 1.275 1.275L12 21l1.912-5.813a2 2 0 0 1 1.275-1.275L21 12l-5.813-1.912a2 2 0 0 1-1.275-1.275L12 3Z' },
           { id: 'Profil', name: 'PROFIL', icon: 'M19 21v-2a4 4 0 0 0-4-4H9a4 4 0 0 0-4 4v2' },
