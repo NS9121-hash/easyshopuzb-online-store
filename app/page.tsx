@@ -15,7 +15,7 @@ export default function Home() {
   // Bazadan kiyimlarni olish funksiyasi
   const fetchItems = async () => {
     const { data } = await supabase
-      .from('clothes')
+      .from('Clothes')
       .select('*')
       .order('created_at', { ascending: false });
     if (data) setItems(data);
