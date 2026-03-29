@@ -67,11 +67,11 @@ export default function Home() {
         </p>
       </div>
 
-      {/* 📱 YANGILANGAN 6 TALIK MENYU (LIQUID GLASS) */}
+      {/* 📱 6 TALIK MENYU (YOQTIRGANLAR BILAN) */}
       <div style={{
         marginTop: '25px',
         width: '95%',
-        maxWidth: '420px',
+        maxWidth: '440px',
         height: '70px',
         borderRadius: '35px',
         background: 'rgba(255, 255, 255, 0.12)',
@@ -82,47 +82,47 @@ export default function Home() {
         display: 'flex',
         justifyContent: 'space-around',
         alignItems: 'center',
-        padding: '0 5px',
+        padding: '0 8px',
         boxShadow: '0 15px 35px rgba(0,0,0,0.3)',
         zIndex: 20
       }}>
 
-        {/* 1. Home (Kirish) */}
-        <div style={{ display: 'flex', flexDirection: 'column', alignItems: 'center', gap: '4px' }}>
+        {/* 1. Asosiy */}
+        <div style={{ display: 'flex', flexDirection: 'column', alignItems: 'center', gap: '4px', flex: 1 }}>
           <div style={{ padding: '6px', backgroundColor: 'rgba(255,255,255,0.15)', borderRadius: '50%' }}>
             <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="#fbbf24" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round"><path d="m3 9 9-7 9 7v11a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z"/><polyline points="9 22 9 12 15 12 15 22"/></svg>
           </div>
-          <span style={{ fontSize: '9px', color: '#fbbf24', fontWeight: '800' }}>Asosiy</span>
+          <span style={{ fontSize: '8.5px', color: '#fbbf24', fontWeight: '800' }}>Asosiy</span>
         </div>
 
         {/* 2. Kiyimlar */}
-        <div style={{ display: 'flex', flexDirection: 'column', alignItems: 'center', gap: '4px', opacity: 0.8 }}>
+        <div style={{ display: 'flex', flexDirection: 'column', alignItems: 'center', gap: '4px', flex: 1, opacity: 0.8 }}>
           <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="white" strokeWidth="2.2" strokeLinecap="round" strokeLinejoin="round"><path d="M20.38 3.46 16 2a8.5 8.5 0 0 1-8 0L3.62 3.46a2 2 0 0 0-1.34 2.23l.58 3.47a1 1 0 0 0 .99.84H6v10c0 1.1.9 2 2 2h8a2 2 0 0 0 2-2V10h2.15a1 1 0 0 0 .99-.84l.58-3.47a2 2 0 0 0-1.34-2.23z"/></svg>
-          <span style={{ fontSize: '9px', color: 'white', fontWeight: '650' }}>Kiyimlar</span>
+          <span style={{ fontSize: '8.5px', color: 'white', fontWeight: '650' }}>Kiyimlar</span>
         </div>
 
-        {/* 3. Yurak (Sevimlilar) */}
-        <div style={{ display: 'flex', flexDirection: 'column', alignItems: 'center', gap: '4px', opacity: 0.8 }}>
+        {/* 3. Yoqtirganlar (O'zgartirildi) */}
+        <div style={{ display: 'flex', flexDirection: 'column', alignItems: 'center', gap: '4px', flex: 1, opacity: 0.8 }}>
           <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="white" strokeWidth="2.2" strokeLinecap="round" strokeLinejoin="round"><path d="M20.84 4.61a5.5 5.5 0 0 0-7.78 0L12 5.67l-1.06-1.06a5.5 5.5 0 0 0-7.78 7.78l1.06 1.06L12 21.23l7.78-7.78 1.06-1.06a5.5 5.5 0 0 0 0-7.78z"/></svg>
-          <span style={{ fontSize: '9px', color: 'white', fontWeight: '650' }}>Yurak</span>
+          <span style={{ fontSize: '8.5px', color: 'white', fontWeight: '650', textAlign: 'center' }}>Yoqtirganlar</span>
         </div>
 
         {/* 4. Savat */}
-        <div style={{ display: 'flex', flexDirection: 'column', alignItems: 'center', gap: '4px', opacity: 0.8 }}>
+        <div style={{ display: 'flex', flexDirection: 'column', alignItems: 'center', gap: '4px', flex: 1, opacity: 0.8 }}>
           <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="white" strokeWidth="2.2" strokeLinecap="round" strokeLinejoin="round"><circle cx="8" cy="21" r="1"/><circle cx="19" cy="21" r="1"/><path d="M2.05 2.05h2l2.66 12.42a2 2 0 0 0 2 1.58h9.78a2 2 0 0 0 1.95-1.57l1.65-7.43H5.12"/></svg>
-          <span style={{ fontSize: '9px', color: 'white', fontWeight: '650' }}>Savat</span>
+          <span style={{ fontSize: '8.5px', color: 'white', fontWeight: '650' }}>Savat</span>
         </div>
 
         {/* 5. AI */}
-        <div style={{ display: 'flex', flexDirection: 'column', alignItems: 'center', gap: '4px', opacity: 0.8 }}>
+        <div style={{ display: 'flex', flexDirection: 'column', alignItems: 'center', gap: '4px', flex: 1, opacity: 0.8 }}>
           <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="white" strokeWidth="2.2" strokeLinecap="round" strokeLinejoin="round"><path d="m12 3-1.912 5.813a2 2 0 0 1-1.275 1.275L3 12l5.813 1.912a2 2 0 0 1 1.275 1.275L12 21l1.912-5.813a2 2 0 0 1 1.275-1.275L21 12l-5.813-1.912a2 2 0 0 1-1.275-1.275L12 3Z"/></svg>
-          <span style={{ fontSize: '9px', color: 'white', fontWeight: '650' }}>AI</span>
+          <span style={{ fontSize: '8.5px', color: 'white', fontWeight: '650' }}>AI</span>
         </div>
 
         {/* 6. Profil */}
-        <div style={{ display: 'flex', flexDirection: 'column', alignItems: 'center', gap: '4px', opacity: 0.8 }}>
+        <div style={{ display: 'flex', flexDirection: 'column', alignItems: 'center', gap: '4px', flex: 1, opacity: 0.8 }}>
           <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="white" strokeWidth="2.2" strokeLinecap="round" strokeLinejoin="round"><path d="M19 21v-2a4 4 0 0 0-4-4H9a4 4 0 0 0-4 4v2"/><circle cx="12" cy="7" r="4"/></svg>
-          <span style={{ fontSize: '9px', color: 'white', fontWeight: '650' }}>Profil</span>
+          <span style={{ fontSize: '8.5px', color: 'white', fontWeight: '650' }}>Profil</span>
         </div>
 
       </div>
