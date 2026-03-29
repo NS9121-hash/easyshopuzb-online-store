@@ -1,3 +1,4 @@
+import Image from 'next/image';
 import { createClient } from '@supabase/supabase-js';
 
 // 1. BAZAGA ULANISH
@@ -6,45 +7,57 @@ const supabase = createClient(
   "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6Im11d2p6eWNkemF2Zm1hc2Juc2JsIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NzQyNjI5MDMsImV4cCI6MjA4OTgzODkwM30.z-TZQXxK_ERd3c9e7U4jCes_bwMOFVM8g5kJ1RejZQU"
 );
 
-// 2. Keshni tozalash (Doim yangi ma'lumotni ko'rsatadi)
+// 2. Keshni tozalash
 export const revalidate = 0;
 
 export default async function Home() {
-  const { data: products, error } = await supabase.from('products').select('*');
+  const { data: products } = await supabase.from('products').select('*');
 
   return (
-    <main className="min-h-screen bg-slate-950 text-slate-50 p-6 font-sans">
-      <div className="max-w-6xl mx-auto">
+    <main style={{ backgroundColor: '#0a192f', minHeight: '100vh', position: 'relative', color: 'white', padding: '20px', fontFamily: 'sans-serif' }}>
+      
+      {/* 🖼️ ORQA FON RASMI (MUKAMMAL VA BARQAROR YO'L) */}
+      <div style={{ position: 'fixed', top: 0, left: 0, width: '100%', height: '100%', zIndex: -1 }}>
+        <Image
+          src="/IMG_2933.jpeg" // Siz yuklagan rasm nomi
+          alt="Background"
+          fill
+          style={{ objectFit: 'cover' }}
+          priority
+        />
+        {/* Rasmni biroz qorong'ulashtirish (Kiyimlar va narxlar tiniq ko'rinishi uchun) */}
+        <div style={{ position: 'absolute', top: 0, left: 0, width: '100%', height: '100%', backgroundColor: 'rgba(0, 0, 0, 0.4)' }}></div>
+      </div>
+
+      <div style={{ maxWidth: '1100px', margin: '0 auto', position: 'relative', zIndex: 10 }}>
         
-        {/* Tepa qism */}
-        <header className="flex justify-between items-center py-6 mb-8 border-b border-slate-800">
-          <h1 className="text-3xl font-bold text-white">EASYSHOP UZB</h1>
-          <div className="bg-slate-800 px-4 py-2 rounded-lg text-white font-medium">🛒 Savat (0)</div>
+        {/* 🏠 ASOSIY KONTENT (Sizning dizayningiz 100% qaytarildi) */}
+        <header style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', padding: '20px 0', borderBottom: '1px solid rgba(255, 255, 255, 0.1)', marginBottom: '30px' }}>
+          <h1 style={{ fontSize: '32px', fontWeight: 'black', letterSpacing: '-1.5px', color: 'white' }}>
+            EASYSHOP <span style={{ color: '#60a5fa' }}>UZB</span>
+          </h1>
+          <div style={{ backgroundColor: 'rgba(255, 255, 255, 0.05)', border: '1px solid rgba(255, 255, 255, 0.1)', padding: '10px 20px', borderRadius: '30px', fontWeight: 'bold' }}>
+            🛒 Savat (0)
+          </div>
         </header>
 
-        {/* Agar xato bo'lsa yoki mahsulot yo'q bo'lsa */}
-        {error && <p className="text-red-500 text-center py-10">Xatolik: {error.message}</p>}
-        {(!products || products.length === 0) && !error && (
-          <p className="text-slate-400 text-center py-10">Hozircha saytda mahsulotlar yo'q.</p>
-        )}
-
-        {/* Mahsulotlar ro'yxati */}
-        <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
+        {/* 👕 MAHSULOTLAR RO'YXATI (Dizayn to'liq qaytarildi) */}
+        <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fill, minmax(300px, 1fr))', gap: '30px' }}>
           {products?.map((product) => (
-            <div key={product.id} className="bg-slate-900 rounded-xl p-4 border border-slate-800 shadow-xl">
-              <div className="h-72 w-full mb-4 overflow-hidden rounded-lg bg-slate-800">
+            <div key={product.id} style={{ backgroundColor: 'rgba(255, 255, 255, 0.03)', backdropFilter: 'blur(2px)', rounded3xl: '20px', padding: '20px', borderRadius: '20px', border: '1px solid rgba(255, 255, 255, 0.05)', boxShadow: '0 10px 15px -3px rgba(0, 0, 0, 0.1)' }}>
+              <div style={{ position: 'relative', height: '300px', width: '100%', marginBottom: '15px', overflow: 'hidden', borderRadius: '15px', backgroundColor: 'rgba(255, 255, 255, 0.05)' }}>
                 <img 
                   src={product.image_url} 
                   alt={product.name}
-                  className="object-cover w-full h-full"
+                  style={{ objectFit: 'cover', width: '100%', height: '100%' }}
                 />
               </div>
-              <h3 className="text-xl font-bold text-white mb-1">{product.name}</h3>
-              <p className="text-blue-400 font-bold text-2xl mb-4">{product.price} so'm</p>
+              <h3 style={{ fontSize: '20px', fontWeight: 'bold', marginBottom: '8px', color: 'white' }}>{product.name}</h3>
+              <p style={{ color: '#60a5fa', fontSize: '24px', fontWeight: 'extrabold', marginBottom: '15px' }}>{product.price} so'm</p>
               
-              <div className="flex justify-between items-center border-t border-slate-800 pt-4">
-                <span className="text-slate-400 text-sm">O'lcham: {product.size}</span>
-                <button className="bg-blue-600 hover:bg-blue-700 text-white px-5 py-2 rounded-lg font-bold">
+              <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', paddingTop: '15px', borderTop: '1px solid rgba(255, 255, 255, 0.05)' }}>
+                <span style={{ fontSize: '14px', color: '#94a3b8' }}>O'lcham: {product.size}</span>
+                <button style={{ backgroundColor: '#2563eb', color: 'white', border: 'none', padding: '10px 20px', borderRadius: '10px', fontWeight: 'bold', cursor: 'pointer', transition: 'transform 0.2s active:scale-95' }}>
                   Sotib olish
                 </button>
               </div>
