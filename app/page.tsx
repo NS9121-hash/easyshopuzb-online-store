@@ -26,7 +26,7 @@ export default function Home() {
 
     // Realtime: Botdan yangi kiyim tushsa, sahifani yangilamasdan ko'rsatish
     const channel = supabase.channel('realtime_clothes')
-      .on('postgres_changes', { event: 'INSERT', schema: 'public', table: 'clothes' }, (payload) => {
+      .on('postgres_changes', { event: 'INSERT', schema: 'public', table: 'Clothes' }, (payload) => {
         setItems((prev) => [payload.new, ...prev]);
       })
       .subscribe();
@@ -49,7 +49,7 @@ export default function Home() {
       boxSizing: 'border-box'
     }}>
 
-      {/* 🖼️ ORQA FON (O'SHA BIZ TANLAGAN RASM) */}
+      {/* 🖼️ ORQA FON */}
       <div style={{
         position: 'absolute', inset: 0,
         backgroundImage: "url('/IMG_2933.jpeg')",
@@ -68,7 +68,7 @@ export default function Home() {
         </p>
       </header>
 
-      {/* 🔄 ASOSIY KONTENT (STATE'GA QARAB O'ZGARADI) */}
+      {/* 🔄 ASOSIY KONTENT */}
       <div style={{
         width: '90%',
         maxWidth: activeTab === 'Kiyimlar' ? '600px' : '350px',
@@ -76,7 +76,7 @@ export default function Home() {
         transition: 'all 0.5s cubic-bezier(0.4, 0, 0.2, 1)'
       }}>
         
-        {/* --- 🌊 1-VARIANT: HOME (SUV VIDEOSI) --- */}
+        {/* --- 🌊 1-VARIANT: HOME --- */}
         {activeTab === 'Home' && (
           <div style={{
             width: '100%', aspectRatio: '4/5',
@@ -97,7 +97,7 @@ export default function Home() {
           </div>
         )}
 
-        {/* --- 🛍️ 2-VARIANT: KIYIMLAR (DINAMIK KATALOG) --- */}
+        {/* --- 🛍️ 2-VARIANT: KIYIMLAR --- */}
         {activeTab === 'Kiyimlar' && (
           <div style={{
             display: 'grid', gridTemplateColumns: 'repeat(2, 1fr)', gap: '15px',
@@ -111,23 +111,71 @@ export default function Home() {
                 overflow: 'hidden', display: 'flex', flexDirection: 'column'
               }}>
                 <img src={item.image_url} alt={item.name} style={{ width: '100%', aspectRatio: '1/1', objectFit: 'cover' }} />
-                <div style={{ padding: '12px' }}>
+                <div style={{ padding: '12px', display: 'flex', flexDirection: 'column', flex: 1 }}>
                   <div style={{ color: '#fbbf24', fontSize: '18px', fontWeight: '800', textShadow: '0 0 10px rgba(251,191,36,0.5)' }}>
                     {item.price?.toLocaleString()} <span style={{fontSize: '10px'}}>so'm</span>
                   </div>
                   <p style={{ color: 'white', fontSize: '11px', margin: '5px 0', height: '2.8em', overflow: 'hidden' }}>{item.name}</p>
-                  <div style={{ fontSize: '9px', color: 'rgba(255,255,255,0.6)', backgroundColor: 'rgba(255,255,255,0.1)', padding: '3px 8px', borderRadius: '6px', display: 'inline-block' }}>
-                    O'lcham: {item.sizes}
+                  
+                  <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginTop: 'auto' }}>
+                    <div style={{ fontSize: '9px', color: 'rgba(255,255,255,0.6)', backgroundColor: 'rgba(255,255,255,0.1)', padding: '3px 8px', borderRadius: '6px' }}>
+                      {item.sizes}
+                    </div>
                   </div>
+
+                  {/* 🆕 SIZ SO'RAGAN TUGMA */}
+                  <button 
+                    onClick={(e) => {
+                      e.stopPropagation();
+                      setActiveTab('Savat');
+                    }}
+                    style={{
+                      marginTop: '12px',
+                      width: '100%',
+                      padding: '10px',
+                      backgroundColor: '#5A31F4',
+                      color: 'white',
+                      border: 'none',
+                      borderRadius: '12px',
+                      fontSize: '11px',
+                      fontWeight: '700',
+                      cursor: 'pointer',
+                      display: 'flex',
+                      alignItems: 'center',
+                      justifyContent: 'center',
+                      gap: '5px',
+                      transition: '0.2s active'
+                    }}
+                    onMouseDown={(e) => e.currentTarget.style.transform = 'scale(0.95)'}
+                    onMouseUp={(e) => e.currentTarget.style.transform = 'scale(1)'}
+                  >
+                    <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round">
+                      <circle cx="9" cy="21" r="1"></circle>
+                      <circle cx="20" cy="21" r="1"></circle>
+                      <path d="M1 1h4l2.68 13.39a2 2 0 0 0 2 1.61h9.72a2 2 0 0 0 2-1.61L23 6H6"></path>
+                    </svg>
+                    Buyurtma berish
+                  </button>
+
                 </div>
               </div>
             ))}
-            {items.length === 0 && <p style={{color: 'white', textAlign: 'center', gridColumn: 'span 2'}}>Hali mahsulot qo'shilmadi...</p>}
+          </div>
+        )}
+
+        {/* SAVAT BO'LIMI (BO'SH HOLATI) */}
+        {activeTab === 'Savat' && (
+          <div style={{ color: 'white', textAlign: 'center', padding: '50px 20px', background: 'rgba(255,255,255,0.05)', borderRadius: '30px', backdropFilter: 'blur(20px)' }}>
+            <h2 style={{ fontSize: '24px', fontWeight: '800' }}>Savatchangiz bo'sh</h2>
+            <p style={{ fontSize: '13px', opacity: 0.6, marginTop: '10px' }}>Xarid qilishda davom eting!</p>
+            <button onClick={() => setActiveTab('Kiyimlar')} style={{ marginTop: '20px', color: '#fbbf24', background: 'none', border: 'none', fontWeight: '700' }}>
+              ← Kiyimlarga qaytish
+            </button>
           </div>
         )}
       </div>
 
-      {/* 📱 6 TALIK LIQUID GLASS MENYU (FIXED) */}
+      {/* 📱 6 TALIK LIQUID GLASS MENYU */}
       <div style={{
         position: 'fixed', bottom: '30px',
         width: '95%', maxWidth: '440px', height: '70px',
@@ -139,8 +187,6 @@ export default function Home() {
         padding: '0 8px', boxShadow: '0 15px 35px rgba(0,0,0,0.3)',
         zIndex: 100
       }}>
-        
-        {/* HAR BIR TUGMA */}
         {[
           { id: 'Home', name: 'Asosiy', icon: 'm3 9 9-7 9 7v11a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z' },
           { id: 'Kiyimlar', name: 'Kiyimlar', icon: 'M20.38 3.46 16 2a8.5 8.5 0 0 1-8 0L3.62 3.46a2 2 0 0 0-1.34 2.23l.58 3.47a1 1 0 0 0 .99.84H6v10c0 1.1.9 2 2 2h8a2 2 0 0 0 2-2V10h2.15a1 1 0 0 0 .99-.84l.58-3.47a2 2 0 0 0-1.34-2.23z' },
