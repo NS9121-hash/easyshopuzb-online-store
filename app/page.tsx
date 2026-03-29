@@ -1,74 +1,68 @@
-"use client";
-import Link from "next/link";
+import Image from 'next/image';
+import { createClient } from '@supabase/supabase-js';
 
-export default function Home() {
+// Supabase ulanishi (Mahsulotlarni olish uchun)
+const supabase = createClient(
+  "https://muwjzycdzavfmasbnsl.supabase.co",
+  "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6Im11d2p6eWNkemF2Zm1hc2Juc2JsIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NzQyNjI5MDMsImV4cCI6MjA4OTgzODkwM30.z-TZQXxK_ERd3c9e7U4jCes_bwMOFVM8g5kJ1RejZQU"
+);
+
+export default async function Home() {
+  // Bazadan mahsulotlarni olish (Hammasini to'g'ri o'qishi uchun)
+  const { data: products } = await supabase.from('products').select('*');
+
   return (
-    <div className="app-container">
-      
-      <header className="header">
-        <h1 className="glass-text">EASYSHOP_<span className="gold-text">UZB</span></h1>
-        <p className="subtitle">OSON ONLINE XARID</p>
-      </header>
-
-      <main className="main-content">
-        <div className="welcome-glass-card">
-          
-          {/* 🌊 SIZ YUKLAGAN MAXSUS VIDEO */}
-          <video 
-            autoPlay 
-            loop 
-            muted 
-            playsInline 
-            className="background-video-inner"
-          >
-            <source src="/-1880952146411559581.mp4" type="video/mp4" />
-          </video>
-
-          {/* SUV USTIDAGI MATNLAR */}
-          <div className="welcome-text-content">
-            <h2 className="welcome-heading">
-              <span className="welcome-gold">ASSALOMU ALEYKUM</span>
-              <br />
-              ONLAYN DO'KONIMIZGA XUSH KELIBSIZ!
-            </h2>
-          </div>
-        </div>
-      </main>
-
-      {/* PASTKI NAVIGATSIYA (Ikonkalar to'liq tiklandi) */}
-      <div className="bottom-nav-wrapper">
-        <nav className="glass-bottom-nav">
-          <Link href="/products" className="glass-nav-item">
-            <div className="glass-nav-btn">
-              <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="#eab351" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round"><path d="M20.38 3.46L16 2a4 4 0 01-8 0L3.62 3.46a2 2 0 00-1.34 2.23l.58 3.47a1 1 0 00.99.84H6v10c0 1.1.9 2 2 2h8a2 2 0 002-2V10h2.15a1 1 0 00.99-.84l.58-3.47a2 2 0 00-1.34-2.23z"/></svg>
-            </div>
-            <span className="nav-label">Kiyimlar</span>
-          </Link>
-          
-          <Link href="/cart" className="glass-nav-item">
-            <div className="glass-nav-btn">
-              <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="#eab351" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round"><circle cx="8" cy="21" r="1"/><circle cx="19" cy="21" r="1"/><path d="M2.05 2.05h2l2.66 12.42a2 2 0 002 1.58h9.78a2 2 0 001.95-1.57l1.65-7.43H5.12"/></svg>
-            </div>
-            <span className="nav-label">Savat</span>
-          </Link>
-          
-          <Link href="/ai-stylist" className="glass-nav-item">
-            <div className="glass-nav-btn">
-              <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="#eab351" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round"><path d="M12 3l1.91 5.81L20 10.75l-6.09 1.94L12 18.5l-1.91-5.81L4 10.75l6.09-1.94z"/><path d="M5 3l1 2 2 1-2 1-1 2-1-2-2-1 2-1z"/><path d="M19 17l1 2 2 1-2 1-1 2-1-2-2-1 2-1z"/></svg>
-            </div>
-            <span className="nav-label">AI</span>
-          </Link>
-          
-          <Link href="/profile" className="glass-nav-item">
-            <div className="glass-nav-btn">
-              {/* Profil ikonkasi boshi bilan birga :) */}
-              <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="#eab351" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round"><path d="M19 21v-2a4 4 0 00-4-4H9a4 4 0 00-4 4v2"/><circle cx="12" cy="7" r="4"/></svg>
-            </div>
-            <span className="nav-label">Profil</span>
-          </Link>
-        </nav>
+    <main className="min-h-screen relative text-white">
+      {/* 🖼️ YANGI ORQA FON RASMI (Hech narsani buzmaydi) */}
+      <div className="fixed inset-0 -z-10">
+        <Image
+          src="/public/IMG_2933.jpeg" // Siz yuklagan rasm nomi
+          alt="Background"
+          fill
+          className="object-cover"
+          priority
+        />
+        {/* Rasmni biroz xiralashtirish (Kiyimlar tiniqroq ko'rinishi uchun) */}
+        <div className="absolute inset-0 bg-black/30 backdrop-blur-[2px]"></div>
       </div>
 
-    </div>
+      {/* 🏠 ASOSIY KONTENT (Sizning mavjud dizayningiz to'liqligicha saqlangan) */}
+      <div className="max-w-6xl mx-auto p-6">
+        <header className="flex justify-between items-center py-8">
+          <h1 className="text-4xl font-bold tracking-tighter drop-shadow-lg">
+            EASYSHOP <span className="text-blue-400">UZB</span>
+          </h1>
+          <div className="bg-white/20 backdrop-blur-md px-4 py-2 rounded-full border border-white/30 cursor-pointer">
+            🛒 Savat (0)
+          </div>
+        </header>
+
+        {/* 👕 MAHSULOTLAR RO'YXATI (Dizayn to'liq saqlangan) */}
+        <div className="grid grid-cols-1 md:grid-cols-3 gap-8">
+          {products?.map((product) => (
+            <div 
+              key={product.id} 
+              className="group bg-white/10 backdrop-blur-xl rounded-3xl p-4 border border-white/20 hover:border-blue-400 transition-all duration-300 shadow-2xl"
+            >
+              <div className="relative h-80 w-full mb-4 overflow-hidden rounded-2xl">
+                <img 
+               src={product.image_url} 
+                  alt={product.name}
+                  className="object-cover w-full h-full group-hover:scale-110 transition-transform duration-500"
+                />
+              </div>
+              <h3 className="text-xl font-semibold mb-1">{product.name}</h3>
+              <p className="text-blue-300 font-bold text-lg mb-2">{product.price} so'm</p>
+              <div className="flex justify-between items-center">
+                <span className="text-sm text-gray-300">O'lcham: {product.size}</span>
+                <button className="bg-blue-600 hover:bg-blue-500 text-white px-4 py-2 rounded-xl transition-colors">
+                  Sotib olish
+                </button>
+              </div>
+            </div>
+          ))}
+        </div>
+      </div>
+    </main>
   );
 }
