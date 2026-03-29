@@ -69,69 +69,64 @@ export default function Home() {
           <p style={{ position: 'relative', zIndex: 2, color: 'white', fontSize: '11px', fontWeight: '700', textAlign: 'center', marginTop: '10px', textShadow: '2px 2px 15px black', letterSpacing: '1px', textTransform: 'uppercase' }}>ONLAYN KIYIM DO'KONIMIZGA XUSH KELIBSIZ</p>
         </div>
 
-        {/* --- 🛍️ KIYIMLAR (UZUM GLASS DIZAYN) --- */}
+        {/* --- 🛍️ KIYIMLAR (YANGILANGAN MUKAMMAL DIZAYN) --- */}
         {activeTab === 'Kiyimlar' && (
           <div style={{ display: 'grid', gridTemplateColumns: 'repeat(2, 1fr)', gap: '15px', animation: 'fadeIn 0.3s ease' }}>
             {items.map((item) => (
               <div key={item.id} style={{ 
                 background: 'rgba(255, 255, 255, 0.05)', 
-                backdropFilter: 'blur(20px) saturate(180%)',
-                borderRadius: '20px', 
-                border: '1px solid rgba(255,255,255,0.15)', 
+                borderRadius: '25px', 
+                border: '1.5px solid rgba(255,255,255,0.15)', 
                 overflow: 'hidden', 
                 display: 'flex', 
                 flexDirection: 'column',
-                boxShadow: '0 8px 32px rgba(0,0,0,0.4)'
+                boxShadow: '0 10px 30px rgba(0,0,0,0.3)'
               }}>
-                {/* TOVAR RASMI VA YURAKCHA */}
+                {/* RASM - BOSGANDA MODAL OCHILADI */}
                 <div style={{ position: 'relative', width: '100%', aspectRatio: '1/1' }}>
                   <img src={item.image_url} alt={item.name} onClick={() => { setSelectedProduct(item); setCount(1); }} style={{ width: '100%', height: '100%', objectFit: 'cover', cursor: 'pointer' }} />
-                  <div style={{ position: 'absolute', top: '10px', right: '10px', color: 'rgba(255,255,255,0.6)' }}>
+                  {/* ❤️ YURAKCHA */}
+                  <div style={{ position: 'absolute', top: '12px', right: '12px', color: 'rgba(255,255,255,0.6)' }}>
                     <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2"><path d="M20.84 4.61a5.5 5.5 0 0 0-7.78 0L12 5.67l-1.06-1.06a5.5 5.5 0 0 0-7.78 7.78l1.06 1.06L12 21.23l7.78-7.78 1.06-1.06a5.5 5.5 0 0 0 0-7.78z"></path></svg>
                   </div>
                 </div>
 
-                <div style={{ padding: '10px', display: 'flex', flexDirection: 'column', flex: 1 }}>
-                  {/* NARX VA CHEGIRMA */}
-                  <div style={{ display: 'flex', alignItems: 'center', gap: '5px' }}>
-                    <div style={{ color: '#fbbf24', fontSize: '16px', fontWeight: '800' }}>{item.price?.toLocaleString()} <span style={{fontSize: '9px'}}>so'm</span></div>
-                    <span style={{ fontSize: '9px', color: '#ff4d4d', fontWeight: 'bold' }}>↓72%</span>
+                <div style={{ padding: '12px', display: 'flex', flexDirection: 'column', flex: 1 }}>
+                  {/* FAQAT ASL NARX */}
+                  <div style={{ color: '#fbbf24', fontSize: '18px', fontWeight: '800', textShadow: '0 0 10px rgba(251,191,36,0.3)' }}>
+                    {item.price?.toLocaleString()} <span style={{fontSize: '10px'}}>so'm</span>
                   </div>
-                  <div style={{ fontSize: '10px', color: 'rgba(255,255,255,0.4)', textDecoration: 'line-through' }}>{(item.price * 1.5).toLocaleString()}</div>
                   
                   {/* NOM */}
-                  <p style={{ color: 'white', fontSize: '11px', margin: '6px 0', height: '2.4em', overflow: 'hidden', lineHeight: '1.2', opacity: 0.9 }}>{item.name}</p>
+                  <p style={{ color: 'white', fontSize: '12px', margin: '6px 0', height: '2.8em', overflow: 'hidden', lineHeight: '1.4', opacity: 0.9 }}>{item.name}</p>
                   
-                  {/* REYTING */}
-                  <div style={{ display: 'flex', alignItems: 'center', gap: '3px', marginBottom: '8px' }}>
-                    <span style={{ color: '#fbbf24', fontSize: '10px' }}>★ 4.7</span>
-                    <span style={{ color: 'rgba(255,255,255,0.4)', fontSize: '9px' }}>(54 ta sharh)</span>
-                  </div>
-
-                  {/* 🆕 UZUM TUGMASI (GLASS STYLE) */}
+                  {/* 🆕 BUYURTMA BERISH TUGMASI - SAVATGA O'TADI */}
                   <button 
-                    onClick={() => { setSelectedProduct(item); setCount(1); }}
+                    onClick={() => setActiveTab('Savat')}
                     style={{ 
                       marginTop: 'auto', 
                       width: '100%', 
-                      padding: '10px', 
+                      padding: '12px', 
                       background: 'rgba(255, 255, 255, 0.1)', 
-                      backdropFilter: 'blur(5px)',
+                      backdropFilter: 'blur(10px)',
                       color: 'white', 
-                      border: '1.5px solid rgba(255,255,255,0.2)', 
-                      borderRadius: '12px', 
-                      fontSize: '11px', 
-                      fontWeight: '700', 
+                      border: '1.5px solid rgba(255,255,255,0.1)', 
+                      borderRadius: '15px', 
+                      fontSize: '10px', 
+                      fontWeight: '800', 
                       cursor: 'pointer',
                       display: 'flex',
                       alignItems: 'center',
                       justifyContent: 'center',
                       gap: '5px',
-                      textTransform: 'uppercase'
+                      textTransform: 'uppercase',
+                      transition: '0.2s active'
                     }}
+                    onMouseDown={(e) => e.currentTarget.style.transform = 'scale(0.95)'}
+                    onMouseUp={(e) => e.currentTarget.style.transform = 'scale(1)'}
                   >
-                    <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5"><path d="M6 2L3 6v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2V6l-3-4Z"/><path d="M16 10a4 4 0 0 1-8 0"/></svg>
-                    Ertaga
+                    <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="3"><path d="M6 2L3 6v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2V6l-3-4Z"/><path d="M16 10a4 4 0 0 1-8 0"/></svg>
+                    BUYURTMA BERISH
                   </button>
                 </div>
               </div>
