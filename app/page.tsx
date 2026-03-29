@@ -21,18 +21,14 @@ export default function Home() {
 
   useEffect(() => {
     fetchItems();
-
-    // 🔥 REALTIME: HAM QO'SHISH, HAM O'CHIRISHNI TEKSHIRADI
     const channel = supabase.channel('realtime_clothes')
       .on('postgres_changes', { event: 'INSERT', schema: 'public', table: 'Clothes' }, (payload) => {
         setItems((prev) => [payload.new, ...prev]);
       })
       .on('postgres_changes', { event: 'DELETE', schema: 'public', table: 'Clothes' }, (payload) => {
-        // Botdan o'chirilsa, saytdagi ro'yxatdan ham olib tashlaydi
         setItems((prev) => prev.filter(item => item.id !== payload.old.id));
       })
       .subscribe();
-
     return () => { supabase.removeChannel(channel); };
   }, []);
 
@@ -45,7 +41,7 @@ export default function Home() {
       padding: '40px 0 120px 0', boxSizing: 'border-box'
     }}>
 
-      {/* 🖼️ BACKGROUND */}
+      {/* 🖼️ ASOSIY BACKGROUND */}
       <div style={{ position: 'absolute', inset: 0, backgroundImage: "url('/IMG_2933.jpeg')", backgroundSize: 'cover', backgroundPosition: 'center', zIndex: 0 }}></div>
 
       <header style={{ textAlign: 'center', marginBottom: '30px', zIndex: 10 }}>
@@ -73,22 +69,69 @@ export default function Home() {
           <p style={{ position: 'relative', zIndex: 2, color: 'white', fontSize: '11px', fontWeight: '700', textAlign: 'center', marginTop: '10px', textShadow: '2px 2px 15px black', letterSpacing: '1px', textTransform: 'uppercase' }}>ONLAYN KIYIM DO'KONIMIZGA XUSH KELIBSIZ</p>
         </div>
 
-        {/* --- 🛍️ KIYIMLAR RO'YXATI --- */}
+        {/* --- 🛍️ KIYIMLAR (UZUM GLASS DIZAYN) --- */}
         {activeTab === 'Kiyimlar' && (
           <div style={{ display: 'grid', gridTemplateColumns: 'repeat(2, 1fr)', gap: '15px', animation: 'fadeIn 0.3s ease' }}>
             {items.map((item) => (
-              <div key={item.id} style={{ background: 'rgba(255, 255, 255, 0.08)', backdropFilter: 'blur(20px)', borderRadius: '25px', border: '1px solid rgba(255,255,255,0.2)', overflow: 'hidden', display: 'flex', flexDirection: 'column' }}>
-                <img src={item.image_url} alt={item.name} onClick={() => { setSelectedProduct(item); setCount(1); }} style={{ width: '100%', aspectRatio: '1/1', objectFit: 'cover', cursor: 'pointer' }} />
-                <div style={{ padding: '12px', display: 'flex', flexDirection: 'column', flex: 1 }}>
-                  <div style={{ color: '#fbbf24', fontSize: '18px', fontWeight: '800' }}>{item.price?.toLocaleString()} <span style={{fontSize: '9px'}}>so'm</span></div>
-                  <p style={{ color: 'white', fontSize: '11px', margin: '5px 0', height: '2.4em', overflow: 'hidden' }}>{item.name}</p>
+              <div key={item.id} style={{ 
+                background: 'rgba(255, 255, 255, 0.05)', 
+                backdropFilter: 'blur(20px) saturate(180%)',
+                borderRadius: '20px', 
+                border: '1px solid rgba(255,255,255,0.15)', 
+                overflow: 'hidden', 
+                display: 'flex', 
+                flexDirection: 'column',
+                boxShadow: '0 8px 32px rgba(0,0,0,0.4)'
+              }}>
+                {/* TOVAR RASMI VA YURAKCHA */}
+                <div style={{ position: 'relative', width: '100%', aspectRatio: '1/1' }}>
+                  <img src={item.image_url} alt={item.name} onClick={() => { setSelectedProduct(item); setCount(1); }} style={{ width: '100%', height: '100%', objectFit: 'cover', cursor: 'pointer' }} />
+                  <div style={{ position: 'absolute', top: '10px', right: '10px', color: 'rgba(255,255,255,0.6)' }}>
+                    <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2"><path d="M20.84 4.61a5.5 5.5 0 0 0-7.78 0L12 5.67l-1.06-1.06a5.5 5.5 0 0 0-7.78 7.78l1.06 1.06L12 21.23l7.78-7.78 1.06-1.06a5.5 5.5 0 0 0 0-7.78z"></path></svg>
+                  </div>
+                </div>
+
+                <div style={{ padding: '10px', display: 'flex', flexDirection: 'column', flex: 1 }}>
+                  {/* NARX VA CHEGIRMA */}
+                  <div style={{ display: 'flex', alignItems: 'center', gap: '5px' }}>
+                    <div style={{ color: '#fbbf24', fontSize: '16px', fontWeight: '800' }}>{item.price?.toLocaleString()} <span style={{fontSize: '9px'}}>so'm</span></div>
+                    <span style={{ fontSize: '9px', color: '#ff4d4d', fontWeight: 'bold' }}>↓72%</span>
+                  </div>
+                  <div style={{ fontSize: '10px', color: 'rgba(255,255,255,0.4)', textDecoration: 'line-through' }}>{(item.price * 1.5).toLocaleString()}</div>
                   
-                  {/* 🆕 KATALOGDAGI TUGMANI QAYTARDIM */}
+                  {/* NOM */}
+                  <p style={{ color: 'white', fontSize: '11px', margin: '6px 0', height: '2.4em', overflow: 'hidden', lineHeight: '1.2', opacity: 0.9 }}>{item.name}</p>
+                  
+                  {/* REYTING */}
+                  <div style={{ display: 'flex', alignItems: 'center', gap: '3px', marginBottom: '8px' }}>
+                    <span style={{ color: '#fbbf24', fontSize: '10px' }}>★ 4.7</span>
+                    <span style={{ color: 'rgba(255,255,255,0.4)', fontSize: '9px' }}>(54 ta sharh)</span>
+                  </div>
+
+                  {/* 🆕 UZUM TUGMASI (GLASS STYLE) */}
                   <button 
                     onClick={() => { setSelectedProduct(item); setCount(1); }}
-                    style={{ marginTop: '10px', width: '100%', padding: '8px', backgroundColor: '#5A31F4', color: 'white', border: 'none', borderRadius: '12px', fontSize: '10px', fontWeight: '700', cursor: 'pointer' }}
+                    style={{ 
+                      marginTop: 'auto', 
+                      width: '100%', 
+                      padding: '10px', 
+                      background: 'rgba(255, 255, 255, 0.1)', 
+                      backdropFilter: 'blur(5px)',
+                      color: 'white', 
+                      border: '1.5px solid rgba(255,255,255,0.2)', 
+                      borderRadius: '12px', 
+                      fontSize: '11px', 
+                      fontWeight: '700', 
+                      cursor: 'pointer',
+                      display: 'flex',
+                      alignItems: 'center',
+                      justifyContent: 'center',
+                      gap: '5px',
+                      textTransform: 'uppercase'
+                    }}
                   >
-                    BUYURTMA BERISH
+                    <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5"><path d="M6 2L3 6v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2V6l-3-4Z"/><path d="M16 10a4 4 0 0 1-8 0"/></svg>
+                    Ertaga
                   </button>
                 </div>
               </div>
