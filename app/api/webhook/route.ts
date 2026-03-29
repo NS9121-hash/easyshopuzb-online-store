@@ -26,7 +26,7 @@ export async function POST(req: Request) {
       const fileData = await fileRes.json();
       const imageUrl = `https://api.telegram.org/file/bot${process.env.BOT_TOKEN}/${fileData.result.file_path}`;
 
-      await supabase.from('clothes').insert([{ 
+      await supabase.from('Clothes').insert([{ 
         name, 
         price: parseInt(price.replace(/\D/g, '')), 
         sizes, 
