@@ -12,6 +12,8 @@ export default function Home() {
   const [items, setItems] = useState<any[]>([]);
   const [selectedProduct, setSelectedProduct] = useState<any>(null);
   const [count, setCount] = useState(1);
+  // 🆕 Video yuklanganini aniqlash uchun state
+  const [videoLoaded, setVideoLoaded] = useState(false);
 
   const fetchItems = async () => {
     const { data } = await supabase.from('Clothes').select('*').order('created_at', { ascending: false });
@@ -46,28 +48,53 @@ export default function Home() {
         <p style={{ fontSize: '11px', fontWeight: '700', color: '#e2e8f0', letterSpacing: '4px', marginTop: '5px' }}>OSON ONLINE XARID</p>
       </header>
 
-      {/* 🔄 ASOSIY KONTENT KONTEYNERI (STABIL WIDTH) */}
+      {/* 🔄 ASOSIY KONTENT KONTEYNERI */}
       <div style={{
         width: '90%',
-        maxWidth: '500px', // FIX: Bir xil o'lcham sakrashni to'xtatadi
+        maxWidth: '500px',
         zIndex: 10,
         position: 'relative',
         minHeight: '400px'
       }}>
         
-        {/* --- 🌊 HOME (VIDEO HAR DOIM LOAD BO'LIB TURADI) --- */}
+        {/* --- 🌊 HOME (VIDEO OPTIMIZATSIYA QILINDI) --- */}
         <div style={{
-          display: activeTab === 'Home' ? 'flex' : 'none', // FIX: Video o'chib ketmaydi, faqat yashirinadi
+          display: activeTab === 'Home' ? 'flex' : 'none',
           width: '100%', aspectRatio: '4/5', borderRadius: '35px', position: 'relative',
           overflow: 'hidden', border: '1.5px solid rgba(255,255,255,0.3)',
           boxShadow: '0 25px 50px rgba(0,0,0,0.5)',
-          flexDirection: 'column', justifyContent: 'center', alignItems: 'center'
+          flexDirection: 'column', justifyContent: 'center', alignItems: 'center',
+          backgroundColor: '#050b14' // Video ochilguncha qora fon
         }}>
-          <video autoPlay muted loop playsInline style={{ position: 'absolute', inset: 0, width: '100%', height: '100%', objectFit: 'cover' }}>
+          {/* 🆕 Optimizatsiya qilingan video tegi */}
+          <video 
+            autoPlay 
+            muted 
+            loop 
+            playsInline 
+            preload="auto"
+            poster="/IMG_2933.jpeg" // Video yuklanguncha orqa fon rasm turadi
+            onLoadedData={() => setVideoLoaded(true)} // Video tayyor bo'lganda opacity o'zgaradi
+            style={{ 
+              position: 'absolute', 
+              inset: 0, 
+              width: '100%', 
+              height: '100%', 
+              objectFit: 'cover',
+              opacity: videoLoaded ? 1 : 0, // Faqat yuklanganda ko'rinadi
+              transition: 'opacity 0.8s ease-in-out' // Yumshoq chiqish
+            }}
+          >
             <source src="/-1880952146411559581.mp4" type="video/mp4" />
           </video>
-          <h2 style={{ position: 'relative', zIndex: 2, color: '#fbbf24', fontSize: '26px', fontWeight: '900', textAlign: 'center', textShadow: '2px 2px 15px black', margin: 0 }}>ASSALOMU ALEYKUM</h2>
-          <p style={{ position: 'relative', zIndex: 2, color: 'white', fontSize: '10px', fontWeight: '700', textAlign: 'center', marginTop: '10px', textShadow: '2px 2px 10px black', letterSpacing: '1.5px', textTransform: 'uppercase' }}>ONLAYN KIYIM DO'KONIMIZGA XUSH KELIBSIZ</p>
+
+          {/* Yozuvlar video yuklanishidan qat'iy nazar ko'rinadi */}
+          <h2 style={{ position: 'relative', zIndex: 2, color: '#fbbf24', fontSize: '26px', fontWeight: '900', textAlign: 'center', textShadow: '2px 2px 15px black', margin: 0 }}>
+            ASSALOMU ALEYKUM
+          </h2>
+          <p style={{ position: 'relative', zIndex: 2, color: 'white', fontSize: '10px', fontWeight: '700', textAlign: 'center', marginTop: '10px', textShadow: '2px 2px 10px black', letterSpacing: '1.5px', textTransform: 'uppercase' }}>
+            ONLAYN KIYIM DO'KONIMIZGA XUSH KELIBSIZ
+          </p>
         </div>
 
         {/* --- 🛍️ KIYIMLAR --- */}
@@ -85,14 +112,14 @@ export default function Home() {
           </div>
         )}
 
-        {/* --- SAVAT VA BOSHQA TABLAR --- */}
+        {/* --- BOSHQA TABLAR --- */}
         {activeTab === 'Savat' && <div style={{ color: 'white', textAlign: 'center', padding: '40px', background: 'rgba(255,255,255,0.05)', borderRadius: '30px', backdropFilter: 'blur(20px)' }}>SAVATCHANGIZ BO'SH</div>}
         {activeTab === 'Yurak' && <div style={{ color: 'white', textAlign: 'center', padding: '40px' }}>YOQTIRGANLAR RO'YXATI BO'SH</div>}
         {activeTab === 'AI' && <div style={{ color: 'white', textAlign: 'center', padding: '40px' }}>AI XIZMATI TEZ ORADA...</div>}
         {activeTab === 'Profil' && <div style={{ color: 'white', textAlign: 'center', padding: '40px' }}>PROFIL MA'LUMOTLARI</div>}
       </div>
 
-      {/* 🛍️ MODAL (SIZNING DIZAYN) */}
+      {/* 🛍️ MODAL */}
       {selectedProduct && (
         <div style={{ position: 'fixed', inset: 0, backgroundColor: 'white', zIndex: 1000, display: 'flex', flexDirection: 'column', animation: 'slideUp 0.3s cubic-bezier(0.4, 0, 0.2, 1)' }}>
           <div style={{ position: 'relative', width: '100%', aspectRatio: '4/5' }}>
@@ -118,7 +145,7 @@ export default function Home() {
         </div>
       )}
 
-      {/* 📱 6 TALIK LIQUID GLASS MENYU */}
+      {/* 📱 6 TALIK MENU */}
       <nav style={{ position: 'fixed', bottom: '30px', width: '95%', maxWidth: '440px', height: '70px', borderRadius: '35px', background: 'rgba(255, 255, 255, 0.12)', backdropFilter: 'blur(25px)', border: '1px solid rgba(255, 255, 255, 0.2)', display: 'flex', justifyContent: 'space-around', alignItems: 'center', padding: '0 8px', zIndex: 100 }}>
         {[
           { id: 'Home', name: 'ASOSIY', icon: 'm3 9 9-7 9 7v11a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z' },
