@@ -1,46 +1,44 @@
 export default function Home() {
   return (
-    <div style={{
+    <main style={{
       position: 'relative',
       minHeight: '100dvh',
-      width: '100vw',
+      width: '100dvw',
       overflow: 'hidden',
-      backgroundColor: '#000',
-      fontFamily: 'system-ui, -apple-system, sans-serif',
-      color: 'white'
+      backgroundColor: '#050b14',
+      display: 'flex',
+      flexDirection: 'column',
+      alignItems: 'center',
+      fontFamily: 'system-ui, -apple-system, sans-serif'
     }}>
-      
-      {/* 🖼️ ASOSIY ORQA FON RASMI */}
+
+      {/* 🖼️ ORQA FON RASMI */}
       <div style={{
-        position: 'absolute', top: 0, left: 0, right: 0, bottom: 0,
+        position: 'absolute', inset: 0,
         backgroundImage: "url('/IMG_2933.jpeg')",
         backgroundSize: 'cover',
         backgroundPosition: 'center',
         zIndex: 0
       }}></div>
 
-      {/* 🏠 ASOSIY KONTENT */}
+      {/* 🏠 KONTENT */}
       <div style={{
-        position: 'relative',
-        zIndex: 10,
-        display: 'flex',
-        flexDirection: 'column',
-        alignItems: 'center',
-        height: '100vh',
-        paddingTop: '60px'
+        position: 'relative', zIndex: 10,
+        display: 'flex', flexDirection: 'column', alignItems: 'center',
+        width: '100%', height: '100dvh', paddingTop: '60px'
       }}>
 
-        {/* 👑 TEPADAGI YOZUVLAR */}
+        {/* 👑 LOGOTIP */}
         <header style={{ textAlign: 'center', marginBottom: '40px' }}>
-          <h1 style={{ fontSize: '32px', fontWeight: '900', margin: 0, letterSpacing: '1px', textShadow: '0 4px 15px rgba(0,0,0,0.5)' }}>
+          <h1 style={{ fontSize: '32px', fontWeight: '900', color: 'white', margin: 0, textShadow: '0 4px 10px rgba(0,0,0,0.5)' }}>
             EASYSHOP_<span style={{ color: '#fbbf24' }}>UZB</span>
           </h1>
-          <p style={{ fontSize: '11px', fontWeight: '700', letterSpacing: '4px', marginTop: '5px', color: '#e2e8f0', textShadow: '0 2px 5px rgba(0,0,0,0.5)' }}>
+          <p style={{ fontSize: '11px', fontWeight: '700', color: '#e2e8f0', letterSpacing: '4px', marginTop: '5px' }}>
             OSON ONLINE XARID
           </p>
         </header>
 
-        {/* 🌊 O'RTADAGI RAMKA VA ICHIDAGI VIDEO (Tabiiy Tiniq Suv) */}
+        {/* 🌊 O'RTADAGI RAMKA (FAQAT TINIQ VIDEO) */}
         <div style={{
           width: '85%',
           maxWidth: '350px',
@@ -52,10 +50,10 @@ export default function Home() {
           flexDirection: 'column',
           justifyContent: 'center',
           alignItems: 'center',
-          boxShadow: '0 25px 50px rgba(0,0,0,0.6)',
-          border: '1.5px solid rgba(255,255,255,0.25)'
+          border: '1.5px solid rgba(255,255,255,0.3)',
+          boxShadow: '0 25px 50px rgba(0,0,0,0.5)'
         }}>
-          {/* 📹 RAMKA ICHIDAGI VIDEO (Hech qanday qora pardasiz, yorqinligi o'chirilgan, 100% tabiiy) */}
+          {/* 📹 VIDEO: 100% TABIIY VA TINIQ HOLATDA */}
           <video
             autoPlay
             muted
@@ -63,87 +61,32 @@ export default function Home() {
             playsInline
             style={{
               position: 'absolute',
-              top: 0, left: 0, width: '100%', height: '100%',
+              inset: 0,
+              width: '100%',
+              height: '100%',
               objectFit: 'cover',
               zIndex: 0
             }}
           >
             <source src="/-1880952146411559581.mp4" type="video/mp4" />
           </video>
-          
-          {/* Suyuq Oyna Overlay-i (Video qoraymasligi va tekst o'qilishi uchun tiniq gradient) */}
-          <div style={{ 
-            position: 'absolute', 
-            inset: 0, 
-            background: 'linear-gradient(to top, rgba(0,0,0,0.4) 0%, rgba(0,0,0,0) 40%, rgba(0,0,0,0) 60%, rgba(0,0,0,0.4) 100%)', 
-            zIndex: 1 
-          }}></div>
 
-          {/* RAMKA ICHIDAGI MATN (Joyida qotirilgan, kuchli soya bilan yorqin suvda ham o'qiladi) */}
+          {/* MATN: Yozuvlar o'zgarishsiz, o'qilishi uchun orqasidagi soya kuchli qoladi */}
           <h2 style={{
-            position: 'relative', zIndex: 2, color: '#fbbf24', fontSize: '28px', fontWeight: '900', textAlign: 'center', margin: 0,
-            textShadow: '0px 2px 15px rgba(0,0,0,1), 0px 4px 20px rgba(0,0,0,0.8)', padding: '0 20px'
+            position: 'relative', zIndex: 2, color: '#fbbf24', fontSize: '28px', fontWeight: '900', textAlign: 'center',
+            textShadow: '2px 2px 15px rgba(0,0,0,1)', padding: '0 20px', margin: 0
           }}>
             ASSALOMU ALEYKUM
           </h2>
           <p style={{
-            position: 'relative', zIndex: 2, color: '#ffffff', fontSize: '13px', fontWeight: '700', textAlign: 'center',
-            marginTop: '10px', marginBottom: 0, textShadow: '0px 2px 10px rgba(0,0,0,1), 0px 2px 15px rgba(0,0,0,0.8)', padding: '0 30px', lineHeight: '1.5'
+            position: 'relative', zIndex: 2, color: 'white', fontSize: '13px', fontWeight: '700', textAlign: 'center',
+            marginTop: '10px', textShadow: '2px 2px 10px rgba(0,0,0,1)', padding: '0 30px', margin: 0
           }}>
             ONLAYN DO'KONIMIZGA XUSH KELIBSIZ!
           </p>
         </div>
 
-        {/* 📱 PASTDAGI MENYU (HAQIQIY BARQAROR SHAFFOF OYNA) */}
-        <div style={{
-          position: 'absolute',
-          bottom: '30px',
-          width: '90%',
-          maxWidth: '380px',
-          height: '75px',
-          borderRadius: '40px',
-          /* Suyuq shisha ko'rinishi: Mayin shaffof oq fon (saturate olib tashlandi, blur bor) */
-          background: 'rgba(255, 255, 255, 0.12)', 
-          backdropFilter: 'blur(25px)', 
-          WebkitBackdropFilter: 'blur(25px)', 
-          border: '1px solid rgba(255, 255, 255, 0.2)', 
-          borderTop: '1px solid rgba(255, 255, 255, 0.3)', 
-          display: 'flex',
-          justifyContent: 'space-around',
-          alignItems: 'center',
-          padding: '0 10px',
-          boxShadow: '0 10px 30px rgba(0,0,0,0.3)',
-          zIndex: 20
-        }}>
-          
-          {/* Kiyimlar (Aktiv) */}
-          <div style={{ display: 'flex', flexDirection: 'column', alignItems: 'center', gap: '5px' }}>
-            <div style={{ padding: '8px', backgroundColor: 'rgba(255,255,255,0.15)', borderRadius: '50%', boxShadow: '0 0 10px rgba(255,255,255,0.1)' }}>
-               <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="#fbbf24" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round"><path d="M20.38 3.46 16 2a8.5 8.5 0 0 1-8 0L3.62 3.46a2 2 0 0 0-1.34 2.23l.58 3.47a1 1 0 0 0 .99.84H6v10c0 1.1.9 2 2 2h8a2 2 0 0 0 2-2V10h2.15a1 1 0 0 0 .99-.84l.58-3.47a2 2 0 0 0-1.34-2.23z"/></svg>
-            </div>
-            <span style={{ fontSize: '10px', color: '#fbbf24', fontWeight: '700' }}>Kiyimlar</span>
-          </div>
-
-          {/* Savat */}
-          <div style={{ display: 'flex', flexDirection: 'column', alignItems: 'center', gap: '6px', opacity: 0.9 }}>
-            <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="white" strokeWidth="2.2" strokeLinecap="round" strokeLinejoin="round"><circle cx="8" cy="21" r="1"/><circle cx="19" cy="21" r="1"/><path d="M2.05 2.05h2l2.66 12.42a2 2 0 0 0 2 1.58h9.78a2 2 0 0 0 1.95-1.57l1.65-7.43H5.12"/></svg>
-            <span style={{ fontSize: '10px', color: 'white', fontWeight: '600' }}>Savat</span>
-          </div>
-
-          {/* AI */}
-          <div style={{ display: 'flex', flexDirection: 'column', alignItems: 'center', gap: '6px', opacity: 0.9 }}>
-            <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="white" strokeWidth="2.2" strokeLinecap="round" strokeLinejoin="round"><path d="m12 3-1.912 5.813a2 2 0 0 1-1.275 1.275L3 12l5.813 1.912a2 2 0 0 1 1.275 1.275L12 21l1.912-5.813a2 2 0 0 1 1.275-1.275L21 12l-5.813-1.912a2 2 0 0 1-1.275-1.275L12 3Z"/></svg>
-            <span style={{ fontSize: '10px', color: 'white', fontWeight: '600' }}>AI</span>
-          </div>
-
-          {/* Profil */}
-          <div style={{ display: 'flex', flexDirection: 'column', alignItems: 'center', gap: '6px', opacity: 0.9 }}>
-            <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="white" strokeWidth="2.2" strokeLinecap="round" strokeLinejoin="round"><path d="M19 21v-2a4 4 0 0 0-4-4H9a4 4 0 0 0-4 4v2"/><circle cx="12" cy="7" r="4"/></svg>
-            <span style={{ fontSize: '10px', color: 'white', fontWeight: '600' }}>Profil</span>
-          </div>
-
-        </div>
       </div>
-    </div>
+    </main>
   );
 }
