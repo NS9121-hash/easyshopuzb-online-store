@@ -204,3 +204,5 @@ export default function Home() {
         @keyframes fadeIn { from { opacity: 0; } to { opacity: 1; } }
       `}</style>
     </main>
+  );
+}
