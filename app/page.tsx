@@ -2,6 +2,7 @@
 import { useEffect, useState, useRef } from 'react';
 import { createClient } from '@supabase/supabase-js';
 
+// SUPABASE'GA ULANISH
 const supabase = createClient(
   process.env.NEXT_PUBLIC_SUPABASE_URL!,
   process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY!
@@ -10,17 +11,34 @@ const supabase = createClient(
 export default function Home() {
   const [activeTab, setActiveTab] = useState('Home');
   const [items, setItems] = useState<any[]>([]);
+  const [cart, setCart] = useState<any[]>([]); // Savat uchun
   const [selectedProduct, setSelectedProduct] = useState<any>(null);
   const [count, setCount] = useState(1);
   const videoRef = useRef<HTMLVideoElement>(null);
 
-  const fetchItems = async () => {
-    const { data } = await supabase.from('Clothes').select('*').order('created_at', { ascending: false });
-    if (data) setItems(data);
+  // SAVATGA QO'SHISH FUNKSIYASI
+  const handleAddToCart = (product: any) => {
+    const newItem = { ...product, qty: count, addedAt: new Date() };
+    setCart((prev) => [...prev, newItem]);
+    setSelectedProduct(null);
+    setActiveTab('Savat'); 
   };
 
+  // MA'LUMOTLARNI TORTIB OLISH
+  const fetchItems = async () => {
+    const { data, error } = await supabase
+      .from('Clothes')
+      .select('*')
+      .order('created_at', { ascending: false });
+      
+    if (data) setItems(data);
+    if (error) console.error("Kiyimlarni olishda xato:", error);
+  };
+
+  // REALTIME - JONLI YANGILANISH (Saytni yangilamasdan)
   useEffect(() => {
     fetchItems();
+    
     const channel = supabase.channel('realtime_clothes')
       .on('postgres_changes', { event: 'INSERT', schema: 'public', table: 'Clothes' }, (payload) => {
         setItems((prev) => [payload.new, ...prev]);
@@ -29,6 +47,7 @@ export default function Home() {
         setItems((prev) => prev.filter(item => item.id !== payload.old.id));
       })
       .subscribe();
+      
     return () => { supabase.removeChannel(channel); };
   }, []);
 
@@ -68,6 +87,7 @@ export default function Home() {
           </div>
         )}
 
+        {/* 🛍️ BAZADAN KELGAN KIYIMLAR */}
         {activeTab === 'Kiyimlar' && (
           <div style={{ display: 'grid', gridTemplateColumns: 'repeat(2, 1fr)', gap: '15px', animation: 'fadeIn 0.3s ease' }}>
             {items.map((item) => (
@@ -97,8 +117,29 @@ export default function Home() {
           </div>
         )}
 
-        {activeTab === 'Savat' && <div style={{ color: 'white', textAlign: 'center', padding: '50px', background: 'rgba(255, 255, 255, 0.05)', borderRadius: '30px', backdropFilter: 'blur(20px)' }}>SAVATCHANGIZ BO'SH</div>}
+        {/* SAVAT VA YOQTIRGANLAR */}
+        {activeTab === 'Savat' && (
+          <div style={{ color: 'white', animation: 'fadeIn 0.3s ease' }}>
+             {cart.length === 0 ? (
+               <div style={{ textAlign: 'center', padding: '50px', background: 'rgba(255, 255, 255, 0.05)', borderRadius: '30px', backdropFilter: 'blur(20px)' }}>SAVATCHANGIZ BO'SH</div>
+             ) : (
+               <div style={{ display: 'flex', flexDirection: 'column', gap: '15px' }}>
+                 {cart.map((c, i) => (
+                   <div key={i} style={{ display: 'flex', gap: '15px', background: 'rgba(255, 255, 255, 0.05)', padding: '15px', borderRadius: '25px', border: '1px solid rgba(255,255,255,0.15)', alignItems: 'center' }}>
+                     <img src={c.image_url} style={{ width: '65px', height: '65px', borderRadius: '15px', objectFit: 'cover' }} />
+                     <div style={{ flex: 1 }}>
+                       <div style={{ fontSize: '14px', fontWeight: '700' }}>{c.name}</div>
+                       <div style={{ fontSize: '12px', color: '#fbbf24', marginTop: '4px', fontWeight: '800' }}>{c.price.toLocaleString()} so'm  <span style={{color: 'white', opacity: 0.5}}>x {c.qty}</span></div>
+                     </div>
+                   </div>
+                 ))}
+               </div>
+             )}
+          </div>
+        )}
+
         {activeTab === 'Yoqtirganlar' && <div style={{ color: 'white', textAlign: 'center', padding: '50px' }}>YOQTIRGANLAR RO'YXATI BO'SH</div>}
+        {activeTab === 'AI' && <div style={{ color: 'white', textAlign: 'center', padding: '50px' }}>AI YORDAMCHI TEZ ORADA</div>}
       </div>
 
       {/* 🛍️ PREMIUM MODAL (DETALNIY VIEW) */}
@@ -150,7 +191,6 @@ export default function Home() {
 
               {/* ACTION BUTTONS */}
               <div style={{ marginTop: 'auto', marginBottom: '35px', display: 'flex', gap: '15px', alignItems: 'center' }}>
-                {/* SONINI TANLASH (GLASS STYLE) */}
                 <div style={{ 
                   display: 'flex', alignItems: 'center', gap: '15px', 
                   background: 'rgba(255,255,255,0.05)', borderRadius: '22px', 
@@ -161,9 +201,9 @@ export default function Home() {
                   <button onClick={() => setCount(count+1)} style={{ border: 'none', background: 'none', color: 'white', fontSize: '24px', width: '45px', height: '45px', cursor: 'pointer' }}>+</button>
                 </div>
 
-                {/* SAVATGA O'TISH TUGMASI */}
+                {/* SAVATGA QO'SHISH TUGMASI ULANDI */}
                 <button 
-                  onClick={() => { setSelectedProduct(null); setActiveTab('Savat'); }}
+                  onClick={() => handleAddToCart(selectedProduct)}
                   style={{ 
                     flex: 1, height: '60px', 
                     background: 'linear-gradient(90deg, #fbbf24 0%, #d97706 100%)', 
@@ -172,7 +212,7 @@ export default function Home() {
                     boxShadow: '0 10px 30px rgba(251, 191, 36, 0.3)',
                     cursor: 'pointer', transition: '0.3s'
                   }}>
-                  SAVATGA O'TISH
+                  SAVATGA QO'SHISH
                 </button>
               </div>
             </div>
@@ -180,6 +220,7 @@ export default function Home() {
         </div>
       )}
 
+      {/* SIZNING ORIGINAL NAVIGATSIYANGIZ */}
       <nav style={{ position: 'fixed', bottom: '30px', width: '95%', maxWidth: '440px', height: '70px', borderRadius: '35px', background: 'rgba(255, 255, 255, 0.12)', backdropFilter: 'blur(25px) saturate(160%)', border: '1px solid rgba(255, 255, 255, 0.2)', display: 'flex', justifyContent: 'space-around', alignItems: 'center', padding: '0 8px', zIndex: 100 }}>
         {[
           { id: 'Home', name: 'ASOSIY', icon: 'm3 9 9-7 9 7v11a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z' },
