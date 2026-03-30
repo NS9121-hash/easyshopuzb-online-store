@@ -41,7 +41,6 @@ export default function Home() {
       padding: '40px 0 120px 0', boxSizing: 'border-box'
     }}>
 
-      {/* 🖼️ ASOSIY BACKGROUND */}
       <div style={{ position: 'absolute', inset: 0, backgroundImage: "url('/IMG_2933.jpeg')", backgroundSize: 'cover', backgroundPosition: 'center', zIndex: 0 }}></div>
 
       <header style={{ textAlign: 'center', marginBottom: '30px', zIndex: 10 }}>
@@ -53,79 +52,43 @@ export default function Home() {
 
       <div style={{ width: '90%', maxWidth: '500px', zIndex: 10, position: 'relative' }}>
         
-        {/* --- 🌊 HOME TAB --- */}
-        <div style={{
-          display: activeTab === 'Home' ? 'flex' : 'none',
-          width: '100%', aspectRatio: '4/5', borderRadius: '35px', position: 'relative',
-          overflow: 'hidden', border: '1.5px solid rgba(255,255,255,0.2)',
-          boxShadow: '0 25px 50px rgba(0,0,0,0.5)',
-          flexDirection: 'column', justifyContent: 'center', alignItems: 'center',
-          background: "url('/IMG_2933.jpeg') center/cover"
-        }}>
-          <video ref={videoRef} autoPlay muted loop playsInline preload="auto" style={{ position: 'absolute', inset: 0, width: '100%', height: '100%', objectFit: 'cover' }}>
-            <source src="/-1880952146411559581.mp4" type="video/mp4" />
-          </video>
-          <h2 style={{ position: 'relative', zIndex: 2, color: '#fbbf24', fontSize: '28px', fontWeight: '900', textAlign: 'center', textShadow: '2px 2px 20px black', margin: 0 }}>ASSALOMU ALEYKUM</h2>
-          <p style={{ position: 'relative', zIndex: 2, color: 'white', fontSize: '11px', fontWeight: '700', textAlign: 'center', marginTop: '10px', textShadow: '2px 2px 15px black', letterSpacing: '1px', textTransform: 'uppercase' }}>ONLAYN KIYIM DO'KONIMIZGA XUSH KELIBSIZ</p>
-        </div>
+        {activeTab === 'Home' && (
+          <div style={{
+            width: '100%', aspectRatio: '4/5', borderRadius: '35px', position: 'relative',
+            overflow: 'hidden', border: '1.5px solid rgba(255,255,255,0.2)',
+            boxShadow: '0 25px 50px rgba(0,0,0,0.5)',
+            display: 'flex', flexDirection: 'column', justifyContent: 'center', alignItems: 'center',
+            background: "url('/IMG_2933.jpeg') center/cover"
+          }}>
+            <video ref={videoRef} autoPlay muted loop playsInline preload="auto" style={{ position: 'absolute', inset: 0, width: '100%', height: '100%', objectFit: 'cover' }}>
+              <source src="/-1880952146411559581.mp4" type="video/mp4" />
+            </video>
+            <h2 style={{ position: 'relative', zIndex: 2, color: '#fbbf24', fontSize: '28px', fontWeight: '900', textAlign: 'center', textShadow: '2px 2px 20px black', margin: 0 }}>ASSALOMU ALEYKUM</h2>
+            <p style={{ position: 'relative', zIndex: 2, color: 'white', fontSize: '11px', fontWeight: '700', textAlign: 'center', marginTop: '10px', textShadow: '2px 2px 15px black', letterSpacing: '1px', textTransform: 'uppercase' }}>ONLAYN KIYIM DO'KONIMIZGA XUSH KELIBSIZ</p>
+          </div>
+        )}
 
-        {/* --- 🛍️ KIYIMLAR (YANGILANGAN MUKAMMAL DIZAYN) --- */}
         {activeTab === 'Kiyimlar' && (
           <div style={{ display: 'grid', gridTemplateColumns: 'repeat(2, 1fr)', gap: '15px', animation: 'fadeIn 0.3s ease' }}>
             {items.map((item) => (
               <div key={item.id} style={{ 
                 background: 'rgba(255, 255, 255, 0.05)', 
                 borderRadius: '25px', 
-                border: '1.5px solid rgba(255,255,255,0.15)', 
+                border: '1px solid rgba(255,255,255,0.15)', 
                 overflow: 'hidden', 
                 display: 'flex', 
                 flexDirection: 'column',
                 boxShadow: '0 10px 30px rgba(0,0,0,0.3)'
               }}>
-                {/* RASM - BOSGANDA MODAL OCHILADI */}
                 <div style={{ position: 'relative', width: '100%', aspectRatio: '1/1' }}>
                   <img src={item.image_url} alt={item.name} onClick={() => { setSelectedProduct(item); setCount(1); }} style={{ width: '100%', height: '100%', objectFit: 'cover', cursor: 'pointer' }} />
-                  {/* ❤️ YURAKCHA */}
-                  <div style={{ position: 'absolute', top: '12px', right: '12px', color: 'rgba(255,255,255,0.6)' }}>
-                    <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2"><path d="M20.84 4.61a5.5 5.5 0 0 0-7.78 0L12 5.67l-1.06-1.06a5.5 5.5 0 0 0-7.78 7.78l1.06 1.06L12 21.23l7.78-7.78 1.06-1.06a5.5 5.5 0 0 0 0-7.78z"></path></svg>
-                  </div>
                 </div>
 
                 <div style={{ padding: '12px', display: 'flex', flexDirection: 'column', flex: 1 }}>
-                  {/* FAQAT ASL NARX */}
-                  <div style={{ color: '#fbbf24', fontSize: '18px', fontWeight: '800', textShadow: '0 0 10px rgba(251,191,36,0.3)' }}>
-                    {item.price?.toLocaleString()} <span style={{fontSize: '10px'}}>so'm</span>
-                  </div>
-                  
-                  {/* NOM */}
+                  <div style={{ color: '#fbbf24', fontSize: '18px', fontWeight: '800' }}>{item.price?.toLocaleString()} <span style={{fontSize: '10px'}}>so'm</span></div>
                   <p style={{ color: 'white', fontSize: '12px', margin: '6px 0', height: '2.8em', overflow: 'hidden', lineHeight: '1.4', opacity: 0.9 }}>{item.name}</p>
-                  
-                  {/* 🆕 BUYURTMA BERISH TUGMASI - SAVATGA O'TADI */}
-                  <button 
-                    onClick={() => setActiveTab('Savat')}
-                    style={{ 
-                      marginTop: 'auto', 
-                      width: '100%', 
-                      padding: '12px', 
-                      background: 'rgba(255, 255, 255, 0.1)', 
-                      backdropFilter: 'blur(10px)',
-                      color: 'white', 
-                      border: '1.5px solid rgba(255,255,255,0.1)', 
-                      borderRadius: '15px', 
-                      fontSize: '10px', 
-                      fontWeight: '800', 
-                      cursor: 'pointer',
-                      display: 'flex',
-                      alignItems: 'center',
-                      justifyContent: 'center',
-                      gap: '5px',
-                      textTransform: 'uppercase',
-                      transition: '0.2s active'
-                    }}
-                    onMouseDown={(e) => e.currentTarget.style.transform = 'scale(0.95)'}
-                    onMouseUp={(e) => e.currentTarget.style.transform = 'scale(1)'}
-                  >
-                    <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="3"><path d="M6 2L3 6v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2V6l-3-4Z"/><path d="M16 10a4 4 0 0 1-8 0"/></svg>
+                  <button onClick={() => { setSelectedProduct(item); setCount(1); }}
+                    style={{ marginTop: 'auto', width: '100%', padding: '12px', background: 'rgba(255, 255, 255, 0.1)', backdropFilter: 'blur(10px)', color: 'white', border: '1.5px solid rgba(255,255,255,0.1)', borderRadius: '15px', fontSize: '10px', fontWeight: '800', cursor: 'pointer', textTransform: 'uppercase' }}>
                     BUYURTMA BERISH
                   </button>
                 </div>
@@ -138,32 +101,85 @@ export default function Home() {
         {activeTab === 'Yoqtirganlar' && <div style={{ color: 'white', textAlign: 'center', padding: '50px' }}>YOQTIRGANLAR RO'YXATI BO'SH</div>}
       </div>
 
-      {/* 🛍️ MODAL (MAHSULOT SAHIFASI) */}
+      {/* 🛍️ PREMIUM MODAL (DETALNIY VIEW) */}
       {selectedProduct && (
-        <div style={{ position: 'fixed', inset: 0, backgroundColor: 'white', zIndex: 1000, display: 'flex', flexDirection: 'column', animation: 'slideUp 0.3s ease-out' }}>
-          <div style={{ position: 'relative', width: '100%', aspectRatio: '4/5' }}>
-            <button onClick={() => setSelectedProduct(null)} style={{ position: 'absolute', top: '20px', left: '20px', zIndex: 10, background: 'rgba(0,0,0,0.5)', border: 'none', borderRadius: '50%', width: '40px', height: '40px', color: 'white', fontSize: '20px' }}>✕</button>
-            <img src={selectedProduct.image_url} style={{ width: '100%', height: '100%', objectFit: 'cover' }} />
-          </div>
-          <div style={{ padding: '25px', flex: 1, backgroundColor: 'white', borderRadius: '30px 30px 0 0', marginTop: '-30px', position: 'relative', color: '#1a1a1a' }}>
-            <div style={{ fontSize: '26px', fontWeight: '800', color: '#5A31F4' }}>{selectedProduct.price?.toLocaleString()} so'm</div>
-            <h2 style={{ fontSize: '20px', fontWeight: '700', marginTop: '10px' }}>{selectedProduct.name}</h2>
-            <div style={{ marginTop: '20px', padding: '12px', background: '#f8f9fa', borderRadius: '12px', fontSize: '13px' }}>📏 O'LCHAM: <span style={{fontWeight: 'bold'}}>{selectedProduct.sizes}</span></div>
-            <div style={{ position: 'absolute', bottom: '30px', left: '20px', right: '20px', display: 'flex', gap: '12px', alignItems: 'center' }}>
-              <div style={{ display: 'flex', alignItems: 'center', background: '#f3f4f6', borderRadius: '16px', padding: '4px' }}>
-                <button onClick={() => count > 1 && setCount(count-1)} style={{ border: 'none', width: '45px', height: '45px', fontSize: '24px', background: 'none' }}>−</button>
-                <span style={{ minWidth: '30px', textAlign: 'center', fontWeight: '800', fontSize: '18px' }}>{count}</span>
-                <button onClick={() => setCount(count+1)} style={{ border: 'none', width: '45px', height: '45px', fontSize: '24px', background: 'none' }}>+</button>
+        <div style={{ 
+          position: 'fixed', inset: 0, zIndex: 1000, 
+          display: 'flex', alignItems: 'flex-end', justifyContent: 'center',
+          backgroundColor: 'rgba(0,0,0,0.85)', backdropFilter: 'blur(10px)',
+          animation: 'fadeIn 0.3s ease'
+        }}>
+          <div style={{ 
+            width: '100%', maxWidth: '500px', height: '88dvh',
+            background: 'linear-gradient(180deg, #0f172a 0%, #050b14 100%)',
+            borderRadius: '40px 40px 0 0', position: 'relative',
+            border: '1.5px solid rgba(255,255,255,0.1)', borderBottom: 'none',
+            display: 'flex', flexDirection: 'column', overflow: 'hidden',
+            animation: 'slideUp 0.4s cubic-bezier(0.4, 0, 0.2, 1)'
+          }}>
+            {/* TEPADAGI HANDLER */}
+            <div onClick={() => setSelectedProduct(null)} style={{ width: '45px', height: '5px', background: 'rgba(255,255,255,0.2)', borderRadius: '10px', margin: '15px auto', cursor: 'pointer' }}></div>
+            
+            {/* PREMIUM RASM */}
+            <div style={{ position: 'relative', width: '92%', margin: '0 auto', aspectRatio: '1/1', borderRadius: '30px', overflow: 'hidden', boxShadow: '0 20px 40px rgba(0,0,0,0.5)', border: '1px solid rgba(255,255,255,0.1)' }}>
+              <button onClick={() => setSelectedProduct(null)} style={{ position: 'absolute', top: '15px', right: '15px', zIndex: 10, background: 'rgba(0,0,0,0.5)', backdropFilter: 'blur(10px)', border: '1px solid rgba(255,255,255,0.2)', borderRadius: '50%', width: '38px', height: '38px', color: 'white', fontSize: '18px', display: 'flex', alignItems: 'center', justifyContent: 'center', cursor: 'pointer' }}>✕</button>
+              <img src={selectedProduct.image_url} style={{ width: '100%', height: '100%', objectFit: 'cover' }} />
+            </div>
+
+            {/* MA'LUMOTLAR QISMI */}
+            <div style={{ padding: '30px 25px', flex: 1, display: 'flex', flexDirection: 'column', color: 'white' }}>
+              <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
+                <div style={{ fontSize: '30px', fontWeight: '900', color: '#fbbf24', letterSpacing: '-1px' }}>{selectedProduct.price?.toLocaleString()} <span style={{fontSize: '14px', color: 'rgba(255,255,255,0.5)'}}>so'm</span></div>
+                <div style={{ padding: '6px 12px', background: 'rgba(251,191,36,0.1)', border: '1px solid #fbbf24', borderRadius: '10px', color: '#fbbf24', fontSize: '10px', fontWeight: '800' }}>PREMIUM</div>
               </div>
-              <button onClick={() => { setSelectedProduct(null); setActiveTab('Savat'); }} style={{ flex: 1, height: '54px', backgroundColor: '#E5E1FF', color: '#5A31F4', border: 'none', borderRadius: '18px', fontWeight: '800', fontSize: '16px', display: 'flex', alignItems: 'center', justifyContent: 'center', gap: '10px' }}>
-                O'TISH
-              </button>
+              
+              <h2 style={{ fontSize: '22px', fontWeight: '700', marginTop: '12px', lineHeight: '1.2' }}>{selectedProduct.name}</h2>
+              
+              <div style={{ 
+                marginTop: '25px', padding: '15px 20px', 
+                background: 'rgba(255,255,255,0.03)', borderRadius: '22px', 
+                border: '1px solid rgba(255,255,255,0.08)',
+                display: 'flex', alignItems: 'center', gap: '12px'
+              }}>
+                <span style={{ fontSize: '20px' }}>📏</span>
+                <div style={{ flex: 1 }}>
+                  <div style={{ fontSize: '10px', color: 'rgba(255,255,255,0.4)', fontWeight: '700', letterSpacing: '1px' }}>O'LCHAMLAR:</div>
+                  <div style={{ fontSize: '16px', fontWeight: '800', marginTop: '2px', color: 'white' }}>{selectedProduct.sizes}</div>
+                </div>
+              </div>
+
+              {/* ACTION BUTTONS */}
+              <div style={{ marginTop: 'auto', marginBottom: '35px', display: 'flex', gap: '15px', alignItems: 'center' }}>
+                {/* SONINI TANLASH (GLASS STYLE) */}
+                <div style={{ 
+                  display: 'flex', alignItems: 'center', gap: '15px', 
+                  background: 'rgba(255,255,255,0.05)', borderRadius: '22px', 
+                  padding: '5px', border: '1px solid rgba(255,255,255,0.1)'
+                }}>
+                  <button onClick={() => count > 1 && setCount(count-1)} style={{ border: 'none', background: 'none', color: 'white', fontSize: '24px', width: '45px', height: '45px', cursor: 'pointer' }}>−</button>
+                  <span style={{ minWidth: '20px', textAlign: 'center', fontWeight: '900', fontSize: '20px' }}>{count}</span>
+                  <button onClick={() => setCount(count+1)} style={{ border: 'none', background: 'none', color: 'white', fontSize: '24px', width: '45px', height: '45px', cursor: 'pointer' }}>+</button>
+                </div>
+
+                {/* SAVATGA O'TISH TUGMASI */}
+                <button 
+                  onClick={() => { setSelectedProduct(null); setActiveTab('Savat'); }}
+                  style={{ 
+                    flex: 1, height: '60px', 
+                    background: 'linear-gradient(90deg, #fbbf24 0%, #d97706 100%)', 
+                    color: '#050b14', border: 'none', borderRadius: '22px', 
+                    fontWeight: '900', fontSize: '16px', letterSpacing: '0.5px',
+                    boxShadow: '0 10px 30px rgba(251, 191, 36, 0.3)',
+                    cursor: 'pointer', transition: '0.3s'
+                  }}>
+                  SAVATGA O'TISH
+                </button>
+              </div>
             </div>
           </div>
         </div>
       )}
 
-      {/* 📱 NAVIGATION */}
       <nav style={{ position: 'fixed', bottom: '30px', width: '95%', maxWidth: '440px', height: '70px', borderRadius: '35px', background: 'rgba(255, 255, 255, 0.12)', backdropFilter: 'blur(25px) saturate(160%)', border: '1px solid rgba(255, 255, 255, 0.2)', display: 'flex', justifyContent: 'space-around', alignItems: 'center', padding: '0 8px', zIndex: 100 }}>
         {[
           { id: 'Home', name: 'ASOSIY', icon: 'm3 9 9-7 9 7v11a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z' },
