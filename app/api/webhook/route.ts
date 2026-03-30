@@ -7,16 +7,26 @@ const supabase = createClient(
 );
 
 export async function POST(req: Request) {
-  // Tokeningiz xavfsiz joyda turibdi
+  // Tokeningiz va Asosiy sozlamalar o'zgarmadi
   const BOT_TOKEN = "8581890098:AAH4P8sovYinYqjMRVMpfQSHecfp7km6O0k";
+
+  // ✅ RUXSAT BERILGAN ID RAQAMLAR (Siz va do'stingiz)
+  const ALLOWED_IDS = [5249524506, 5212098605];
 
   try {
     const body = await req.json();
     const message = body.message;
 
-    if (!message) return NextResponse.json({ ok: true });
+    // 1. Xabar yoki yuboruvchi bo'lmasa, to'xtatamiz
+    if (!message || !message.from) return NextResponse.json({ ok: true });
 
-    // --- YANGI QO'SHILGAN O'CHIRISH QISMI ---
+    // 2. 🛡️ XAVFSIZLIK FILTRI: Begona odam bo'lsa, pastdagi kodlarga o'tkazmaymiz
+    if (!ALLOWED_IDS.includes(message.from.id)) {
+      console.log("🚫 Ruxsatsiz kirish urinishi! ID:", message.from.id);
+      return NextResponse.json({ ok: true });
+    }
+
+    // --- YANGI QO'SHILGAN O'CHIRISH QISMI (O'zgarmadi) ---
     if (message.reply_to_message && message.text && message.text.toLowerCase() === 'del') {
       const originalCaption = message.reply_to_message.caption || "";
       const nameToDelete = originalCaption.split('|')[0].trim(); 
@@ -29,7 +39,7 @@ export async function POST(req: Request) {
     }
     // ---------------------------------------
 
-    // Eski kodingiz - Rasmni qo'shish qismi o'zgarmasdan qoldi
+    // Rasmni qo'shish qismi - O'zgarmasdan qoldi
     if (!message.photo) {
       return NextResponse.json({ ok: true });
     }
@@ -58,7 +68,7 @@ export async function POST(req: Request) {
     }
     const sizes = parts[2] || "Standart";
 
-    // Supabase'ga ma'lumotni tiqamiz
+    // Supabase'ga ma'lumotni yuborish (O'zgarmadi)
     const { error } = await supabase
       .from('Clothes')
       .insert([{ name: name, price: price, image_url: imageUrl, sizes: sizes }]);
