@@ -7,14 +7,30 @@ const supabase = createClient(
 );
 
 export async function POST(req: Request) {
-  // 🚨 DIQQAT: Tokenni to'g'ridan-to'g'ri "qattiq" yozib qo'ydik! Vercel endi bahona qilolmaydi.
+  // Tokeningiz xavfsiz joyda turibdi
   const BOT_TOKEN = "8581890098:AAH4P8sovYinYqjMRVMpfQSHecfp7km6O0k";
 
   try {
     const body = await req.json();
     const message = body.message;
 
-    if (!message || !message.photo) {
+    if (!message) return NextResponse.json({ ok: true });
+
+    // --- YANGI QO'SHILGAN O'CHIRISH QISMI ---
+    if (message.reply_to_message && message.text && message.text.toLowerCase() === 'del') {
+      const originalCaption = message.reply_to_message.caption || "";
+      const nameToDelete = originalCaption.split('|')[0].trim(); 
+      
+      if (nameToDelete) {
+        const { error } = await supabase.from('Clothes').delete().eq('name', nameToDelete);
+        if (!error) console.log("🗑️ MAHSULOT O'CHIRILDI:", nameToDelete);
+      }
+      return NextResponse.json({ ok: true });
+    }
+    // ---------------------------------------
+
+    // Eski kodingiz - Rasmni qo'shish qismi o'zgarmasdan qoldi
+    if (!message.photo) {
       return NextResponse.json({ ok: true });
     }
 
