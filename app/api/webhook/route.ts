@@ -1,7 +1,6 @@
 import { NextResponse } from 'next/server';
 import { createClient } from '@supabase/supabase-js';
 
-// Supabase-ga ulanish
 const supabase = createClient(
   process.env.NEXT_PUBLIC_SUPABASE_URL!,
   process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY!
@@ -14,49 +13,62 @@ export async function POST(req: Request) {
     const body = await req.json();
     const message = body.message;
 
-    // Agar xabar yoki rasm bo'lmasa, to'xtatish
+    // Xabar yoki rasm bo'lmasa, indamasdan yopamiz
     if (!message || !message.photo) {
       return NextResponse.json({ ok: true });
     }
 
-    const caption = message.caption || ""; // Botga yozilgan matn
+    // ⚠️ ENG ASOSIY TEKSHIRUV: Token bormi?
+    if (!BOT_TOKEN) {
+      console.error("XATOLIK: Vercel'da TELEGRAM_BOT_TOKEN yo'q!");
+      return NextResponse.json({ ok: true });
+    }
+
+    const caption = message.caption || "Nomsiz | 0 | Standart";
     const photo = message.photo; 
 
     // Eng sifatli rasmni olish
     const fileId = photo[photo.length - 1].file_id;
 
-    // Telegramdan rasmning manzilini (URL) olish
+    // Telegramdan rasm linkini olish
     const fileResponse = await fetch(`https://api.telegram.org/bot${BOT_TOKEN}/getFile?file_id=${fileId}`);
     const fileData = await fileResponse.json();
+
+    // ⚠️ TEKSHIRUV: Telegram ruxsat bermasa (token xato bo'lsa)
+    if (!fileData.ok) {
+      console.error("TELEGRAM API XATOSI (Token xato bo'lishi mumkin):", fileData);
+      return NextResponse.json({ ok: true });
+    }
+
     const filePath = fileData.result.file_path;
     const imageUrl = `https://api.telegram.org/file/bot${BOT_TOKEN}/${filePath}`;
 
-    // Matnni qismlarga ajratish. Masalan: "Kurtka | 550000 | M, L, XL"
+    // Matnni xavfsiz bo'laklarga ajratish
     const parts = caption.split('|').map((p: string) => p.trim());
-    
     const name = parts[0] || "Yangi mahsulot";
-    const price = parseInt(parts[1]?.replace(/\s/g, '') || "0"); // Probellarni olib tashlaydi
+    
+    // Narxni xavfsiz tozalash (agar | bo'lmasa, xato bermasligi uchun)
+    let price = 0;
+    if (parts[1]) {
+      price = parseInt(parts[1].replace(/\s/g, '')) || 0;
+    }
     const sizes = parts[2] || "Standart";
 
-    // 🚀 SUPABASE BAZASIGA QO'SHISH (Aynan shu qism o'chib ketgan edi)
+    // Supabase'ga yozish
     const { error } = await supabase
-      .from('Clothes')
-      .insert([
-        { 
-          name: name, 
-          price: price, 
-          image_url: imageUrl, 
-          sizes: sizes 
-        }
-      ]);
+      .from('Clothes') // Jadval nomiga ehtiyot bo'ling
+      .insert([{ name: name, price: price, image_url: imageUrl, sizes: sizes }]);
 
     if (error) {
-      console.error("Baza xatosi:", error);
+      console.error("SUPABASE XATOSI:", error);
+    } else {
+      console.log("✅ MAHSULOT MUVAFFAQIYATLI QO'SHILDI:", name);
     }
 
     return NextResponse.json({ ok: true });
   } catch (err) {
-    console.error("Webhook xatosi:", err);
-    return NextResponse.json({ ok: false });
+    // Agar umuman boshqa narsa bo'lsa, aniq xatoni ko'rsatadi
+    console.error("Webhookning o'zida xatolik:", err);
+    return NextResponse.json({ ok: true }); // Telegram botni asabiylashtirmaslik uchun ok: true qaytaramiz
   }
 }
