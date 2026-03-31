@@ -78,6 +78,7 @@ export async function POST(req: Request) {
           updateData.name = parts[0] || existing.name;
           updateData.price = parts[1] ? parseInt(parts[1].replace(/\s/g, '')) : existing.price;
           updateData.sizes = parts[2] || existing.sizes;
+          updateData.colors = parts[3] || existing.colors; // 🎨 SHU YERGA RANG QO'SHILDI
         }
         
         await supabase.from('Clothes').update(updateData).eq('media_group_id', groupId);
@@ -95,11 +96,12 @@ export async function POST(req: Request) {
       price = parseInt(parts[1].replace(/\s/g, '')) || 0;
     }
     const sizes = parts[2] || "Standart";
+    const colors = parts[3] || ""; // 🎨 SHU YERGA RANG QO'SHILDI
 
-    // Supabase'ga ma'lumotni yuborish (media_group_id qo'shildi)
+    // Supabase'ga ma'lumotni yuborish (colors qo'shildi)
     const { error } = await supabase
       .from('Clothes')
-      .insert([{ name: name, price: price, image_url: imageUrl, sizes: sizes, media_group_id: groupId }]);
+      .insert([{ name: name, price: price, image_url: imageUrl, sizes: sizes, colors: colors, media_group_id: groupId }]);
 
     if (error) {
       console.error("SUPABASE XATOSI:", error);
