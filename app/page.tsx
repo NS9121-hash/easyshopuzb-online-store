@@ -139,6 +139,8 @@ export default function Home() {
         )}
 
         {activeTab === 'Yoqtirganlar' && <div style={{ color: 'white', textAlign: 'center', padding: '50px' }}>YOQTIRGANLAR RO'YXATI BO'SH</div>}
+        {/* YANGI QO'SHILGAN LOOK BO'LIMI YUZI */}
+        {activeTab === 'Look' && <div style={{ color: '#fbbf24', textAlign: 'center', padding: '50px', fontWeight: 'bold' }}>PREMIUM LOOKS TEZ ORADA</div>}
         {activeTab === 'AI' && <div style={{ color: 'white', textAlign: 'center', padding: '50px' }}>AI YORDAMCHI TEZ ORADA</div>}
       </div>
 
@@ -220,22 +222,26 @@ export default function Home() {
         </div>
       )}
 
-      {/* SIZNING ORIGINAL NAVIGATSIYANGIZ */}
+      {/* SIZNING YANGILANGAN NAVIGATSIYANGIZ */}
       <nav style={{ position: 'fixed', bottom: '30px', width: '95%', maxWidth: '440px', height: '70px', borderRadius: '35px', background: 'rgba(255, 255, 255, 0.12)', backdropFilter: 'blur(25px) saturate(160%)', border: '1px solid rgba(255, 255, 255, 0.2)', display: 'flex', justifyContent: 'space-around', alignItems: 'center', padding: '0 8px', zIndex: 100 }}>
         {[
           { id: 'Home', name: 'ASOSIY', icon: 'm3 9 9-7 9 7v11a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z' },
           { id: 'Kiyimlar', name: 'KIYIMLAR', icon: 'M20.38 3.46 16 2a8.5 8.5 0 0 1-8 0L3.62 3.46a2 2 0 0 0-1.34 2.23l.58 3.47a1 1 0 0 0 .99.84H6v10c0 1.1.9 2 2 2h8a2 2 0 0 0 2-2V10h2.15a1 1 0 0 0 .99-.84l.58-3.47a2 2 0 0 0-1.34-2.23z' },
-          { id: 'Yoqtirganlar', name: 'YOQTIRGANLAR', icon: 'M20.84 4.61a5.5 5.5 0 0 0-7.78 0L12 5.67l-1.06-1.06a5.5 5.5 0 0 0-7.78 7.78l1.06 1.06L12 21.23l7.78-7.78 1.06-1.06a5.5 5.5 0 0 0 0-7.78z' },
+          { id: 'Look', name: 'LOOK', icon: 'M6 3h12l4 6-10 13L2 9Z' }, // YANGA QO'SHILGAN DIAMOND
+          { id: 'Yoqtirganlar', name: 'YOQTIRGAN', icon: 'M20.84 4.61a5.5 5.5 0 0 0-7.78 0L12 5.67l-1.06-1.06a5.5 5.5 0 0 0-7.78 7.78l1.06 1.06L12 21.23l7.78-7.78 1.06-1.06a5.5 5.5 0 0 0 0-7.78z' },
           { id: 'Savat', name: 'SAVAT', icon: 'M8 21a1 1 0 1 0 0-2 1 1 0 0 0 0 2zM19 21a1 1 0 1 0 0-2 1 1 0 0 0 0 2zM2.05 2.05h2l2.66 12.42a2 2 0 0 0 2 1.58h9.78a2 2 0 0 0 1.95-1.57l1.65-7.43H5.12' },
           { id: 'AI', name: 'AI', icon: 'm12 3-1.912 5.813a2 2 0 0 1-1.275 1.275L3 12l5.813 1.912a2 2 0 0 1 1.275 1.275L12 21l1.912-5.813a2 2 0 0 1 1.275-1.275L21 12l-5.813-1.912a2 2 0 0 1-1.275-1.275L12 3Z' },
           { id: 'Profil', name: 'PROFIL', icon: 'M19 21v-2a4 4 0 0 0-4-4H9a4 4 0 0 0-4 4v2' },
         ].map((tab) => (
           <div key={tab.id} onClick={() => setActiveTab(tab.id)} style={{ cursor: 'pointer', display: 'flex', flexDirection: 'column', alignItems: 'center', gap: '4px', flex: 1, position: 'relative' }}>
-            <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke={activeTab === tab.id ? '#fbbf24' : 'white'} strokeWidth="2.2" strokeLinecap="round" strokeLinejoin="round" style={{ transition: '0.3s' }}>
+            <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke={activeTab === tab.id ? '#fbbf24' : 'white'} strokeWidth="2.2" strokeLinecap="round" strokeLinejoin="round" style={{ transition: '0.3s' }}>
               <path d={tab.icon}/>
               {tab.id === 'Profil' && <circle cx="12" cy="7" r="4"></circle>}
+              {/* OLMOS ICHI CHIZIQLARI */}
+              {tab.id === 'Look' && <path d="M11 3 8 9l4 13 4-13-3-6" />}
+              {tab.id === 'Look' && <path d="M2 9h20" />}
             </svg>
-            <span style={{ fontSize: '7.5px', color: activeTab === tab.id ? '#fbbf24' : 'white', fontWeight: '800' }}>{tab.name}</span>
+            <span style={{ fontSize: '7px', color: activeTab === tab.id ? '#fbbf24' : 'white', fontWeight: '800' }}>{tab.name}</span>
           </div>
         ))}
       </nav>
