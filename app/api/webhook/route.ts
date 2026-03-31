@@ -44,7 +44,8 @@ export async function POST(req: Request) {
       return NextResponse.json({ ok: true });
     }
 
-    const caption = message.caption || "Nomsiz | 0 | Standart";
+    // Matn guruhdagi faqat bitta rasmda kelishi mumkin, shuning uchun bo'sh qoldiramiz
+    const caption = message.caption || ""; 
     const photo = message.photo; 
     const fileId = photo[photo.length - 1].file_id;
 
@@ -59,6 +60,33 @@ export async function POST(req: Request) {
     const filePath = fileData.result.file_path;
     const imageUrl = `https://api.telegram.org/file/bot${BOT_TOKEN}/${filePath}`;
 
+    // 🌟 UZUM MARKET MANTIG'I: ALBUM (GURUH)NI TEKSHIRISH 🌟
+    const groupId = message.media_group_id || null;
+
+    if (groupId) {
+      // Bu rasm guruhning (albumni) bir qismi bo'lsa, bazadan shu guruhni qidiramiz
+      const { data: existing } = await supabase.from('Clothes').select('*').eq('media_group_id', groupId).single();
+
+      if (existing) {
+        // Avvalgi rasmga yangisini vergul bilan ulab qo'yamiz (Karusel uchun)
+        const updatedImages = existing.image_url + ',' + imageUrl;
+        let updateData: any = { image_url: updatedImages };
+        
+        // Agar matn (caption) shu rasmda kelsa, narx va nomni ham yangilaymiz
+        if (caption) {
+          const parts = caption.split('|').map((p: string) => p.trim());
+          updateData.name = parts[0] || existing.name;
+          updateData.price = parts[1] ? parseInt(parts[1].replace(/\s/g, '')) : existing.price;
+          updateData.sizes = parts[2] || existing.sizes;
+        }
+        
+        await supabase.from('Clothes').update(updateData).eq('media_group_id', groupId);
+        console.log("✅ ALBUMGA RASM QO'SHILDI");
+        return NextResponse.json({ ok: true });
+      }
+    }
+
+    // --- 1-RASM YOKI GURUHSIR YAKKA RASM UCHUN ---
     const parts = caption.split('|').map((p: string) => p.trim());
     const name = parts[0] || "Yangi mahsulot";
     
@@ -68,10 +96,10 @@ export async function POST(req: Request) {
     }
     const sizes = parts[2] || "Standart";
 
-    // Supabase'ga ma'lumotni yuborish (O'zgarmadi)
+    // Supabase'ga ma'lumotni yuborish (media_group_id qo'shildi)
     const { error } = await supabase
       .from('Clothes')
-      .insert([{ name: name, price: price, image_url: imageUrl, sizes: sizes }]);
+      .insert([{ name: name, price: price, image_url: imageUrl, sizes: sizes, media_group_id: groupId }]);
 
     if (error) {
       console.error("SUPABASE XATOSI:", error);
