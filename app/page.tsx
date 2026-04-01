@@ -64,22 +64,25 @@ export default function Home() {
           </div>
         )}
 
+        {/* BAZADAN KELGAN KIYIMLAR */}
         {activeTab === 'Kiyimlar' && (
           <div style={{ display: 'grid', gridTemplateColumns: 'repeat(2, 1fr)', gap: '15px', animation: 'fadeIn 0.3s ease' }}>
             {items.map((item) => {
               const firstImage = item.image_url ? item.image_url.split(',')[0] : '';
               return (
                 <div key={item.id} 
-                  tabIndex={-1} // Qo'shildi: Ramka fokuslanmasligi uchun
+                  tabIndex={-1}
                   onClick={() => { 
                     setSelectedProduct(item); setCount(1); setSelectedImageIndex(0); 
                     setSelectedSize(item.sizes ? item.sizes.split(',')[0].trim() : '');
                     setSelectedColor(item.colors ? item.colors.split(',')[0].trim() : '');
                   }} 
-                  style={{ background: 'rgba(255, 255, 255, 0.03)', backdropFilter: 'blur(15px) saturate(180%)', borderRadius: '25px', border: '1px solid rgba(255,255,255,0.15)', overflow: 'hidden', display: 'flex', flexDirection: 'column', boxShadow: '0 15px 35px rgba(0,0,0,0.4)', cursor: 'pointer', WebkitTapHighlightColor: 'transparent' }}>
+                  // 🎨 1-O'ZGARISH: Kartochka burchaklari 25px dan 18px ga tushirildi (Uzum stili)
+                  style={{ background: 'rgba(255, 255, 255, 0.03)', backdropFilter: 'blur(15px) saturate(180%)', borderRadius: '18px', border: '1px solid rgba(255,255,255,0.15)', overflow: 'hidden', display: 'flex', flexDirection: 'column', boxShadow: '0 15px 35px rgba(0,0,0,0.4)', cursor: 'pointer', WebkitTapHighlightColor: 'transparent' }}>
                   
-                  <div style={{ position: 'relative', width: '100%', aspectRatio: '3/4', display: 'flex', justifyContent: 'center', alignItems: 'center' }}>
-                    <img src={firstImage} style={{ width: '90%', height: '90%', objectFit: 'contain', filter: 'drop-shadow(0px 15px 20px rgba(0,0,0,0.6))' }} />
+                  {/* 🎨 2-O'ZGARISH: Rasmning pastki burchaklari alohida 16px dumaloq qilindi */}
+                  <div style={{ position: 'relative', width: '100%', aspectRatio: '3/4', display: 'flex', justifyContent: 'center', alignItems: 'center', overflow: 'hidden', borderBottomLeftRadius: '16px', borderBottomRightRadius: '16px' }}>
+                    <img src={firstImage} style={{ width: '100%', height: '100%', objectFit: 'cover' }} />
                   </div>
                   
                   <div style={{ padding: '12px', display: 'flex', flexDirection: 'column', flex: 1, background: 'rgba(0,0,0,0.2)' }}>
@@ -87,7 +90,7 @@ export default function Home() {
                     <p style={{ color: 'white', fontSize: '12px', margin: '6px 0', height: '2.8em', overflow: 'hidden', lineHeight: '1.4', opacity: 0.9 }}>{item.name}</p>
                     
                     <button 
-                      tabIndex={-1} // Qo'shildi: Tugma fokuslanmasligi uchun
+                      tabIndex={-1}
                       onClick={(e) => {
                         e.stopPropagation(); 
                         const defaultSize = item.sizes ? item.sizes.split(',')[0].trim() : '';
@@ -95,10 +98,11 @@ export default function Home() {
                         const newItem = { ...item, qty: 1, chosenSize: defaultSize, chosenColor: defaultColor, addedAt: new Date() };
                         setCart((prev) => [...prev, newItem]);
                       }}
+                      // 🎨 3-O'ZGARISH: Tugma ham 15px dan 12px ga silliqlandi
                       style={{ 
                         marginTop: 'auto', width: '100%', padding: '10px', 
                         background: 'linear-gradient(90deg, #fbbf24 0%, #f59e0b 100%)', 
-                        color: '#050b14', border: 'none', borderRadius: '15px', 
+                        color: '#050b14', border: 'none', borderRadius: '12px', 
                         fontSize: '11px', fontWeight: '900', cursor: 'pointer', 
                         textTransform: 'uppercase', boxShadow: '0 5px 15px rgba(251, 191, 36, 0.3)',
                         WebkitTapHighlightColor: 'transparent', outline: 'none'
@@ -112,6 +116,7 @@ export default function Home() {
           </div>
         )}
 
+        {/* SAVAT VA QOLGAN BO'LIMLAR... */}
         {activeTab === 'Savat' && (
           <div style={{ color: 'white', animation: 'fadeIn 0.3s ease' }}>
              {cart.length === 0 ? (
@@ -119,8 +124,8 @@ export default function Home() {
              ) : (
                <div style={{ display: 'flex', flexDirection: 'column', gap: '15px' }}>
                  {cart.map((c, i) => (
-                   <div key={i} style={{ display: 'flex', gap: '15px', background: 'rgba(255, 255, 255, 0.05)', padding: '15px', borderRadius: '25px', border: '1px solid rgba(255,255,255,0.15)', alignItems: 'center' }}>
-                     <img src={c.image_url.split(',')[0]} style={{ width: '65px', height: '65px', borderRadius: '15px', objectFit: 'cover' }} />
+                   <div key={i} style={{ display: 'flex', gap: '15px', background: 'rgba(255, 255, 255, 0.05)', padding: '15px', borderRadius: '18px', border: '1px solid rgba(255,255,255,0.15)', alignItems: 'center' }}>
+                     <img src={c.image_url.split(',')[0]} style={{ width: '65px', height: '65px', borderRadius: '12px', objectFit: 'cover' }} />
                      <div style={{ flex: 1 }}>
                        <div style={{ fontSize: '14px', fontWeight: '700' }}>{c.name}</div>
                        <div style={{ fontSize: '10px', color: 'rgba(255,255,255,0.5)', marginTop: '2px' }}>{c.chosenColor} | {c.chosenSize}</div>
@@ -138,6 +143,7 @@ export default function Home() {
         {activeTab === 'AI' && <div style={{ color: 'white', textAlign: 'center', padding: '50px' }}>AI YORDAMCHI TEZ ORADA</div>}
       </div>
 
+      {/* 💎 100% LIQUID GLASS PREMIUM MODAL 💎 */}
       {selectedProduct && (() => {
         const productImages = selectedProduct.image_url ? selectedProduct.image_url.split(',') : [];
         const productSizes = selectedProduct.sizes ? selectedProduct.sizes.split(',').map((s:string) => s.trim()) : [];
@@ -148,14 +154,13 @@ export default function Home() {
             <div style={{ width: '100%', maxWidth: '500px', height: '94dvh', 
               background: 'rgba(20, 30, 50, 0.45)', backdropFilter: 'blur(50px) saturate(200%)', 
               boxShadow: '0 -30px 60px rgba(0,0,0,0.6), inset 0 2px 20px rgba(255,255,255,0.15)', 
-              borderRadius: '45px 45px 0 0', position: 'relative', border: '1.5px solid rgba(255,255,255,0.2)', borderBottom: 'none', display: 'flex', flexDirection: 'column', overflowY: 'auto', paddingBottom: '30px', animation: 'slideUp 0.4s cubic-bezier(0.4, 0, 0.2, 1)' }}>
+              borderRadius: '35px 35px 0 0', position: 'relative', border: '1.5px solid rgba(255,255,255,0.2)', borderBottom: 'none', display: 'flex', flexDirection: 'column', overflowY: 'auto', paddingBottom: '30px', animation: 'slideUp 0.4s cubic-bezier(0.4, 0, 0.2, 1)' }}>
               
               <div onClick={() => setSelectedProduct(null)} style={{ width: '50px', height: '5px', background: 'rgba(255,255,255,0.5)', borderRadius: '10px', margin: '15px auto', cursor: 'pointer' }}></div>
               <button tabIndex={-1} onClick={() => setSelectedProduct(null)} style={{ position: 'absolute', top: '20px', right: '20px', zIndex: 10, background: 'rgba(255,255,255,0.15)', backdropFilter: 'blur(20px)', border: '1px solid rgba(255,255,255,0.3)', borderRadius: '50%', width: '38px', height: '38px', color: 'white', fontSize: '18px', display: 'flex', alignItems: 'center', justifyContent: 'center', WebkitTapHighlightColor: 'transparent', outline: 'none' }}>✕</button>
 
-              <div style={{ position: 'relative', width: '100%', height: '42vh', display: 'flex', justifyContent: 'center', alignItems: 'center', overflow: 'hidden' }}>
-                <img src={productImages[selectedImageIndex]} style={{ maxWidth: '95%', maxHeight: '100%', objectFit: 'contain', filter: 'drop-shadow(0px 25px 40px rgba(0,0,0,0.7))' }} />
-                <div style={{ position: 'absolute', bottom: 0, left: 0, right: 0, height: '40px', background: 'linear-gradient(to bottom, transparent, rgba(20,30,50,0.1))' }}></div>
+              <div style={{ position: 'relative', width: '100%', display: 'flex', justifyContent: 'center', alignItems: 'center', padding: '15px' }}>
+                <img src={productImages[selectedImageIndex]} style={{ width: '100%', height: 'auto', maxHeight: '45vh', objectFit: 'contain', borderRadius: '16px' }} />
               </div>
 
               <div style={{ padding: '20px 25px', color: 'white' }}>
@@ -175,10 +180,10 @@ export default function Home() {
                     <div style={{ display: 'flex', gap: '12px', overflowX: 'auto', paddingBottom: '10px', scrollbarWidth: 'none' }}>
                       {productImages.map((img: string, idx: number) => (
                         <div key={idx} 
-                          tabIndex={-1} // Qo'shildi
+                          tabIndex={-1} 
                           onClick={() => { setSelectedImageIndex(idx); setSelectedColor(productColors[idx] || `Maxsus Rang`); }} 
                           style={{ 
-                            minWidth: '60px', height: '75px', borderRadius: '16px', 
+                            minWidth: '65px', width: '65px', aspectRatio: '3/4', height: 'auto', borderRadius: '12px', 
                             border: selectedImageIndex === idx ? '2px solid #fbbf24' : '1px solid rgba(255,255,255,0.2)', 
                             overflow: 'hidden', cursor: 'pointer', 
                             background: 'rgba(255,255,255,0.08)', backdropFilter: 'blur(15px)',
@@ -199,7 +204,7 @@ export default function Home() {
                     <div style={{ display: 'flex', gap: '12px', flexWrap: 'wrap' }}>
                       {productSizes.map((size: string, i: number) => (
                         <div key={i} onClick={() => setSelectedSize(size)} 
-                          tabIndex={-1} // Qo'shildi
+                          tabIndex={-1} 
                           style={{ width: '50px', height: '50px', borderRadius: '16px', 
                             background: selectedSize === size ? '#fbbf24' : 'rgba(255,255,255,0.08)', 
                             backdropFilter: 'blur(15px)',
@@ -218,13 +223,13 @@ export default function Home() {
                 )}
 
                 <div style={{ marginTop: '35px', display: 'flex', gap: '15px', alignItems: 'center' }}>
-                  <div style={{ display: 'flex', alignItems: 'center', gap: '15px', background: 'rgba(255,255,255,0.08)', backdropFilter: 'blur(25px)', borderRadius: '22px', padding: '5px', border: '1px solid rgba(255,255,255,0.2)' }}>
+                  <div style={{ display: 'flex', alignItems: 'center', gap: '15px', background: 'rgba(255,255,255,0.08)', backdropFilter: 'blur(25px)', borderRadius: '20px', padding: '5px', border: '1px solid rgba(255,255,255,0.2)' }}>
                     <button tabIndex={-1} onClick={() => count > 1 && setCount(count-1)} style={{ border: 'none', background: 'none', color: 'white', fontSize: '24px', width: '50px', height: '50px', WebkitTapHighlightColor: 'transparent', outline: 'none' }}>−</button>
                     <span style={{ minWidth: '20px', textAlign: 'center', fontWeight: '900', fontSize: '20px' }}>{count}</span>
                     <button tabIndex={-1} onClick={() => setCount(count+1)} style={{ border: 'none', background: 'none', color: 'white', fontSize: '24px', width: '50px', height: '50px', WebkitTapHighlightColor: 'transparent', outline: 'none' }}>+</button>
                   </div>
                   <button tabIndex={-1} onClick={() => handleAddToCart(selectedProduct)} 
-                    style={{ flex: 1, height: '60px', background: 'linear-gradient(90deg, #fbbf24 0%, #f59e0b 100%)', color: '#050b14', border: 'none', borderRadius: '22px', fontWeight: '900', fontSize: '15px', letterSpacing: '1px', boxShadow: '0 15px 35px rgba(251, 191, 36, 0.4)', transition: 'all 0.3s', WebkitTapHighlightColor: 'transparent', outline: 'none' }}>
+                    style={{ flex: 1, height: '60px', background: 'linear-gradient(90deg, #fbbf24 0%, #f59e0b 100%)', color: '#050b14', border: 'none', borderRadius: '20px', fontWeight: '900', fontSize: '15px', letterSpacing: '1px', boxShadow: '0 15px 35px rgba(251, 191, 36, 0.4)', transition: 'all 0.3s', WebkitTapHighlightColor: 'transparent', outline: 'none' }}>
                     SAVATGA QO'SHISH
                   </button>
                 </div>
@@ -244,7 +249,7 @@ export default function Home() {
           { id: 'AI', name: 'AI', icon: 'm12 3-1.912 5.813a2 2 0 0 1-1.275 1.275L3 12l5.813 1.912a2 2 0 0 1 1.275 1.275L12 21l1.912-5.813a2 2 0 0 1 1.275-1.275L21 12l-5.813-1.912a2 2 0 0 1-1.275-1.275L12 3Z' },
           { id: 'Profil', name: 'PROFIL', icon: 'M19 21v-2a4 4 0 0 0-4-4H9a4 4 0 0 0-4 4v2' },
         ].map((tab) => (
-          <div key={tab.id} onClick={() => setActiveTab(tab.id)} tabIndex={-1} style={{ cursor: 'pointer', display: 'flex', flexDirection: 'column', alignItems: 'center', gap: '4px', flex: 1, position: 'relative', WebkitTapHighlightColor: 'transparent', outline: 'none' }}>
+          <div key={tab.id} onClick={() => setActiveTab(tab.id)} tabIndex={-1} style={{ cursor: 'pointer', display: 'flex', flexDirection: 'column', alignItems: 'center', gap: '4px', flex: 1, position: 'relative', WebkitTapHighlightColor: 'transparent', userSelect: 'none', WebkitUserSelect: 'none', outline: 'none' }}>
             
             {tab.id === 'Savat' && totalCartItems > 0 && (
               <div style={{ position: 'absolute', top: '-6px', right: '12px', background: '#ef4444', color: 'white', fontSize: '9px', fontWeight: '900', minWidth: '16px', height: '16px', borderRadius: '8px', display: 'flex', alignItems: 'center', justifyContent: 'center', padding: '0 4px', border: '2px solid #050b14', zIndex: 10 }}>
@@ -263,6 +268,7 @@ export default function Home() {
         ))}
       </nav>
 
+      {/* ✅ BARCHA BROWSERLAR UCHUN MAJBURIY TOZALASH */}
       <style jsx global>{`
         * {
           -webkit-tap-highlight-color: transparent !important;
