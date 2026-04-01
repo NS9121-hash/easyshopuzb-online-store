@@ -20,11 +20,12 @@ export default function Home() {
 
   const videoRef = useRef<HTMLVideoElement>(null);
 
+  // 1-O'ZGARISH: Savatga o'tib ketish (setActiveTab) olib tashlandi
   const handleAddToCart = (product: any) => {
     const newItem = { ...product, qty: count, chosenSize: selectedSize, chosenColor: selectedColor, addedAt: new Date() };
     setCart((prev) => [...prev, newItem]);
     setSelectedProduct(null);
-    setActiveTab('Savat'); 
+    // Mijoz o'z joyida qoladi, pastda raqam o'zgaradi!
   };
 
   const fetchItems = async () => {
@@ -41,6 +42,9 @@ export default function Home() {
       .subscribe();
     return () => { supabase.removeChannel(channel); };
   }, []);
+
+  // SAVATDAGI JAMI MAHSULOTLAR SONINI HISOBLASH
+  const totalCartItems = cart.reduce((total, item) => total + item.qty, 0);
 
   return (
     <main style={{ position: 'relative', minHeight: '100dvh', width: '100dvw', overflowX: 'hidden', backgroundColor: '#050b14', display: 'flex', flexDirection: 'column', alignItems: 'center', fontFamily: 'system-ui, -apple-system, sans-serif', padding: '40px 0 120px 0', boxSizing: 'border-box' }}>
@@ -63,7 +67,7 @@ export default function Home() {
           </div>
         )}
 
-        {/* BAZADAN KELGAN KIYIMLAR - TUGMA VA RAMKA ALOHIDA ISHLAYDI */}
+        {/* BAZADAN KELGAN KIYIMLAR */}
         {activeTab === 'Kiyimlar' && (
           <div style={{ display: 'grid', gridTemplateColumns: 'repeat(2, 1fr)', gap: '15px', animation: 'fadeIn 0.3s ease' }}>
             {items.map((item) => {
@@ -71,14 +75,12 @@ export default function Home() {
               return (
                 <div key={item.id} 
                   onClick={() => { 
-                    // Ramka yoki rasmga bosilganda Modal oynani ochish
                     setSelectedProduct(item); setCount(1); setSelectedImageIndex(0); 
                     setSelectedSize(item.sizes ? item.sizes.split(',')[0].trim() : '');
                     setSelectedColor(item.colors ? item.colors.split(',')[0].trim() : '');
                   }} 
                   style={{ background: 'rgba(255, 255, 255, 0.03)', backdropFilter: 'blur(15px) saturate(180%)', borderRadius: '25px', border: '1px solid rgba(255,255,255,0.15)', overflow: 'hidden', display: 'flex', flexDirection: 'column', boxShadow: '0 15px 35px rgba(0,0,0,0.4)', cursor: 'pointer' }}>
                   
-                  {/* ASOSIY RASM */}
                   <div style={{ position: 'relative', width: '100%', aspectRatio: '3/4', display: 'flex', justifyContent: 'center', alignItems: 'center' }}>
                     <img src={firstImage} style={{ width: '90%', height: '90%', objectFit: 'contain', filter: 'drop-shadow(0px 15px 20px rgba(0,0,0,0.6))' }} />
                   </div>
@@ -87,15 +89,14 @@ export default function Home() {
                     <div style={{ color: '#fbbf24', fontSize: '18px', fontWeight: '800' }}>{item.price?.toLocaleString()} <span style={{fontSize: '10px'}}>so'm</span></div>
                     <p style={{ color: 'white', fontSize: '12px', margin: '6px 0', height: '2.8em', overflow: 'hidden', lineHeight: '1.4', opacity: 0.9 }}>{item.name}</p>
                     
-                    {/* TUGMA: TO'G'RIDAN-TO'G'RI SAVATGA QO'SHISH */}
+                    {/* 2-O'ZGARISH: Bu yerdagi setActiveTab ham o'chirildi */}
                     <button 
                       onClick={(e) => {
-                        e.stopPropagation(); // Ramka bosilishini bloklaydi, faqat tugma ishlaydi
+                        e.stopPropagation(); 
                         const defaultSize = item.sizes ? item.sizes.split(',')[0].trim() : '';
                         const defaultColor = item.colors ? item.colors.split(',')[0].trim() : '';
                         const newItem = { ...item, qty: 1, chosenSize: defaultSize, chosenColor: defaultColor, addedAt: new Date() };
                         setCart((prev) => [...prev, newItem]);
-                        setActiveTab('Savat');
                       }}
                       style={{ 
                         marginTop: 'auto', width: '100%', padding: '10px', 
@@ -235,6 +236,7 @@ export default function Home() {
         );
       })()}
 
+      {/* 3-O'ZGARISH: Navigatsiyadagi Savat ikonkasi ustida qizil bildirishnoma qo'shildi! */}
       <nav style={{ position: 'fixed', bottom: '30px', width: '95%', maxWidth: '440px', height: '70px', borderRadius: '35px', background: 'rgba(255, 255, 255, 0.12)', backdropFilter: 'blur(25px) saturate(160%)', border: '1px solid rgba(255, 255, 255, 0.2)', display: 'flex', justifyContent: 'space-around', alignItems: 'center', padding: '0 8px', zIndex: 100 }}>
         {[
           { id: 'Home', name: 'ASOSIY', icon: 'm3 9 9-7 9 7v11a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z' },
@@ -246,6 +248,14 @@ export default function Home() {
           { id: 'Profil', name: 'PROFIL', icon: 'M19 21v-2a4 4 0 0 0-4-4H9a4 4 0 0 0-4 4v2' },
         ].map((tab) => (
           <div key={tab.id} onClick={() => setActiveTab(tab.id)} style={{ cursor: 'pointer', display: 'flex', flexDirection: 'column', alignItems: 'center', gap: '4px', flex: 1, position: 'relative' }}>
+            
+            {/* SAVAT UCHUN MAXSUS QIZIL BILDIRISHNOMA (BADGE) */}
+            {tab.id === 'Savat' && totalCartItems > 0 && (
+              <div style={{ position: 'absolute', top: '-6px', right: '12px', background: '#ef4444', color: 'white', fontSize: '9px', fontWeight: '900', minWidth: '16px', height: '16px', borderRadius: '8px', display: 'flex', alignItems: 'center', justifyContent: 'center', padding: '0 4px', border: '2px solid #050b14', zIndex: 10 }}>
+                {totalCartItems}
+              </div>
+            )}
+
             <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke={activeTab === tab.id ? '#fbbf24' : 'white'} strokeWidth="2.2" strokeLinecap="round" strokeLinejoin="round" style={{ transition: '0.3s' }}>
               <path d={tab.icon}/>
               {tab.id === 'Profil' && <circle cx="12" cy="7" r="4"></circle>}
