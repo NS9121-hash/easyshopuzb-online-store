@@ -64,7 +64,6 @@ export default function Home() {
           </div>
         )}
 
-        {/* BAZADAN KELGAN KIYIMLAR */}
         {activeTab === 'Kiyimlar' && (
           <div style={{ display: 'grid', gridTemplateColumns: 'repeat(2, 1fr)', gap: '15px', animation: 'fadeIn 0.3s ease' }}>
             {items.map((item) => {
@@ -113,7 +112,6 @@ export default function Home() {
           </div>
         )}
 
-        {/* SAVAT VA QOLGAN BO'LIMLAR... */}
         {activeTab === 'Savat' && (
           <div style={{ color: 'white', animation: 'fadeIn 0.3s ease' }}>
              {cart.length === 0 ? (
@@ -140,7 +138,6 @@ export default function Home() {
         {activeTab === 'AI' && <div style={{ color: 'white', textAlign: 'center', padding: '50px' }}>AI YORDAMCHI TEZ ORADA</div>}
       </div>
 
-      {/* 💎 100% LIQUID GLASS PREMIUM MODAL 💎 */}
       {selectedProduct && (() => {
         const productImages = selectedProduct.image_url ? selectedProduct.image_url.split(',') : [];
         const productSizes = selectedProduct.sizes ? selectedProduct.sizes.split(',').map((s:string) => s.trim()) : [];
@@ -151,36 +148,18 @@ export default function Home() {
             
             <div style={{ width: '100%', maxWidth: '500px', height: '94dvh', position: 'relative', animation: 'slideUp 0.4s cubic-bezier(0.4, 0, 0.2, 1)' }}>
               
-              {/* SHISHA FON (SCROLL QILINMAYDI, JOYIDA QOTADI) */}
-              <div style={{ position: 'absolute', inset: 0, 
-                background: 'rgba(20, 30, 50, 0.45)', 
-                backdropFilter: 'blur(50px) saturate(200%)', 
-                WebkitBackdropFilter: 'blur(50px) saturate(200%)', 
-                borderRadius: '35px 35px 0 0', 
-                border: '1.5px solid rgba(255,255,255,0.2)', 
-                borderBottom: 'none', 
-                zIndex: 0, pointerEvents: 'none' 
-              }}></div>
+              <div style={{ position: 'absolute', inset: 0, background: 'rgba(20, 30, 50, 0.45)', backdropFilter: 'blur(50px) saturate(200%)', WebkitBackdropFilter: 'blur(50px) saturate(200%)', borderRadius: '35px 35px 0 0', border: '1.5px solid rgba(255,255,255,0.2)', borderBottom: 'none', zIndex: 0, pointerEvents: 'none' }}></div>
 
-              {/* IChKI MA'LUMOTLAR (FAQAT SHU QISMI SURILADI) */}
               <div style={{ position: 'relative', zIndex: 1, width: '100%', height: '100%', overflowY: 'auto', display: 'flex', flexDirection: 'column', paddingBottom: '30px' }}>
                 
                 <div onClick={() => setSelectedProduct(null)} style={{ width: '50px', height: '5px', background: 'rgba(255,255,255,0.5)', borderRadius: '10px', margin: '15px auto', cursor: 'pointer', flexShrink: 0 }}></div>
                 <button tabIndex={-1} onClick={() => setSelectedProduct(null)} style={{ position: 'absolute', top: '20px', right: '20px', zIndex: 10, background: 'rgba(255,255,255,0.15)', backdropFilter: 'blur(20px)', border: '1px solid rgba(255,255,255,0.3)', borderRadius: '50%', width: '38px', height: '38px', color: 'white', fontSize: '18px', display: 'flex', alignItems: 'center', justifyContent: 'center', WebkitTapHighlightColor: 'transparent', outline: 'none' }}>✕</button>
 
-                {/* 🛑 ✅ O'ZGARISH: "Sun'iy" oq fon olib tashlandi. "Tabiiy" gradient fon yoyildi. 
-                     Rasmni kichikroq (35vh) va o'z burchaklari (16px) bilan professional qilib joylashtirdik. */}
-                <div style={{ position: 'relative', width: '100%', height: '35vh', display: 'flex', justifyContent: 'center', alignItems: 'center', padding: '10px 25px 0 25px', flexShrink: 0, 
-                    /* 🛑 ✅ FON gradient bilan yoyildi */
-                    background: 'linear-gradient(135deg, rgba(5,11,20,0.8) 0%, rgba(10,30,50,0.95) 100%)', 
-                    borderTopLeftRadius: '35px', borderTopRightRadius: '35px', 
-                    boxShadow: 'inset 0 0 30px rgba(0,0,0,0.2)' 
-                }}>
-                  <img src={productImages[selectedImageIndex]} style={{ maxWidth: '100%', maxHeight: '100%', aspectRatio: '3/4', objectFit: 'cover', borderRadius: '16px', boxShadow: '0 15px 30px rgba(0,0,0,0.5)' }} />
+                <div style={{ position: 'relative', width: '100%', height: '40vh', display: 'flex', justifyContent: 'center', alignItems: 'center', padding: '15px 25px 0 25px', flexShrink: 0, background: '#DCDCDC', borderTopLeftRadius: '20px', borderTopRightRadius: '20px', boxShadow: 'inset 0 0 40px rgba(0,0,0,0.1)' }}>
+                  <img src={productImages[selectedImageIndex]} style={{ maxWidth: '100%', maxHeight: '100%', borderRadius: '16px', boxShadow: '0 15px 35px rgba(0,0,0,0.5)', objectFit: 'contain' }} />
                 </div>
 
-                {/* 🛑 ✅ O'ZGARISH: Tugmalarni bir ekranga sig'dirish uchun paddinglarixchamladi */}
-                <div style={{ padding: '10px 25px', color: 'white', flexShrink: 0 }}>
+                <div style={{ padding: '15px 25px', color: 'white', flexShrink: 0 }}>
                   
                   <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
                     <div style={{ fontSize: '32px', fontWeight: '900', color: '#fbbf24', letterSpacing: '-1px', textShadow: '0 4px 15px rgba(251, 191, 36, 0.3)' }}>{selectedProduct.price?.toLocaleString()} <span style={{fontSize: '14px', color: 'rgba(255,255,255,0.6)'}}>so'm</span></div>
@@ -267,7 +246,7 @@ export default function Home() {
           { id: 'AI', name: 'AI', icon: 'm12 3-1.912 5.813a2 2 0 0 1-1.275 1.275L3 12l5.813 1.912a2 2 0 0 1 1.275 1.275L12 21l1.912-5.813a2 2 0 0 1 1.275-1.275L21 12l-5.813-1.912a2 2 0 0 1-1.275-1.275L12 3Z' },
           { id: 'Profil', name: 'PROFIL', icon: 'M19 21v-2a4 4 0 0 0-4-4H9a4 4 0 0 0-4 4v2' },
         ].map((tab) => (
-          <div key={tab.id} onClick={() => setActiveTab(tab.id)} tabIndex={-1} className="nav-item" style={{ cursor: 'pointer', display: 'flex', flexDirection: 'column', alignItems: 'center', gap: '4px', flex: 1, position: 'relative', WebkitTapHighlightColor: 'transparent', userSelect: 'none', WebkitUserSelect: 'none', outline: 'none' }}>
+          <div key={tab.id} onClick={() => setActiveTab(tab.id)} tabIndex={-1} style={{ cursor: 'pointer', display: 'flex', flexDirection: 'column', alignItems: 'center', gap: '4px', flex: 1, position: 'relative', WebkitTapHighlightColor: 'transparent', userSelect: 'none', WebkitUserSelect: 'none', outline: 'none' }}>
             
             {tab.id === 'Savat' && totalCartItems > 0 && (
               <div style={{ position: 'absolute', top: '-6px', right: '12px', background: '#ef4444', color: 'white', fontSize: '9px', fontWeight: '900', minWidth: '16px', height: '16px', borderRadius: '8px', display: 'flex', alignItems: 'center', justifyContent: 'center', padding: '0 4px', border: '2px solid #050b14', zIndex: 10 }}>
@@ -286,27 +265,28 @@ export default function Home() {
         ))}
       </nav>
 
-      {/* ✅ BARCHA BROWSERLAR UCHUN MAJBURIY TOZALASH (Global Style Updated) */}
+      {/* ✅ MILTILLASHNI YO'QOTISH VA BOSGANDAGI YORISHISHNI TA'QIQLASH */}
       <style jsx global>{`
         * {
           -webkit-tap-highlight-color: transparent !important;
           -webkit-touch-callout: none !important;
           outline: none !important;
         }
+        
+        /* 🛑 BOSILGANDA FONNI BARQAROR SAQLASH */
+        div:active, button:active, span:active {
+          background-color: inherit !important;
+          opacity: 1 !important;
+        }
+
         *:focus, *:active, *:focus-visible {
           outline: none !important;
           border: none !important;
           box-shadow: none !important;
-          background-color: transparent !important;
         }
+
         a, span, div, button {
           text-decoration: none !important;
-        }
-        // ✅ 🛑 NAV BAR ITEM FIX: iOS/React render miltillashini yo'qotish va fonni barqaror saqlash
-        // Interaktiv div bosilganda (React qayta render paytida) qisqa vaqt ichida boshqa fon rangini ko'rsatmasligi kerak.
-        // Bu agressiv global `transparent !important` miltillashiga bevosita qarshi yechim.
-        .nav-item:active, .nav-item:focus {
-            background-color: transparent !important; // majburlash orqali fonning barqaror qolishini ta'minlash
         }
 
         @keyframes slideUp { from { transform: translateY(100%); } to { transform: translateY(0); } }
