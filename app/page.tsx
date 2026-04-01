@@ -270,7 +270,13 @@ export default function Home() {
         ))}
       </nav>
 
+      {/* ✅ BARCHA BROWSERLAR UCHUN MAJBURIY TOZALASH (CHROME CHIZIQLARINI YULIB TASHLAYDI) */}
       <style jsx global>{`
+        * {
+          text-decoration: none !important;
+          -webkit-tap-highlight-color: transparent !important;
+          outline: none !important;
+        }
         @keyframes slideUp { from { transform: translateY(100%); } to { transform: translateY(0); } }
         @keyframes fadeIn { from { opacity: 0; } to { opacity: 1; } }
       `}</style>
