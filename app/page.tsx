@@ -104,7 +104,8 @@ export default function Home() {
                         color: '#050b14', border: 'none', borderRadius: '15px', 
                         fontSize: '11px', fontWeight: '900', cursor: 'pointer', 
                         textTransform: 'uppercase', boxShadow: '0 5px 15px rgba(251, 191, 36, 0.3)',
-                        WebkitTapHighlightColor: 'transparent'
+                        WebkitTapHighlightColor: 'transparent',
+                        outline: 'none'
                       }}>
                       BUYURTMA BERISH
                     </button>
@@ -158,7 +159,7 @@ export default function Home() {
               borderRadius: '45px 45px 0 0', position: 'relative', border: '1.5px solid rgba(255,255,255,0.2)', borderBottom: 'none', display: 'flex', flexDirection: 'column', overflowY: 'auto', paddingBottom: '30px', animation: 'slideUp 0.4s cubic-bezier(0.4, 0, 0.2, 1)' }}>
               
               <div onClick={() => setSelectedProduct(null)} style={{ width: '50px', height: '5px', background: 'rgba(255,255,255,0.5)', borderRadius: '10px', margin: '15px auto', cursor: 'pointer', WebkitTapHighlightColor: 'transparent' }}></div>
-              <button onClick={() => setSelectedProduct(null)} style={{ position: 'absolute', top: '20px', right: '20px', zIndex: 10, background: 'rgba(255,255,255,0.15)', backdropFilter: 'blur(20px)', border: '1px solid rgba(255,255,255,0.3)', borderRadius: '50%', width: '38px', height: '38px', color: 'white', fontSize: '18px', display: 'flex', alignItems: 'center', justifyContent: 'center', WebkitTapHighlightColor: 'transparent' }}>✕</button>
+              <button onClick={() => setSelectedProduct(null)} style={{ position: 'absolute', top: '20px', right: '20px', zIndex: 10, background: 'rgba(255,255,255,0.15)', backdropFilter: 'blur(20px)', border: '1px solid rgba(255,255,255,0.3)', borderRadius: '50%', width: '38px', height: '38px', color: 'white', fontSize: '18px', display: 'flex', alignItems: 'center', justifyContent: 'center', WebkitTapHighlightColor: 'transparent', outline: 'none' }}>✕</button>
 
               <div style={{ position: 'relative', width: '100%', height: '42vh', display: 'flex', justifyContent: 'center', alignItems: 'center', overflow: 'hidden' }}>
                 <img src={productImages[selectedImageIndex]} style={{ maxWidth: '95%', maxHeight: '100%', objectFit: 'contain', filter: 'drop-shadow(0px 25px 40px rgba(0,0,0,0.7))' }} />
@@ -224,12 +225,12 @@ export default function Home() {
 
                 <div style={{ marginTop: '35px', display: 'flex', gap: '15px', alignItems: 'center' }}>
                   <div style={{ display: 'flex', alignItems: 'center', gap: '15px', background: 'rgba(255,255,255,0.08)', backdropFilter: 'blur(25px)', borderRadius: '22px', padding: '5px', border: '1px solid rgba(255,255,255,0.2)' }}>
-                    <button onClick={() => count > 1 && setCount(count-1)} style={{ border: 'none', background: 'none', color: 'white', fontSize: '24px', width: '50px', height: '50px', WebkitTapHighlightColor: 'transparent' }}>−</button>
+                    <button onClick={() => count > 1 && setCount(count-1)} style={{ border: 'none', background: 'none', color: 'white', fontSize: '24px', width: '50px', height: '50px', WebkitTapHighlightColor: 'transparent', outline: 'none' }}>−</button>
                     <span style={{ minWidth: '20px', textAlign: 'center', fontWeight: '900', fontSize: '20px' }}>{count}</span>
-                    <button onClick={() => setCount(count+1)} style={{ border: 'none', background: 'none', color: 'white', fontSize: '24px', width: '50px', height: '50px', WebkitTapHighlightColor: 'transparent' }}>+</button>
+                    <button onClick={() => setCount(count+1)} style={{ border: 'none', background: 'none', color: 'white', fontSize: '24px', width: '50px', height: '50px', WebkitTapHighlightColor: 'transparent', outline: 'none' }}>+</button>
                   </div>
                   <button onClick={() => handleAddToCart(selectedProduct)} 
-                    style={{ flex: 1, height: '60px', background: 'linear-gradient(90deg, #fbbf24 0%, #f59e0b 100%)', color: '#050b14', border: 'none', borderRadius: '22px', fontWeight: '900', fontSize: '15px', letterSpacing: '1px', boxShadow: '0 15px 35px rgba(251, 191, 36, 0.4)', transition: 'all 0.3s', WebkitTapHighlightColor: 'transparent' }}>
+                    style={{ flex: 1, height: '60px', background: 'linear-gradient(90deg, #fbbf24 0%, #f59e0b 100%)', color: '#050b14', border: 'none', borderRadius: '22px', fontWeight: '900', fontSize: '15px', letterSpacing: '1px', boxShadow: '0 15px 35px rgba(251, 191, 36, 0.4)', transition: 'all 0.3s', WebkitTapHighlightColor: 'transparent', outline: 'none' }}>
                     SAVATGA QO'SHISH
                   </button>
                 </div>
@@ -239,7 +240,6 @@ export default function Home() {
         );
       })()}
 
-      {/* 3-O'ZGARISH: Navigatsiyadagi Savat ikonkasi ustida qizil bildirishnoma qo'shildi! */}
       <nav style={{ position: 'fixed', bottom: '30px', width: '95%', maxWidth: '440px', height: '70px', borderRadius: '35px', background: 'rgba(255, 255, 255, 0.12)', backdropFilter: 'blur(25px) saturate(160%)', border: '1px solid rgba(255, 255, 255, 0.2)', display: 'flex', justifyContent: 'space-around', alignItems: 'center', padding: '0 8px', zIndex: 100 }}>
         {[
           { id: 'Home', name: 'ASOSIY', icon: 'm3 9 9-7 9 7v11a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z' },
@@ -250,9 +250,8 @@ export default function Home() {
           { id: 'AI', name: 'AI', icon: 'm12 3-1.912 5.813a2 2 0 0 1-1.275 1.275L3 12l5.813 1.912a2 2 0 0 1 1.275 1.275L12 21l1.912-5.813a2 2 0 0 1 1.275-1.275L21 12l-5.813-1.912a2 2 0 0 1-1.275-1.275L12 3Z' },
           { id: 'Profil', name: 'PROFIL', icon: 'M19 21v-2a4 4 0 0 0-4-4H9a4 4 0 0 0-4 4v2' },
         ].map((tab) => (
-          <div key={tab.id} onClick={() => setActiveTab(tab.id)} style={{ cursor: 'pointer', display: 'flex', flexDirection: 'column', alignItems: 'center', gap: '4px', flex: 1, position: 'relative', WebkitTapHighlightColor: 'transparent' }}>
+          <div key={tab.id} onClick={() => setActiveTab(tab.id)} style={{ cursor: 'pointer', display: 'flex', flexDirection: 'column', alignItems: 'center', gap: '4px', flex: 1, position: 'relative', WebkitTapHighlightColor: 'transparent', userSelect: 'none', WebkitUserSelect: 'none', outline: 'none' }}>
             
-            {/* SAVAT UCHUN MAXSUS QIZIL BILDIRISHNOMA (BADGE) */}
             {tab.id === 'Savat' && totalCartItems > 0 && (
               <div style={{ position: 'absolute', top: '-6px', right: '12px', background: '#ef4444', color: 'white', fontSize: '9px', fontWeight: '900', minWidth: '16px', height: '16px', borderRadius: '8px', display: 'flex', alignItems: 'center', justifyContent: 'center', padding: '0 4px', border: '2px solid #050b14', zIndex: 10 }}>
                 {totalCartItems}
@@ -265,17 +264,25 @@ export default function Home() {
               {tab.id === 'Look' && <path d="M11 3 8 9l4 13 4-13-3-6" />}
               {tab.id === 'Look' && <path d="M2 9h20" />}
             </svg>
-            <span spellCheck={false} translate="no" style={{ fontSize: '7px', color: activeTab === tab.id ? '#fbbf24' : 'white', fontWeight: '800', textDecoration: 'none', borderBottom: 'none' }}>{tab.name}</span>
+            <span spellCheck={false} translate="no" style={{ fontSize: '7px', color: activeTab === tab.id ? '#fbbf24' : 'white', fontWeight: '800', textDecoration: 'none', borderBottom: 'none', outline: 'none' }}>{tab.name}</span>
           </div>
         ))}
       </nav>
 
-      {/* ✅ BARCHA BROWSERLAR UCHUN MAJBURIY TOZALASH (CHROME CHIZIQLARINI YULIB TASHLAYDI) */}
+      {/* ✅ BARCHA BROWSERLAR UCHUN MAJBURIY TOZALASH */}
       <style jsx global>{`
         * {
-          text-decoration: none !important;
           -webkit-tap-highlight-color: transparent !important;
+          -webkit-touch-callout: none !important;
           outline: none !important;
+        }
+        *:focus, *:active, *:focus-visible {
+          outline: none !important;
+          border: none !important;
+          box-shadow: none !important;
+        }
+        a, span, div, button {
+          text-decoration: none !important;
         }
         @keyframes slideUp { from { transform: translateY(100%); } to { transform: translateY(0); } }
         @keyframes fadeIn { from { opacity: 0; } to { opacity: 1; } }
