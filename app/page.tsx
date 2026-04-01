@@ -151,20 +151,21 @@ export default function Home() {
             
             <div style={{ width: '100%', maxWidth: '500px', height: '94dvh', position: 'relative', animation: 'slideUp 0.4s cubic-bezier(0.4, 0, 0.2, 1)' }}>
               
-              {/* SHISHA FON */}
+              {/* SHISHA FON (SCROLL QILINMAYDI, JOYIDA QOTADI) */}
               <div style={{ position: 'absolute', inset: 0, background: 'rgba(20, 30, 50, 0.45)', backdropFilter: 'blur(50px) saturate(200%)', WebkitBackdropFilter: 'blur(50px) saturate(200%)', borderRadius: '35px 35px 0 0', border: '1.5px solid rgba(255,255,255,0.2)', borderBottom: 'none', zIndex: 0, pointerEvents: 'none' }}></div>
 
-              {/* IChKI MA'LUMOTLAR */}
+              {/* IChKI MA'LUMOTLAR (FAQAT SHU QISMI SURILADI) */}
               <div style={{ position: 'relative', zIndex: 1, width: '100%', height: '100%', overflowY: 'auto', display: 'flex', flexDirection: 'column', paddingBottom: '30px' }}>
                 
                 <div onClick={() => setSelectedProduct(null)} style={{ width: '50px', height: '5px', background: 'rgba(255,255,255,0.5)', borderRadius: '10px', margin: '15px auto', cursor: 'pointer', flexShrink: 0 }}></div>
                 <button tabIndex={-1} onClick={() => setSelectedProduct(null)} style={{ position: 'absolute', top: '20px', right: '20px', zIndex: 10, background: 'rgba(255,255,255,0.15)', backdropFilter: 'blur(20px)', border: '1px solid rgba(255,255,255,0.3)', borderRadius: '50%', width: '38px', height: '38px', color: 'white', fontSize: '18px', display: 'flex', alignItems: 'center', justifyContent: 'center', WebkitTapHighlightColor: 'transparent', outline: 'none' }}>✕</button>
 
-                {/* 🛑 O'ZGARISH: Rasm balandligi chegaralandi (40vh) va markazga olindi */}
-                <div style={{ position: 'relative', width: '100%', height: '40vh', display: 'flex', justifyContent: 'center', alignItems: 'center', padding: '15px 25px 0 25px', flexShrink: 0 }}>
-                  <img src={productImages[selectedImageIndex]} style={{ maxWidth: '100%', maxHeight: '100%', borderRadius: '20px', boxShadow: '0 15px 35px rgba(0,0,0,0.5)', objectFit: 'contain' }} />
+                {/* 🛑 O'ZGARISH 1 & 2: Oq-kulrang fon tepaga yoyildi va rasm balandligi qulblandi (40vh) */}
+                <div style={{ position: 'relative', width: '100%', height: '40vh', display: 'flex', justifyContent: 'center', alignItems: 'center', padding: '15px 25px 0 25px', flexShrink: 0, background: '#DCDCDC', borderTopLeftRadius: '20px', borderTopRightRadius: '20px', boxShadow: 'inset 0 0 40px rgba(0,0,0,0.1)' }}>
+                  <img src={productImages[selectedImageIndex]} style={{ maxWidth: '100%', maxHeight: '100%', borderRadius: '16px', boxShadow: '0 15px 35px rgba(0,0,0,0.5)', objectFit: 'contain' }} />
                 </div>
 
+                {/* 🛑 O'ZGARISH 3: Tugmalarni bir ekranga sig'dirish uchun paddinglarixchamladi */}
                 <div style={{ padding: '15px 25px', color: 'white', flexShrink: 0 }}>
                   
                   <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
