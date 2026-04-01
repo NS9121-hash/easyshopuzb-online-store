@@ -59,31 +59,53 @@ export default function Home() {
               <source src="/-1880952146411559581.mp4" type="video/mp4" />
             </video>
             <h2 style={{ position: 'relative', zIndex: 2, color: '#fbbf24', fontSize: '28px', fontWeight: '900', textAlign: 'center', textShadow: '2px 2px 20px black', margin: 0 }}>ASSALOMU ALEYKUM</h2>
-            {/* ✅ MANA SHU YOZUV QAYTARILDI */}
             <p style={{ position: 'relative', zIndex: 2, color: 'white', fontSize: '11px', fontWeight: '700', textAlign: 'center', marginTop: '10px', textShadow: '2px 2px 15px black', letterSpacing: '1px', textTransform: 'uppercase' }}>ONLAYN KIYIM DO'KONIMIZGA XUSH KELIBSIZ</p>
           </div>
         )}
 
-        {/* BAZADAN KELGAN KIYIMLAR - LIQUID GLASS EFFEKTI */}
+        {/* BAZADAN KELGAN KIYIMLAR - TUGMA VA RAMKA ALOHIDA ISHLAYDI */}
         {activeTab === 'Kiyimlar' && (
           <div style={{ display: 'grid', gridTemplateColumns: 'repeat(2, 1fr)', gap: '15px', animation: 'fadeIn 0.3s ease' }}>
             {items.map((item) => {
               const firstImage = item.image_url ? item.image_url.split(',')[0] : '';
               return (
-                <div key={item.id} style={{ background: 'rgba(255, 255, 255, 0.03)', backdropFilter: 'blur(15px) saturate(180%)', borderRadius: '25px', border: '1px solid rgba(255,255,255,0.15)', overflow: 'hidden', display: 'flex', flexDirection: 'column', boxShadow: '0 15px 35px rgba(0,0,0,0.4)' }}>
+                <div key={item.id} 
+                  onClick={() => { 
+                    // Ramka yoki rasmga bosilganda Modal oynani ochish
+                    setSelectedProduct(item); setCount(1); setSelectedImageIndex(0); 
+                    setSelectedSize(item.sizes ? item.sizes.split(',')[0].trim() : '');
+                    setSelectedColor(item.colors ? item.colors.split(',')[0].trim() : '');
+                  }} 
+                  style={{ background: 'rgba(255, 255, 255, 0.03)', backdropFilter: 'blur(15px) saturate(180%)', borderRadius: '25px', border: '1px solid rgba(255,255,255,0.15)', overflow: 'hidden', display: 'flex', flexDirection: 'column', boxShadow: '0 15px 35px rgba(0,0,0,0.4)', cursor: 'pointer' }}>
                   
-                  {/* ASOSIY RASM - MUALLAQ HOLATDA */}
+                  {/* ASOSIY RASM */}
                   <div style={{ position: 'relative', width: '100%', aspectRatio: '3/4', display: 'flex', justifyContent: 'center', alignItems: 'center' }}>
-                    <img src={firstImage} onClick={() => { 
-                      setSelectedProduct(item); setCount(1); setSelectedImageIndex(0); 
-                      setSelectedSize(item.sizes ? item.sizes.split(',')[0].trim() : '');
-                      setSelectedColor(item.colors ? item.colors.split(',')[0].trim() : '');
-                    }} style={{ width: '90%', height: '90%', objectFit: 'contain', cursor: 'pointer', filter: 'drop-shadow(0px 15px 20px rgba(0,0,0,0.6))' }} />
+                    <img src={firstImage} style={{ width: '90%', height: '90%', objectFit: 'contain', filter: 'drop-shadow(0px 15px 20px rgba(0,0,0,0.6))' }} />
                   </div>
                   
                   <div style={{ padding: '12px', display: 'flex', flexDirection: 'column', flex: 1, background: 'rgba(0,0,0,0.2)' }}>
                     <div style={{ color: '#fbbf24', fontSize: '18px', fontWeight: '800' }}>{item.price?.toLocaleString()} <span style={{fontSize: '10px'}}>so'm</span></div>
                     <p style={{ color: 'white', fontSize: '12px', margin: '6px 0', height: '2.8em', overflow: 'hidden', lineHeight: '1.4', opacity: 0.9 }}>{item.name}</p>
+                    
+                    {/* TUGMA: TO'G'RIDAN-TO'G'RI SAVATGA QO'SHISH */}
+                    <button 
+                      onClick={(e) => {
+                        e.stopPropagation(); // Ramka bosilishini bloklaydi, faqat tugma ishlaydi
+                        const defaultSize = item.sizes ? item.sizes.split(',')[0].trim() : '';
+                        const defaultColor = item.colors ? item.colors.split(',')[0].trim() : '';
+                        const newItem = { ...item, qty: 1, chosenSize: defaultSize, chosenColor: defaultColor, addedAt: new Date() };
+                        setCart((prev) => [...prev, newItem]);
+                        setActiveTab('Savat');
+                      }}
+                      style={{ 
+                        marginTop: 'auto', width: '100%', padding: '10px', 
+                        background: 'linear-gradient(90deg, #fbbf24 0%, #f59e0b 100%)', 
+                        color: '#050b14', border: 'none', borderRadius: '15px', 
+                        fontSize: '11px', fontWeight: '900', cursor: 'pointer', 
+                        textTransform: 'uppercase', boxShadow: '0 5px 15px rgba(251, 191, 36, 0.3)' 
+                      }}>
+                      BUYURTMA BERISH
+                    </button>
                   </div>
                 </div>
               )
@@ -127,18 +149,15 @@ export default function Home() {
         return (
           <div style={{ position: 'fixed', inset: 0, zIndex: 1000, display: 'flex', alignItems: 'flex-end', justifyContent: 'center', backgroundColor: 'rgba(0,0,0,0.4)', backdropFilter: 'blur(8px)', animation: 'fadeIn 0.3s ease' }}>
             
-            {/* OYNA (GLASS) KONTEYNERI */}
             <div style={{ width: '100%', maxWidth: '500px', height: '94dvh', 
-              background: 'rgba(20, 30, 50, 0.45)', // Suyuq to'q oyna
+              background: 'rgba(20, 30, 50, 0.45)', 
               backdropFilter: 'blur(50px) saturate(200%)', 
               boxShadow: '0 -30px 60px rgba(0,0,0,0.6), inset 0 2px 20px rgba(255,255,255,0.15)', 
               borderRadius: '45px 45px 0 0', position: 'relative', border: '1.5px solid rgba(255,255,255,0.2)', borderBottom: 'none', display: 'flex', flexDirection: 'column', overflowY: 'auto', paddingBottom: '30px', animation: 'slideUp 0.4s cubic-bezier(0.4, 0, 0.2, 1)' }}>
               
-              {/* TEPADAGI CHIZIQ VA YOPISH TUGMASI */}
               <div onClick={() => setSelectedProduct(null)} style={{ width: '50px', height: '5px', background: 'rgba(255,255,255,0.5)', borderRadius: '10px', margin: '15px auto', cursor: 'pointer' }}></div>
               <button onClick={() => setSelectedProduct(null)} style={{ position: 'absolute', top: '20px', right: '20px', zIndex: 10, background: 'rgba(255,255,255,0.15)', backdropFilter: 'blur(20px)', border: '1px solid rgba(255,255,255,0.3)', borderRadius: '50%', width: '38px', height: '38px', color: 'white', fontSize: '18px', display: 'flex', alignItems: 'center', justifyContent: 'center' }}>✕</button>
 
-              {/* 🖼️ ASOSIY RASM - ORQA FONSIZ (MUALLAQ) EFEKTI */}
               <div style={{ position: 'relative', width: '100%', height: '42vh', display: 'flex', justifyContent: 'center', alignItems: 'center', overflow: 'hidden' }}>
                 <img src={productImages[selectedImageIndex]} style={{ maxWidth: '95%', maxHeight: '100%', objectFit: 'contain', filter: 'drop-shadow(0px 25px 40px rgba(0,0,0,0.7))' }} />
                 <div style={{ position: 'absolute', bottom: 0, left: 0, right: 0, height: '40px', background: 'linear-gradient(to bottom, transparent, rgba(20,30,50,0.1))' }}></div>
@@ -151,7 +170,6 @@ export default function Home() {
                   <div style={{ padding: '6px 12px', background: 'rgba(251,191,36,0.15)', backdropFilter: 'blur(10px)', border: '1px solid rgba(251,191,36,0.5)', borderRadius: '12px', color: '#fbbf24', fontSize: '10px', fontWeight: '900', letterSpacing: '1px' }}>PREMIUM</div>
                 </div>
                 
-                {/* RANG TANLASH SHISHASI */}
                 {productImages.length > 0 && (
                   <div style={{ marginTop: '25px' }}>
                     <div style={{ fontSize: '13px', color: 'white', fontWeight: '700', marginBottom: '12px', letterSpacing: '0.5px' }}>
@@ -178,7 +196,6 @@ export default function Home() {
                   </div>
                 )}
 
-                {/* O'LCHAMLAR TANLOVI (SHISHA TUGMALAR) */}
                 {productSizes.length > 0 && productSizes[0] !== '' && (
                   <div style={{ marginTop: '25px' }}>
                     <div style={{ fontSize: '12px', color: 'rgba(255,255,255,0.5)', fontWeight: '800', marginBottom: '12px', letterSpacing: '1px' }}>O'LCHAMLAR:</div>
@@ -201,7 +218,6 @@ export default function Home() {
                   </div>
                 )}
 
-                {/* SAVATGA QO'SHISH (LIQUID TUGMALAR) */}
                 <div style={{ marginTop: '35px', display: 'flex', gap: '15px', alignItems: 'center' }}>
                   <div style={{ display: 'flex', alignItems: 'center', gap: '15px', background: 'rgba(255,255,255,0.08)', backdropFilter: 'blur(25px)', borderRadius: '22px', padding: '5px', border: '1px solid rgba(255,255,255,0.2)' }}>
                     <button onClick={() => count > 1 && setCount(count-1)} style={{ border: 'none', background: 'none', color: 'white', fontSize: '24px', width: '50px', height: '50px' }}>−</button>
