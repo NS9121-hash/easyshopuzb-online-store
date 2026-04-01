@@ -79,7 +79,7 @@ export default function Home() {
                     setSelectedSize(item.sizes ? item.sizes.split(',')[0].trim() : '');
                     setSelectedColor(item.colors ? item.colors.split(',')[0].trim() : '');
                   }} 
-                  style={{ background: 'rgba(255, 255, 255, 0.03)', backdropFilter: 'blur(15px) saturate(180%)', borderRadius: '25px', border: '1px solid rgba(255,255,255,0.15)', overflow: 'hidden', display: 'flex', flexDirection: 'column', boxShadow: '0 15px 35px rgba(0,0,0,0.4)', cursor: 'pointer' }}>
+                  style={{ background: 'rgba(255, 255, 255, 0.03)', backdropFilter: 'blur(15px) saturate(180%)', borderRadius: '25px', border: '1px solid rgba(255,255,255,0.15)', overflow: 'hidden', display: 'flex', flexDirection: 'column', boxShadow: '0 15px 35px rgba(0,0,0,0.4)', cursor: 'pointer', WebkitTapHighlightColor: 'transparent' }}>
                   
                   <div style={{ position: 'relative', width: '100%', aspectRatio: '3/4', display: 'flex', justifyContent: 'center', alignItems: 'center' }}>
                     <img src={firstImage} style={{ width: '90%', height: '90%', objectFit: 'contain', filter: 'drop-shadow(0px 15px 20px rgba(0,0,0,0.6))' }} />
@@ -103,7 +103,8 @@ export default function Home() {
                         background: 'linear-gradient(90deg, #fbbf24 0%, #f59e0b 100%)', 
                         color: '#050b14', border: 'none', borderRadius: '15px', 
                         fontSize: '11px', fontWeight: '900', cursor: 'pointer', 
-                        textTransform: 'uppercase', boxShadow: '0 5px 15px rgba(251, 191, 36, 0.3)' 
+                        textTransform: 'uppercase', boxShadow: '0 5px 15px rgba(251, 191, 36, 0.3)',
+                        WebkitTapHighlightColor: 'transparent'
                       }}>
                       BUYURTMA BERISH
                     </button>
@@ -156,8 +157,8 @@ export default function Home() {
               boxShadow: '0 -30px 60px rgba(0,0,0,0.6), inset 0 2px 20px rgba(255,255,255,0.15)', 
               borderRadius: '45px 45px 0 0', position: 'relative', border: '1.5px solid rgba(255,255,255,0.2)', borderBottom: 'none', display: 'flex', flexDirection: 'column', overflowY: 'auto', paddingBottom: '30px', animation: 'slideUp 0.4s cubic-bezier(0.4, 0, 0.2, 1)' }}>
               
-              <div onClick={() => setSelectedProduct(null)} style={{ width: '50px', height: '5px', background: 'rgba(255,255,255,0.5)', borderRadius: '10px', margin: '15px auto', cursor: 'pointer' }}></div>
-              <button onClick={() => setSelectedProduct(null)} style={{ position: 'absolute', top: '20px', right: '20px', zIndex: 10, background: 'rgba(255,255,255,0.15)', backdropFilter: 'blur(20px)', border: '1px solid rgba(255,255,255,0.3)', borderRadius: '50%', width: '38px', height: '38px', color: 'white', fontSize: '18px', display: 'flex', alignItems: 'center', justifyContent: 'center' }}>✕</button>
+              <div onClick={() => setSelectedProduct(null)} style={{ width: '50px', height: '5px', background: 'rgba(255,255,255,0.5)', borderRadius: '10px', margin: '15px auto', cursor: 'pointer', WebkitTapHighlightColor: 'transparent' }}></div>
+              <button onClick={() => setSelectedProduct(null)} style={{ position: 'absolute', top: '20px', right: '20px', zIndex: 10, background: 'rgba(255,255,255,0.15)', backdropFilter: 'blur(20px)', border: '1px solid rgba(255,255,255,0.3)', borderRadius: '50%', width: '38px', height: '38px', color: 'white', fontSize: '18px', display: 'flex', alignItems: 'center', justifyContent: 'center', WebkitTapHighlightColor: 'transparent' }}>✕</button>
 
               <div style={{ position: 'relative', width: '100%', height: '42vh', display: 'flex', justifyContent: 'center', alignItems: 'center', overflow: 'hidden' }}>
                 <img src={productImages[selectedImageIndex]} style={{ maxWidth: '95%', maxHeight: '100%', objectFit: 'contain', filter: 'drop-shadow(0px 25px 40px rgba(0,0,0,0.7))' }} />
@@ -188,7 +189,8 @@ export default function Home() {
                             overflow: 'hidden', cursor: 'pointer', 
                             background: 'rgba(255,255,255,0.08)', backdropFilter: 'blur(15px)',
                             opacity: selectedImageIndex === idx ? 1 : 0.6, transition: 'all 0.3s ease',
-                            boxShadow: selectedImageIndex === idx ? '0 10px 20px rgba(251, 191, 36, 0.2)' : 'none'
+                            boxShadow: selectedImageIndex === idx ? '0 10px 20px rgba(251, 191, 36, 0.2)' : 'none',
+                            WebkitTapHighlightColor: 'transparent'
                           }}>
                           <img src={img} style={{ width: '100%', height: '100%', objectFit: 'cover' }} />
                         </div>
@@ -210,7 +212,8 @@ export default function Home() {
                             display: 'flex', alignItems: 'center', justifyContent: 'center', fontSize: '16px', fontWeight: '900', 
                             border: '1px solid', borderColor: selectedSize === size ? '#fbbf24' : 'rgba(255,255,255,0.3)', 
                             cursor: 'pointer', transition: 'all 0.3s ease',
-                            boxShadow: selectedSize === size ? '0 10px 20px rgba(251, 191, 36, 0.3)' : 'none'
+                            boxShadow: selectedSize === size ? '0 10px 20px rgba(251, 191, 36, 0.3)' : 'none',
+                            WebkitTapHighlightColor: 'transparent'
                           }}>
                           {size}
                         </div>
@@ -221,12 +224,12 @@ export default function Home() {
 
                 <div style={{ marginTop: '35px', display: 'flex', gap: '15px', alignItems: 'center' }}>
                   <div style={{ display: 'flex', alignItems: 'center', gap: '15px', background: 'rgba(255,255,255,0.08)', backdropFilter: 'blur(25px)', borderRadius: '22px', padding: '5px', border: '1px solid rgba(255,255,255,0.2)' }}>
-                    <button onClick={() => count > 1 && setCount(count-1)} style={{ border: 'none', background: 'none', color: 'white', fontSize: '24px', width: '50px', height: '50px' }}>−</button>
+                    <button onClick={() => count > 1 && setCount(count-1)} style={{ border: 'none', background: 'none', color: 'white', fontSize: '24px', width: '50px', height: '50px', WebkitTapHighlightColor: 'transparent' }}>−</button>
                     <span style={{ minWidth: '20px', textAlign: 'center', fontWeight: '900', fontSize: '20px' }}>{count}</span>
-                    <button onClick={() => setCount(count+1)} style={{ border: 'none', background: 'none', color: 'white', fontSize: '24px', width: '50px', height: '50px' }}>+</button>
+                    <button onClick={() => setCount(count+1)} style={{ border: 'none', background: 'none', color: 'white', fontSize: '24px', width: '50px', height: '50px', WebkitTapHighlightColor: 'transparent' }}>+</button>
                   </div>
                   <button onClick={() => handleAddToCart(selectedProduct)} 
-                    style={{ flex: 1, height: '60px', background: 'linear-gradient(90deg, #fbbf24 0%, #f59e0b 100%)', color: '#050b14', border: 'none', borderRadius: '22px', fontWeight: '900', fontSize: '15px', letterSpacing: '1px', boxShadow: '0 15px 35px rgba(251, 191, 36, 0.4)', transition: 'all 0.3s' }}>
+                    style={{ flex: 1, height: '60px', background: 'linear-gradient(90deg, #fbbf24 0%, #f59e0b 100%)', color: '#050b14', border: 'none', borderRadius: '22px', fontWeight: '900', fontSize: '15px', letterSpacing: '1px', boxShadow: '0 15px 35px rgba(251, 191, 36, 0.4)', transition: 'all 0.3s', WebkitTapHighlightColor: 'transparent' }}>
                     SAVATGA QO'SHISH
                   </button>
                 </div>
@@ -247,7 +250,7 @@ export default function Home() {
           { id: 'AI', name: 'AI', icon: 'm12 3-1.912 5.813a2 2 0 0 1-1.275 1.275L3 12l5.813 1.912a2 2 0 0 1 1.275 1.275L12 21l1.912-5.813a2 2 0 0 1 1.275-1.275L21 12l-5.813-1.912a2 2 0 0 1-1.275-1.275L12 3Z' },
           { id: 'Profil', name: 'PROFIL', icon: 'M19 21v-2a4 4 0 0 0-4-4H9a4 4 0 0 0-4 4v2' },
         ].map((tab) => (
-          <div key={tab.id} onClick={() => setActiveTab(tab.id)} style={{ cursor: 'pointer', display: 'flex', flexDirection: 'column', alignItems: 'center', gap: '4px', flex: 1, position: 'relative' }}>
+          <div key={tab.id} onClick={() => setActiveTab(tab.id)} style={{ cursor: 'pointer', display: 'flex', flexDirection: 'column', alignItems: 'center', gap: '4px', flex: 1, position: 'relative', WebkitTapHighlightColor: 'transparent' }}>
             
             {/* SAVAT UCHUN MAXSUS QIZIL BILDIRISHNOMA (BADGE) */}
             {tab.id === 'Savat' && totalCartItems > 0 && (
@@ -262,7 +265,7 @@ export default function Home() {
               {tab.id === 'Look' && <path d="M11 3 8 9l4 13 4-13-3-6" />}
               {tab.id === 'Look' && <path d="M2 9h20" />}
             </svg>
-            <span style={{ fontSize: '7px', color: activeTab === tab.id ? '#fbbf24' : 'white', fontWeight: '800' }}>{tab.name}</span>
+            <span style={{ fontSize: '7px', color: activeTab === tab.id ? '#fbbf24' : 'white', fontWeight: '800', textDecoration: 'none' }}>{tab.name}</span>
           </div>
         ))}
       </nav>
