@@ -265,7 +265,7 @@ export default function Home() {
               {tab.id === 'Look' && <path d="M11 3 8 9l4 13 4-13-3-6" />}
               {tab.id === 'Look' && <path d="M2 9h20" />}
             </svg>
-            <span style={{ fontSize: '7px', color: activeTab === tab.id ? '#fbbf24' : 'white', fontWeight: '800', textDecoration: 'none' }}>{tab.name}</span>
+            <span spellCheck={false} translate="no" style={{ fontSize: '7px', color: activeTab === tab.id ? '#fbbf24' : 'white', fontWeight: '800', textDecoration: 'none', borderBottom: 'none' }}>{tab.name}</span>
           </div>
         ))}
       </nav>
