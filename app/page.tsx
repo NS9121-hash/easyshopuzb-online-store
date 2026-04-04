@@ -2,41 +2,63 @@
 import { useEffect, useState, useRef } from 'react';
 import { createClient } from '@supabase/supabase-js';
 
+// Supabase konfiguratsiyasi
 const supabase = createClient(
   process.env.NEXT_PUBLIC_SUPABASE_URL!,
   process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY!
 );
 
 export default function Home() {
+  // Asosiy holatlar (states)
   const [activeTab, setActiveTab] = useState('Home');
   const [items, setItems] = useState<any[]>([]);
   const [cart, setCart] = useState<any[]>([]); 
   const [selectedProduct, setSelectedProduct] = useState<any>(null);
   const [count, setCount] = useState(1);
   
+  // Mahsulot detallari uchun holatlar
   const [selectedImageIndex, setSelectedImageIndex] = useState(0);
   const [selectedSize, setSelectedSize] = useState('');
   const [selectedColor, setSelectedColor] = useState('');
+  const [isFullScreen, setIsFullScreen] = useState(false); // Rasmni to'liq ko'rish uchun
 
   const videoRef = useRef<HTMLVideoElement>(null);
 
+  // Savatga qo'shish funksiyasi
   const handleAddToCart = (product: any) => {
-    const newItem = { ...product, qty: count, chosenSize: selectedSize, chosenColor: selectedColor, addedAt: new Date() };
+    const newItem = { 
+      ...product, 
+      qty: count, 
+      chosenSize: selectedSize, 
+      chosenColor: selectedColor, 
+      addedAt: new Date() 
+    };
     setCart((prev) => [...prev, newItem]);
     setSelectedProduct(null);
   };
 
+  // Ma'lumotlarni bazadan olish
   const fetchItems = async () => {
-    const { data, error } = await supabase.from('Clothes').select('*').order('created_at', { ascending: false });
+    const { data, error } = await supabase
+      .from('Clothes')
+      .select('*')
+      .order('created_at', { ascending: false });
     if (data) setItems(data);
   };
 
+  // Real-time o'zgarishlarni kuzatish
   useEffect(() => {
     fetchItems();
     const channel = supabase.channel('realtime_clothes')
-      .on('postgres_changes', { event: 'INSERT', schema: 'public', table: 'Clothes' }, (payload) => { setItems((prev) => [payload.new, ...prev]); })
-      .on('postgres_changes', { event: 'UPDATE', schema: 'public', table: 'Clothes' }, (payload) => { setItems((prev) => prev.map(item => item.id === payload.new.id ? payload.new : item)); })
-      .on('postgres_changes', { event: 'DELETE', schema: 'public', table: 'Clothes' }, (payload) => { setItems((prev) => prev.filter(item => item.id !== payload.old.id)); })
+      .on('postgres_changes', { event: 'INSERT', schema: 'public', table: 'Clothes' }, (payload) => { 
+        setItems((prev) => [payload.new, ...prev]); 
+      })
+      .on('postgres_changes', { event: 'UPDATE', schema: 'public', table: 'Clothes' }, (payload) => { 
+        setItems((prev) => prev.map(item => item.id === payload.new.id ? payload.new : item)); 
+      })
+      .on('postgres_changes', { event: 'DELETE', schema: 'public', table: 'Clothes' }, (payload) => { 
+        setItems((prev) => prev.filter(item => item.id !== payload.old.id)); 
+      })
       .subscribe();
     return () => { supabase.removeChannel(channel); };
   }, []);
@@ -45,13 +67,16 @@ export default function Home() {
 
   return (
     <main style={{ position: 'relative', minHeight: '100dvh', width: '100dvw', overflowX: 'hidden', backgroundColor: '#050b14', display: 'flex', flexDirection: 'column', alignItems: 'center', fontFamily: 'system-ui, -apple-system, sans-serif', padding: '40px 0 120px 0', boxSizing: 'border-box' }}>
+      {/* Orqa fon */}
       <div style={{ position: 'absolute', inset: 0, backgroundImage: "url('/IMG_2933.jpeg')", backgroundSize: 'cover', backgroundPosition: 'center', zIndex: 0 }}></div>
 
+      {/* Header */}
       <header style={{ textAlign: 'center', marginBottom: '30px', zIndex: 10 }}>
         <h1 style={{ fontSize: '32px', fontWeight: '900', color: 'white', margin: 0, textShadow: '0 4px 10px rgba(0,0,0,0.5)' }}>EASYSHOP_<span style={{ color: '#fbbf24' }}>UZB</span></h1>
         <p style={{ fontSize: '11px', fontWeight: '700', color: '#e2e8f0', letterSpacing: '4px', marginTop: '5px' }}>OSON ONLINE XARID</p>
       </header>
 
+      {/* Asosiy kontent maydoni */}
       <div style={{ width: '90%', maxWidth: '500px', zIndex: 10, position: 'relative' }}>
         
         {activeTab === 'Home' && (
@@ -112,6 +137,7 @@ export default function Home() {
           </div>
         )}
 
+        {/* Boshqa tablar (Savat, Look, etc.) saqlangan... */}
         {activeTab === 'Savat' && (
           <div style={{ color: 'white', animation: 'fadeIn 0.3s ease' }}>
              {cart.length === 0 ? (
@@ -138,106 +164,123 @@ export default function Home() {
         {activeTab === 'AI' && <div style={{ color: 'white', textAlign: 'center', padding: '50px' }}>AI YORDAMCHI TEZ ORADA</div>}
       </div>
 
+      {/* MAHSULOT DETALLARI MODALI */}
       {selectedProduct && (() => {
         const productImages = selectedProduct.image_url ? selectedProduct.image_url.split(',') : [];
         const productSizes = selectedProduct.sizes ? selectedProduct.sizes.split(',').map((s:string) => s.trim()) : [];
         const productColors = selectedProduct.colors ? selectedProduct.colors.split(',').map((c:string) => c.trim()) : [];
 
         return (
-          <div style={{ position: 'fixed', inset: 0, zIndex: 1000, display: 'flex', alignItems: 'flex-end', justifyContent: 'center', backgroundColor: 'rgba(0,0,0,0.4)', backdropFilter: 'blur(8px)', animation: 'fadeIn 0.3s ease' }}>
-            
-            <div style={{ width: '100%', maxWidth: '500px', height: '94dvh', position: 'relative', animation: 'slideUp 0.4s cubic-bezier(0.4, 0, 0.2, 1)' }}>
+          <>
+            <div style={{ position: 'fixed', inset: 0, zIndex: 1000, display: 'flex', alignItems: 'flex-end', justifyContent: 'center', backgroundColor: 'rgba(0,0,0,0.4)', backdropFilter: 'blur(8px)', animation: 'fadeIn 0.3s ease' }}>
               
-              <div style={{ position: 'absolute', inset: 0, background: 'rgba(20, 30, 50, 0.45)', backdropFilter: 'blur(50px) saturate(200%)', WebkitBackdropFilter: 'blur(50px) saturate(200%)', borderRadius: '35px 35px 0 0', border: '1.5px solid rgba(255,255,255,0.2)', borderBottom: 'none', zIndex: 0, pointerEvents: 'none' }}></div>
-
-              <div style={{ position: 'relative', zIndex: 1, width: '100%', height: '100%', overflowY: 'auto', display: 'flex', flexDirection: 'column', paddingBottom: '30px' }}>
+              <div style={{ width: '100%', maxWidth: '500px', height: '94dvh', position: 'relative', animation: 'slideUp 0.4s cubic-bezier(0.4, 0, 0.2, 1)' }}>
                 
-                <div onClick={() => setSelectedProduct(null)} style={{ width: '50px', height: '5px', background: 'rgba(255,255,255,0.5)', borderRadius: '10px', margin: '15px auto', cursor: 'pointer', flexShrink: 0 }}></div>
-                <button tabIndex={-1} onClick={() => setSelectedProduct(null)} style={{ position: 'absolute', top: '20px', right: '20px', zIndex: 10, background: 'rgba(255,255,255,0.15)', backdropFilter: 'blur(20px)', border: '1px solid rgba(255,255,255,0.3)', borderRadius: '50%', width: '38px', height: '38px', color: 'white', fontSize: '18px', display: 'flex', alignItems: 'center', justifyContent: 'center', WebkitTapHighlightColor: 'transparent', outline: 'none' }}>✕</button>
+                <div style={{ position: 'absolute', inset: 0, background: 'rgba(20, 30, 50, 0.45)', backdropFilter: 'blur(50px) saturate(200%)', WebkitBackdropFilter: 'blur(50px) saturate(200%)', borderRadius: '35px 35px 0 0', border: '1.5px solid rgba(255,255,255,0.2)', borderBottom: 'none', zIndex: 0, pointerEvents: 'none' }}></div>
 
-                {/* ✅ RASM BLOKI BALANDLIGI 40VH DAN 28VH GA QISQARTIRILDI VA SHIM PASTIDAGI BO'SH JOY YO'QOTILDI */}
-                <div style={{ position: 'relative', width: '100%', height: '28vh', display: 'flex', justifyContent: 'center', alignItems: 'center', padding: '10px 25px 0 25px', flexShrink: 0, background: '#DCDCDC', borderTopLeftRadius: '20px', borderTopRightRadius: '20px', boxShadow: 'inset 0 0 40px rgba(0,0,0,0.1)' }}>
-                  <img src={productImages[selectedImageIndex]} style={{ maxWidth: '100%', maxHeight: '100%', borderRadius: '16px', boxShadow: '0 15px 35px rgba(0,0,0,0.5)', objectFit: 'contain' }} />
-                </div>
-
-                <div style={{ padding: '15px 25px', color: 'white', flexShrink: 0 }}>
+                <div style={{ position: 'relative', zIndex: 1, width: '100%', height: '100%', overflowY: 'auto', display: 'flex', flexDirection: 'column', paddingBottom: '30px' }}>
                   
-                  <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
-                    <div style={{ fontSize: '32px', fontWeight: '900', color: '#fbbf24', letterSpacing: '-1px', textShadow: '0 4px 15px rgba(251, 191, 36, 0.3)' }}>{selectedProduct.price?.toLocaleString()} <span style={{fontSize: '14px', color: 'rgba(255,255,255,0.6)'}}>so'm</span></div>
-                    <div style={{ padding: '6px 12px', background: 'rgba(251,191,36,0.15)', backdropFilter: 'blur(10px)', border: '1px solid rgba(251,191,36,0.5)', borderRadius: '12px', color: '#fbbf24', fontSize: '10px', fontWeight: '900', letterSpacing: '1px' }}>PREMIUM</div>
+                  <div onClick={() => setSelectedProduct(null)} style={{ width: '50px', height: '5px', background: 'rgba(255,255,255,0.5)', borderRadius: '10px', margin: '15px auto', cursor: 'pointer', flexShrink: 0 }}></div>
+                  <button tabIndex={-1} onClick={() => setSelectedProduct(null)} style={{ position: 'absolute', top: '20px', right: '20px', zIndex: 10, background: 'rgba(255,255,255,0.15)', backdropFilter: 'blur(20px)', border: '1px solid rgba(255,255,255,0.3)', borderRadius: '50%', width: '38px', height: '38px', color: 'white', fontSize: '18px', display: 'flex', alignItems: 'center', justifyContent: 'center', WebkitTapHighlightColor: 'transparent', outline: 'none' }}>✕</button>
+
+                  {/* ✅ RASM BLOKI - BOSILGANDA KATTALASHADI */}
+                  <div 
+                    onClick={() => setIsFullScreen(true)}
+                    style={{ position: 'relative', width: '100%', height: '28vh', display: 'flex', justifyContent: 'center', alignItems: 'center', padding: '10px 25px 0 25px', flexShrink: 0, background: '#DCDCDC', borderTopLeftRadius: '20px', borderTopRightRadius: '20px', boxShadow: 'inset 0 0 40px rgba(0,0,0,0.1)', cursor: 'zoom-in' }}>
+                    <img src={productImages[selectedImageIndex]} style={{ maxWidth: '100%', maxHeight: '100%', borderRadius: '16px', boxShadow: '0 15px 35px rgba(0,0,0,0.5)', objectFit: 'contain' }} />
+                    <div style={{ position: 'absolute', bottom: '10px', right: '35px', background: 'rgba(0,0,0,0.5)', padding: '5px', borderRadius: '50%', color: 'white' }}>
+                      <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5"><path d="M15 3h6v6M9 21H3v-6M21 3l-7 7M3 21l7-7"/></svg>
+                    </div>
                   </div>
-                  
-                  {productImages.length > 0 && (
-                    <div style={{ marginTop: '15px' }}>
-                      <div style={{ fontSize: '13px', color: 'white', fontWeight: '700', marginBottom: '10px', letterSpacing: '0.5px' }}>
-                        <span style={{color: 'rgba(255,255,255,0.5)'}}>RANG: </span> 
-                        {productColors[selectedImageIndex] || `Maxsus Rang`}
-                      </div>
-                      
-                      <div style={{ display: 'flex', gap: '12px', overflowX: 'auto', paddingBottom: '10px', scrollbarWidth: 'none' }}>
-                        {productImages.map((img: string, idx: number) => (
-                          <div key={idx} 
-                            tabIndex={-1} 
-                            onClick={() => { setSelectedImageIndex(idx); setSelectedColor(productColors[idx] || `Maxsus Rang`); }} 
-                            style={{ 
-                              minWidth: '60px', width: '60px', aspectRatio: '3/4', height: 'auto', borderRadius: '12px', 
-                              border: selectedImageIndex === idx ? '2px solid #fbbf24' : '1px solid rgba(255,255,255,0.2)', 
-                              overflow: 'hidden', cursor: 'pointer', 
-                              background: 'rgba(255,255,255,0.08)', backdropFilter: 'blur(15px)',
-                              opacity: selectedImageIndex === idx ? 1 : 0.6, transition: 'all 0.3s ease',
-                              boxShadow: selectedImageIndex === idx ? '0 10px 20px rgba(251, 191, 36, 0.2)' : 'none',
-                              WebkitTapHighlightColor: 'transparent', outline: 'none'
-                            }}>
-                            <img src={img} style={{ width: '100%', height: '100%', objectFit: 'cover' }} />
-                          </div>
-                        ))}
-                      </div>
-                    </div>
-                  )}
 
-                  {productSizes.length > 0 && productSizes[0] !== '' && (
-                    <div style={{ marginTop: '15px' }}>
-                      <div style={{ fontSize: '12px', color: 'rgba(255,255,255,0.5)', fontWeight: '800', marginBottom: '10px', letterSpacing: '1px' }}>O'LCHAMLAR:</div>
-                      <div style={{ display: 'flex', gap: '10px', flexWrap: 'wrap' }}>
-                        {productSizes.map((size: string, i: number) => (
-                          <div key={i} onClick={() => setSelectedSize(size)} 
-                            tabIndex={-1} 
-                            style={{ width: '48px', height: '48px', borderRadius: '14px', 
-                              background: selectedSize === size ? '#fbbf24' : 'rgba(255,255,255,0.08)', 
-                              backdropFilter: 'blur(15px)',
-                              color: selectedSize === size ? '#050b14' : 'white', 
-                              display: 'flex', alignItems: 'center', justifyContent: 'center', fontSize: '15px', fontWeight: '900', 
-                              border: '1px solid', borderColor: selectedSize === size ? '#fbbf24' : 'rgba(255,255,255,0.3)', 
-                              cursor: 'pointer', transition: 'all 0.3s ease',
-                              boxShadow: selectedSize === size ? '0 10px 20px rgba(251, 191, 36, 0.3)' : 'none',
-                              WebkitTapHighlightColor: 'transparent', outline: 'none'
-                            }}>
-                            {size}
-                          </div>
-                        ))}
+                  <div style={{ padding: '15px 25px', color: 'white', flexShrink: 0 }}>
+                    <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
+                      <div style={{ fontSize: '32px', fontWeight: '900', color: '#fbbf24', letterSpacing: '-1px', textShadow: '0 4px 15px rgba(251, 191, 36, 0.3)' }}>{selectedProduct.price?.toLocaleString()} <span style={{fontSize: '14px', color: 'rgba(255,255,255,0.6)'}}>so'm</span></div>
+                      <div style={{ padding: '6px 12px', background: 'rgba(251,191,36,0.15)', backdropFilter: 'blur(10px)', border: '1px solid rgba(251,191,36,0.5)', borderRadius: '12px', color: '#fbbf24', fontSize: '10px', fontWeight: '900', letterSpacing: '1px' }}>PREMIUM</div>
+                    </div>
+                    
+                    {/* Ranglar/Rasm tanlash */}
+                    {productImages.length > 0 && (
+                      <div style={{ marginTop: '15px' }}>
+                        <div style={{ fontSize: '13px', color: 'white', fontWeight: '700', marginBottom: '10px', letterSpacing: '0.5px' }}>
+                          <span style={{color: 'rgba(255,255,255,0.5)'}}>RANG: </span> 
+                          {productColors[selectedImageIndex] || `Maxsus Rang`}
+                        </div>
+                        <div style={{ display: 'flex', gap: '12px', overflowX: 'auto', paddingBottom: '10px', scrollbarWidth: 'none' }}>
+                          {productImages.map((img: string, idx: number) => (
+                            <div key={idx} 
+                              onClick={() => { setSelectedImageIndex(idx); setSelectedColor(productColors[idx] || `Maxsus Rang`); }} 
+                              style={{ 
+                                minWidth: '60px', width: '60px', aspectRatio: '3/4', borderRadius: '12px', 
+                                border: selectedImageIndex === idx ? '2px solid #fbbf24' : '1px solid rgba(255,255,255,0.2)', 
+                                overflow: 'hidden', opacity: selectedImageIndex === idx ? 1 : 0.6, transition: '0.3s'
+                              }}>
+                              <img src={img} style={{ width: '100%', height: '100%', objectFit: 'cover' }} />
+                            </div>
+                          ))}
+                        </div>
                       </div>
-                    </div>
-                  )}
+                    )}
 
-                  <div style={{ marginTop: '20px', display: 'flex', gap: '15px', alignItems: 'center' }}>
-                    <div style={{ display: 'flex', alignItems: 'center', gap: '10px', background: 'rgba(255,255,255,0.08)', backdropFilter: 'blur(25px)', borderRadius: '18px', padding: '4px', border: '1px solid rgba(255,255,255,0.2)' }}>
-                      <button tabIndex={-1} onClick={() => count > 1 && setCount(count-1)} style={{ border: 'none', background: 'none', color: 'white', fontSize: '22px', width: '45px', height: '45px', WebkitTapHighlightColor: 'transparent', outline: 'none' }}>−</button>
-                      <span style={{ minWidth: '18px', textAlign: 'center', fontWeight: '900', fontSize: '18px' }}>{count}</span>
-                      <button tabIndex={-1} onClick={() => setCount(count+1)} style={{ border: 'none', background: 'none', color: 'white', fontSize: '22px', width: '45px', height: '45px', WebkitTapHighlightColor: 'transparent', outline: 'none' }}>+</button>
+                    {/* O'lchamlar */}
+                    {productSizes.length > 0 && productSizes[0] !== '' && (
+                      <div style={{ marginTop: '15px' }}>
+                        <div style={{ fontSize: '12px', color: 'rgba(255,255,255,0.5)', fontWeight: '800', marginBottom: '10px' }}>O'LCHAMLAR:</div>
+                        <div style={{ display: 'flex', gap: '10px', flexWrap: 'wrap' }}>
+                          {productSizes.map((size: string, i: number) => (
+                            <div key={i} onClick={() => setSelectedSize(size)} 
+                              style={{ width: '48px', height: '48px', borderRadius: '14px', 
+                                background: selectedSize === size ? '#fbbf24' : 'rgba(255,255,255,0.08)', 
+                                color: selectedSize === size ? '#050b14' : 'white', 
+                                display: 'flex', alignItems: 'center', justifyContent: 'center', fontSize: '15px', fontWeight: '900', 
+                                border: '1px solid', borderColor: selectedSize === size ? '#fbbf24' : 'rgba(255,255,255,0.3)'
+                              }}>
+                              {size}
+                            </div>
+                          ))}
+                        </div>
+                      </div>
+                    )}
+
+                    {/* Soni va Savatga qo'shish */}
+                    <div style={{ marginTop: '20px', display: 'flex', gap: '15px', alignItems: 'center' }}>
+                      <div style={{ display: 'flex', alignItems: 'center', gap: '10px', background: 'rgba(255,255,255,0.08)', borderRadius: '18px', padding: '4px', border: '1px solid rgba(255,255,255,0.2)' }}>
+                        <button onClick={() => count > 1 && setCount(count-1)} style={{ border: 'none', background: 'none', color: 'white', fontSize: '22px', width: '45px', height: '45px' }}>−</button>
+                        <span style={{ minWidth: '18px', textAlign: 'center', fontWeight: '900', fontSize: '18px' }}>{count}</span>
+                        <button onClick={() => setCount(count+1)} style={{ border: 'none', background: 'none', color: 'white', fontSize: '22px', width: '45px', height: '45px' }}>+</button>
+                      </div>
+                      <button onClick={() => handleAddToCart(selectedProduct)} 
+                        style={{ flex: 1, height: '55px', background: 'linear-gradient(90deg, #fbbf24 0%, #f59e0b 100%)', color: '#050b14', border: 'none', borderRadius: '18px', fontWeight: '900', fontSize: '14px', boxShadow: '0 15px 35px rgba(251, 191, 36, 0.4)' }}>
+                        SAVATGA QO'SHISH
+                      </button>
                     </div>
-                    <button tabIndex={-1} onClick={() => handleAddToCart(selectedProduct)} 
-                      style={{ flex: 1, height: '55px', background: 'linear-gradient(90deg, #fbbf24 0%, #f59e0b 100%)', color: '#050b14', border: 'none', borderRadius: '18px', fontWeight: '900', fontSize: '14px', letterSpacing: '1px', boxShadow: '0 15px 35px rgba(251, 191, 36, 0.4)', transition: 'all 0.3s', WebkitTapHighlightColor: 'transparent', outline: 'none' }}>
-                      SAVATGA QO'SHISH
-                    </button>
                   </div>
                 </div>
               </div>
             </div>
-          </div>
+
+            {/* ✅ RASMNI TO'LIQ EKRANDA KO'RISH MODALI */}
+            {isFullScreen && (
+              <div 
+                onClick={() => setIsFullScreen(false)}
+                style={{ position: 'fixed', inset: 0, zIndex: 2000, backgroundColor: 'rgba(0,0,0,0.95)', display: 'flex', alignItems: 'center', justifyContent: 'center', animation: 'fadeIn 0.2s ease' }}>
+                <button style={{ position: 'absolute', top: '40px', right: '20px', background: 'white', border: 'none', borderRadius: '50%', width: '40px', height: '40px', fontSize: '20px', fontWeight: 'bold' }}>✕</button>
+                <img 
+                  src={productImages[selectedImageIndex]} 
+                  style={{ maxWidth: '95%', maxHeight: '85%', objectFit: 'contain', borderRadius: '10px', boxShadow: '0 0 50px rgba(255,255,255,0.1)' }} 
+                  onClick={(e) => e.stopPropagation()} 
+                />
+                <div style={{ position: 'absolute', bottom: '50px', color: 'white', textAlign: 'center', background: 'rgba(255,255,255,0.1)', padding: '10px 20px', borderRadius: '20px', backdropFilter: 'blur(10px)' }}>
+                  Yopish uchun bosing
+                </div>
+              </div>
+            )}
+          </>
         );
       })()}
 
-      <nav style={{ position: 'fixed', bottom: '30px', width: '95%', maxWidth: '440px', height: '70px', borderRadius: '35px', background: 'rgba(255, 255, 255, 0.12)', backdropFilter: 'blur(25px) saturate(160%)', border: '1px solid rgba(255, 255, 255, 0.2)', display: 'flex', justifyContent: 'space-around', alignItems: 'center', padding: '0 8px', zIndex: 100 }}>
+      {/* Navigatsiya menyusi */}
+      <nav style={{ position: 'fixed', bottom: '30px', width: '95%', maxWidth: '440px', height: '70px', borderRadius: '35px', background: 'rgba(255, 255, 255, 0.12)', backdropFilter: 'blur(25px)', border: '1px solid rgba(255, 255, 255, 0.2)', display: 'flex', justifyContent: 'space-around', alignItems: 'center', padding: '0 8px', zIndex: 100 }}>
         {[
           { id: 'Home', name: 'ASOSIY', icon: 'm3 9 9-7 9 7v11a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z' },
           { id: 'Kiyimlar', name: 'KIYIMLAR', icon: 'M20.38 3.46 16 2a8.5 8.5 0 0 1-8 0L3.62 3.46a2 2 0 0 0-1.34 2.23l.58 3.47a1 1 0 0 0 .99.84H6v10c0 1.1.9 2 2 2h8a2 2 0 0 0 2-2V10h2.15a1 1 0 0 0 .99-.84l.58-3.47a2 2 0 0 0-1.34-2.23z' },
@@ -247,50 +290,26 @@ export default function Home() {
           { id: 'AI', name: 'AI', icon: 'm12 3-1.912 5.813a2 2 0 0 1-1.275 1.275L3 12l5.813 1.912a2 2 0 0 1 1.275 1.275L12 21l1.912-5.813a2 2 0 0 1 1.275-1.275L21 12l-5.813-1.912a2 2 0 0 1-1.275-1.275L12 3Z' },
           { id: 'Profil', name: 'PROFIL', icon: 'M19 21v-2a4 4 0 0 0-4-4H9a4 4 0 0 0-4 4v2' },
         ].map((tab) => (
-          <div key={tab.id} onClick={() => setActiveTab(tab.id)} tabIndex={-1} style={{ cursor: 'pointer', display: 'flex', flexDirection: 'column', alignItems: 'center', gap: '4px', flex: 1, position: 'relative', WebkitTapHighlightColor: 'transparent', userSelect: 'none', WebkitUserSelect: 'none', outline: 'none' }}>
-            
+          <div key={tab.id} onClick={() => setActiveTab(tab.id)} style={{ cursor: 'pointer', display: 'flex', flexDirection: 'column', alignItems: 'center', gap: '4px', flex: 1, position: 'relative' }}>
             {tab.id === 'Savat' && totalCartItems > 0 && (
-              <div style={{ position: 'absolute', top: '-6px', right: '12px', background: '#ef4444', color: 'white', fontSize: '9px', fontWeight: '900', minWidth: '16px', height: '16px', borderRadius: '8px', display: 'flex', alignItems: 'center', justifyContent: 'center', padding: '0 4px', border: '2px solid #050b14', zIndex: 10 }}>
+              <div style={{ position: 'absolute', top: '-6px', right: '12px', background: '#ef4444', color: 'white', fontSize: '9px', fontWeight: '900', minWidth: '16px', height: '16px', borderRadius: '8px', display: 'flex', alignItems: 'center', justifyContent: 'center', border: '2px solid #050b14' }}>
                 {totalCartItems}
               </div>
             )}
-
-            <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke={activeTab === tab.id ? '#fbbf24' : 'white'} strokeWidth="2.2" strokeLinecap="round" strokeLinejoin="round" style={{ transition: '0.3s' }}>
+            <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke={activeTab === tab.id ? '#fbbf24' : 'white'} strokeWidth="2.2" strokeLinecap="round" strokeLinejoin="round">
               <path d={tab.icon}/>
-              {tab.id === 'Profil' && <circle cx="12" cy="7" r="4"></circle>}
-              {tab.id === 'Look' && <path d="M11 3 8 9l4 13 4-13-3-6" />}
-              {tab.id === 'Look' && <path d="M2 9h20" />}
             </svg>
-            <span spellCheck={false} translate="no" style={{ fontSize: '7px', color: activeTab === tab.id ? '#fbbf24' : 'white', fontWeight: '800', textDecoration: 'none', borderBottom: 'none', outline: 'none' }}>{tab.name}</span>
+            <span style={{ fontSize: '7px', color: activeTab === tab.id ? '#fbbf24' : 'white', fontWeight: '800' }}>{tab.name}</span>
           </div>
         ))}
       </nav>
 
       <style jsx global>{`
-        * {
-          -webkit-tap-highlight-color: transparent !important;
-          -webkit-touch-callout: none !important;
-          outline: none !important;
-        }
-
-        *:focus, 
-        *:active, 
-        *:focus-visible {
-          outline: none !important;
-          box-shadow: none !important;
-          border: none !important;
-        }
-
-        @keyframes slideUp { 
-          from { transform: translateY(100%); } 
-          to { transform: translateY(0); } 
-        }
-
-        @keyframes fadeIn { 
-          from { opacity: 0; } 
-          to { opacity: 1; } 
-        }
+        * { -webkit-tap-highlight-color: transparent; outline: none !important; }
+        @keyframes slideUp { from { transform: translateY(100%); } to { transform: translateY(0); } }
+        @keyframes fadeIn { from { opacity: 0; } to { opacity: 1; } }
       `}</style>
     </main>
   );
 }
+
