@@ -118,7 +118,7 @@ export default function Home() {
                   }} 
                   style={{ background: 'rgba(255, 255, 255, 0.03)', backdropFilter: 'blur(15px) saturate(180%)', borderRadius: '18px', border: '1px solid rgba(255,255,255,0.15)', overflow: 'hidden', display: 'flex', flexDirection: 'column', boxShadow: '0 15px 35px rgba(0,0,0,0.4)', cursor: 'pointer', WebkitTapHighlightColor: 'transparent', position: 'relative' }}>
                   
-                  {/* ✅ LIQUID GLASS HEART BUTTON WITH BLUE COLOR */}
+                  {/* ✅ LIQUID GLASS HEART BUTTON */}
                   <div 
                     onClick={(e) => toggleFavorite(e, item)}
                     style={{ 
@@ -129,7 +129,7 @@ export default function Home() {
                       display: 'flex', alignItems: 'center', justifyContent: 'center',
                       boxShadow: '0 4px 15px rgba(0,0,0,0.2)', transition: '0.3s'
                     }}>
-                    <svg width="18" height="18" viewBox="0 0 24 24" fill={isLiked ? "#3b82f6" : "none"} stroke={isLiked ? "#3b82f6" : "white"} strokeWidth="2.5">
+                    <svg width="18" height="18" viewBox="0 0 24 24" fill={isLiked ? "#ef4444" : "none"} stroke={isLiked ? "#ef4444" : "white"} strokeWidth="2.5">
                       <path d="M20.84 4.61a5.5 5.5 0 0 0-7.78 0L12 5.67l-1.06-1.06a5.5 5.5 0 0 0-7.78 7.78l1.06 1.06L12 21.23l7.78-7.78 1.06-1.06a5.5 5.5 0 0 0 0-7.78z" />
                     </svg>
                   </div>
