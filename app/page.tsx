@@ -133,18 +133,16 @@ export default function Home() {
                   }} 
                   style={{ background: 'rgba(255, 255, 255, 0.03)', backdropFilter: 'blur(15px) saturate(180%)', borderRadius: '18px', border: '1px solid rgba(255,255,255,0.15)', overflow: 'hidden', display: 'flex', flexDirection: 'column', boxShadow: '0 15px 35px rgba(0,0,0,0.4)', cursor: 'pointer', WebkitTapHighlightColor: 'transparent', position: 'relative' }}>
                   
-                  {/* ✅ LIQUID GLASS HEART BUTTON */}
+                  {/* ✅ HEART BUTTON WITHOUT FRAME */}
                   <div 
                     onClick={(e) => toggleFavorite(e, item)}
                     style={{ 
                       position: 'absolute', top: '10px', right: '10px', zIndex: 20, 
-                      width: '32px', height: '32px', borderRadius: '10px',
-                      background: 'rgba(255, 255, 255, 0.15)', backdropFilter: 'blur(12px)',
-                      border: '1px solid rgba(255, 255, 255, 0.25)',
+                      width: '32px', height: '32px',
                       display: 'flex', alignItems: 'center', justifyContent: 'center',
-                      boxShadow: '0 4px 15px rgba(0,0,0,0.2)', transition: '0.3s'
+                      transition: '0.3s', background: 'none', border: 'none', backdropFilter: 'none', boxShadow: 'none'
                     }}>
-                    <svg width="18" height="18" viewBox="0 0 24 24" fill={isLiked ? "#ef4444" : "none"} stroke={isLiked ? "#ef4444" : "white"} strokeWidth="2.5">
+                    <svg width="22" height="22" viewBox="0 0 24 24" fill={isLiked ? "#ef4444" : "none"} stroke={isLiked ? "#ef4444" : "white"} strokeWidth="2.5" style={{ filter: 'drop-shadow(0 2px 5px rgba(0,0,0,0.5))' }}>
                       <path d="M20.84 4.61a5.5 5.5 0 0 0-7.78 0L12 5.67l-1.06-1.06a5.5 5.5 0 0 0-7.78 7.78l1.06 1.06L12 21.23l7.78-7.78 1.06-1.06a5.5 5.5 0 0 0 0-7.78z" />
                     </svg>
                   </div>
@@ -204,7 +202,7 @@ export default function Home() {
           </div>
         )}
 
-        {/* ✅ YOQTIRGANLAR BO'LIMI - DINAMIK RENDERING */}
+        {/* ✅ YOQTIRGANLAR BO'LIMI - RAMKASIZ YURAKCHA */}
         {activeTab === 'Yoqtirganlar' && (
           <div style={{ animation: 'fadeIn 0.3s ease' }}>
             <h3 style={{ color: 'white', textAlign: 'center', marginBottom: '20px', fontSize: '18px' }}>YOQTIRGANLAR ({favorites.length})</h3>
@@ -216,8 +214,8 @@ export default function Home() {
                   <div key={item.id} 
                     onClick={() => setSelectedProduct(item)}
                     style={{ background: 'rgba(255, 255, 255, 0.03)', borderRadius: '18px', border: '1px solid rgba(255,255,255,0.15)', overflow: 'hidden', position: 'relative' }}>
-                    <div onClick={(e) => toggleFavorite(e, item)} style={{ position: 'absolute', top: '10px', right: '10px', zIndex: 20, width: '32px', height: '32px', borderRadius: '10px', background: 'rgba(239, 68, 68, 0.2)', backdropFilter: 'blur(10px)', border: '1px solid rgba(239, 68, 68, 0.5)', display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
-                      <svg width="18" height="18" viewBox="0 0 24 24" fill="#ef4444" stroke="#ef4444" strokeWidth="2.5"><path d="M20.84 4.61a5.5 5.5 0 0 0-7.78 0L12 5.67l-1.06-1.06a5.5 5.5 0 0 0-7.78 7.78l1.06 1.06L12 21.23l7.78-7.78 1.06-1.06a5.5 5.5 0 0 0 0-7.78z" /></svg>
+                    <div onClick={(e) => toggleFavorite(e, item)} style={{ position: 'absolute', top: '10px', right: '10px', zIndex: 20, width: '32px', height: '32px', display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
+                      <svg width="22" height="22" viewBox="0 0 24 24" fill="#ef4444" stroke="#ef4444" strokeWidth="2.5" style={{ filter: 'drop-shadow(0 2px 5px rgba(0,0,0,0.5))' }}><path d="M20.84 4.61a5.5 5.5 0 0 0-7.78 0L12 5.67l-1.06-1.06a5.5 5.5 0 0 0-7.78 7.78l1.06 1.06L12 21.23l7.78-7.78 1.06-1.06a5.5 5.5 0 0 0 0-7.78z" /></svg>
                     </div>
                     <img src={item.image_url.split(',')[0]} style={{ width: '100%', aspectRatio: '3/4', objectFit: 'cover' }} />
                     <div style={{ padding: '12px', background: 'rgba(0,0,0,0.2)' }}>
