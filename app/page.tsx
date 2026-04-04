@@ -202,7 +202,7 @@ export default function Home() {
           </div>
         )}
 
-        {/* ✅ YOQTIRGANLAR BO'LIMI - BUYURTMA BERISH TUGMASI QO'SHILDI */}
+        {/* ✅ YOQTIRGANLAR BO'LIMI */}
         {activeTab === 'Yoqtirganlar' && (
           <div style={{ animation: 'fadeIn 0.3s ease' }}>
             <h3 style={{ color: 'white', textAlign: 'center', marginBottom: '20px', fontSize: '18px' }}>YOQTIRGANLAR ({favorites.length})</h3>
@@ -281,7 +281,6 @@ export default function Home() {
                   <div onClick={() => setSelectedProduct(null)} style={{ width: '50px', height: '5px', background: 'rgba(255,255,255,0.5)', borderRadius: '10px', margin: '15px auto', cursor: 'pointer', flexShrink: 0 }}></div>
                   <button tabIndex={-1} onClick={() => setSelectedProduct(null)} style={{ position: 'absolute', top: '20px', right: '20px', zIndex: 10, background: 'rgba(255,255,255,0.15)', backdropFilter: 'blur(20px)', border: '1px solid rgba(255,255,255,0.3)', borderRadius: '50%', width: '38px', height: '38px', color: 'white', fontSize: '18px', display: 'flex', alignItems: 'center', justifyContent: 'center', WebkitTapHighlightColor: 'transparent', outline: 'none' }}>✕</button>
 
-                  {/* RASM BLOKI - BOSILGANDA KATTALASHADI */}
                   <div 
                     onClick={() => setIsFullScreen(true)}
                     style={{ position: 'relative', width: '100%', height: '28vh', display: 'flex', justifyContent: 'center', alignItems: 'center', padding: '10px 25px 0 25px', flexShrink: 0, background: '#DCDCDC', borderTopLeftRadius: '20px', borderTopRightRadius: '20px', boxShadow: 'inset 0 0 40px rgba(0,0,0,0.1)', cursor: 'zoom-in' }}>
@@ -297,7 +296,6 @@ export default function Home() {
                       <div style={{ padding: '6px 12px', background: 'rgba(251,191,36,0.15)', backdropFilter: 'blur(10px)', border: '1px solid rgba(251,191,36,0.5)', borderRadius: '12px', color: '#fbbf24', fontSize: '10px', fontWeight: '900', letterSpacing: '1px' }}>PREMIUM</div>
                     </div>
                     
-                    {/* Ranglar/Rasm tanlash */}
                     {productImages.length > 0 && (
                       <div style={{ marginTop: '15px' }}>
                         <div style={{ fontSize: '13px', color: 'white', fontWeight: '700', marginBottom: '10px', letterSpacing: '0.5px' }}>
@@ -320,7 +318,6 @@ export default function Home() {
                       </div>
                     )}
 
-                    {/* O'lchamlar */}
                     {productSizes.length > 0 && productSizes[0] !== '' && (
                       <div style={{ marginTop: '15px' }}>
                         <div style={{ fontSize: '12px', color: 'rgba(255,255,255,0.5)', fontWeight: '800', marginBottom: '10px' }}>O'LCHAMLAR:</div>
@@ -340,7 +337,6 @@ export default function Home() {
                       </div>
                     )}
 
-                    {/* Soni va Savatga qo'shish */}
                     <div style={{ marginTop: '20px', display: 'flex', gap: '15px', alignItems: 'center' }}>
                       <div style={{ display: 'flex', alignItems: 'center', gap: '10px', background: 'rgba(255,255,255,0.08)', borderRadius: '18px', padding: '4px', border: '1px solid rgba(255,255,255,0.2)' }}>
                         <button onClick={() => count > 1 && setCount(count-1)} style={{ border: 'none', background: 'none', color: 'white', fontSize: '22px', width: '45px', height: '45px' }}>−</button>
@@ -357,7 +353,6 @@ export default function Home() {
               </div>
             </div>
 
-            {/* RASMNI TO'LIQ EKRANDA KO'RISH MODALI */}
             {isFullScreen && (
               <div 
                 onClick={() => setIsFullScreen(false)}
@@ -377,13 +372,24 @@ export default function Home() {
       {/* Navigatsiya menyusi */}
       <nav style={{ position: 'fixed', bottom: '30px', width: '95%', maxWidth: '440px', height: '70px', borderRadius: '35px', background: 'rgba(255, 255, 255, 0.12)', backdropFilter: 'blur(25px)', border: '1px solid rgba(255, 255, 255, 0.2)', display: 'flex', justifyContent: 'space-around', alignItems: 'center', padding: '0 8px', zIndex: 100 }}>
         {[
-          { id: 'Home', name: 'ASOSIY', icon: 'm3 9 9-7 9 7v11a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z' },
-          { id: 'Kiyimlar', name: 'KIYIMLAR', icon: 'M20.38 3.46 16 2a8.5 8.5 0 0 1-8 0L3.62 3.46a2 2 0 0 0-1.34 2.23l.58 3.47a1 1 0 0 0 .99.84H6v10c0 1.1.9 2 2 2h8a2 2 0 0 0 2-2V10h2.15a1 1 0 0 0 .99-.84l.58-3.47a2 2 0 0 0-1.34-2.23z' },
-          { id: 'Look', name: 'LOOK', icon: 'M6 3h12l4 6-10 13L2 9Z' }, 
-          { id: 'Yoqtirganlar', name: 'YOQTIRGAN', icon: 'M20.84 4.61a5.5 5.5 0 0 0-7.78 0L12 5.67l-1.06-1.06a5.5 5.5 0 0 0-7.78 7.78l1.06 1.06L12 21.23l7.78-7.78 1.06-1.06a5.5 5.5 0 0 0 0-7.78z' },
-          { id: 'Savat', name: 'SAVAT', icon: 'M8 21a1 1 0 1 0 0-2 1 1 0 0 0 0 2zM19 21a1 1 0 1 0 0-2 1 1 0 0 0 0 2zM2.05 2.05h2l2.66 12.42a2 2 0 0 0 2 1.58h9.78a2 2 0 0 0 1.95-1.57l1.65-7.43H5.12' },
-          { id: 'AI', name: 'AI', icon: 'm12 3-1.912 5.813a2 2 0 0 1-1.275 1.275L3 12l5.813 1.912a2 2 0 0 1 1.275 1.275L12 21l1.912-5.813a2 2 0 0 1 1.275-1.275L21 12l-5.813-1.912a2 2 0 0 1-1.275-1.275L12 3Z' },
-          { id: 'Profil', name: 'PROFIL', icon: 'M19 21v-2a4 4 0 0 0-4-4H9a4 4 0 0 0-4 4v2' },
+          { id: 'Home', name: 'ASOSIY', icon: <path d="m3 9 9-7 9 7v11a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z"/> },
+          { id: 'Kiyimlar', name: 'KIYIMLAR', icon: <path d="M20.38 3.46 16 2a8.5 8.5 0 0 1-8 0L3.62 3.46a2 2 0 0 0-1.34 2.23l.58 3.47a1 1 0 0 0 .99.84H6v10c0 1.1.9 2 2 2h8a2 2 0 0 0 2-2V10h2.15a1 1 0 0 0 .99-.84l.58-3.47a2 2 0 0 0-1.34-2.23z"/> },
+          { id: 'Look', name: 'LOOK', icon: (
+            <g>
+              <path d="M6 3h12l4 6-10 13L2 9Z" />
+              <path d="M11 3 8 9l4 13 4-13-3-6" opacity="0.4" strokeWidth="1"/>
+              <path d="M2 9h20M5.5 3 2 9m16.5-6L22 9" opacity="0.4" strokeWidth="1"/>
+            </g>
+          )}, 
+          { id: 'Yoqtirganlar', name: 'YOQTIRGAN', icon: <path d="M20.84 4.61a5.5 5.5 0 0 0-7.78 0L12 5.67l-1.06-1.06a5.5 5.5 0 0 0-7.78 7.78l1.06 1.06L12 21.23l7.78-7.78 1.06-1.06a5.5 5.5 0 0 0 0-7.78z" /> },
+          { id: 'Savat', name: 'SAVAT', icon: <path d="M8 21a1 1 0 1 0 0-2 1 1 0 0 0 0 2zM19 21a1 1 0 1 0 0-2 1 1 0 0 0 0 2zM2.05 2.05h2l2.66 12.42a2 2 0 0 0 2 1.58h9.78a2 2 0 0 0 1.95-1.57l1.65-7.43H5.12" /> },
+          { id: 'AI', name: 'AI', icon: <path d="m12 3-1.912 5.813a2 2 0 0 1-1.275 1.275L3 12l5.813 1.912a2 2 0 0 1 1.275 1.275L12 21l1.912-5.813a2 2 0 0 1 1.275-1.275L21 12l-5.813-1.912a2 2 0 0 1-1.275-1.275L12 3Z" /> },
+          { id: 'Profil', name: 'PROFIL', icon: (
+            <g>
+              <path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2" />
+              <circle cx="12" cy="7" r="4" />
+            </g>
+          )},
         ].map((tab) => (
           <div key={tab.id} onClick={() => setActiveTab(tab.id)} style={{ cursor: 'pointer', display: 'flex', flexDirection: 'column', alignItems: 'center', gap: '4px', flex: 1, position: 'relative' }}>
             {tab.id === 'Savat' && totalCartItems > 0 && (
@@ -392,7 +398,7 @@ export default function Home() {
               </div>
             )}
             <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke={activeTab === tab.id ? '#fbbf24' : 'white'} strokeWidth="2.2" strokeLinecap="round" strokeLinejoin="round">
-              <path d={tab.icon}/>
+              {tab.icon}
             </svg>
             <span style={{ fontSize: '7px', color: activeTab === tab.id ? '#fbbf24' : 'white', fontWeight: '800' }}>{tab.name}</span>
           </div>
@@ -407,4 +413,3 @@ export default function Home() {
     </main>
   );
 }
-
