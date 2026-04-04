@@ -202,7 +202,7 @@ export default function Home() {
           </div>
         )}
 
-        {/* ✅ YOQTIRGANLAR BO'LIMI - RAMKASIZ YURAKCHA */}
+        {/* ✅ YOQTIRGANLAR BO'LIMI - BUYURTMA BERISH TUGMASI QO'SHILDI */}
         {activeTab === 'Yoqtirganlar' && (
           <div style={{ animation: 'fadeIn 0.3s ease' }}>
             <h3 style={{ color: 'white', textAlign: 'center', marginBottom: '20px', fontSize: '18px' }}>YOQTIRGANLAR ({favorites.length})</h3>
@@ -212,15 +212,44 @@ export default function Home() {
               <div style={{ display: 'grid', gridTemplateColumns: 'repeat(2, 1fr)', gap: '15px' }}>
                 {favorites.map((item) => (
                   <div key={item.id} 
-                    onClick={() => setSelectedProduct(item)}
-                    style={{ background: 'rgba(255, 255, 255, 0.03)', borderRadius: '18px', border: '1px solid rgba(255,255,255,0.15)', overflow: 'hidden', position: 'relative' }}>
+                    onClick={() => {
+                      setSelectedProduct(item); setCount(1); setSelectedImageIndex(0); 
+                      setSelectedSize(item.sizes ? item.sizes.split(',')[0].trim() : '');
+                      setSelectedColor(item.colors ? item.colors.split(',')[0].trim() : '');
+                    }}
+                    style={{ background: 'rgba(255, 255, 255, 0.03)', backdropFilter: 'blur(15px) saturate(180%)', borderRadius: '18px', border: '1px solid rgba(255,255,255,0.15)', overflow: 'hidden', display: 'flex', flexDirection: 'column', position: 'relative' }}>
+                    
                     <div onClick={(e) => toggleFavorite(e, item)} style={{ position: 'absolute', top: '10px', right: '10px', zIndex: 20, width: '32px', height: '32px', display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
                       <svg width="22" height="22" viewBox="0 0 24 24" fill="#ef4444" stroke="#ef4444" strokeWidth="2.5" style={{ filter: 'drop-shadow(0 2px 5px rgba(0,0,0,0.5))' }}><path d="M20.84 4.61a5.5 5.5 0 0 0-7.78 0L12 5.67l-1.06-1.06a5.5 5.5 0 0 0-7.78 7.78l1.06 1.06L12 21.23l7.78-7.78 1.06-1.06a5.5 5.5 0 0 0 0-7.78z" /></svg>
                     </div>
-                    <img src={item.image_url.split(',')[0]} style={{ width: '100%', aspectRatio: '3/4', objectFit: 'cover' }} />
-                    <div style={{ padding: '12px', background: 'rgba(0,0,0,0.2)' }}>
-                      <div style={{ color: '#fbbf24', fontSize: '16px', fontWeight: '800' }}>{item.price?.toLocaleString()} so'm</div>
-                      <p style={{ color: 'white', fontSize: '11px', marginTop: '5px', whiteSpace: 'nowrap', overflow: 'hidden', textOverflow: 'ellipsis' }}>{item.name}</p>
+
+                    <div style={{ position: 'relative', width: '100%', aspectRatio: '3/4', display: 'flex', justifyContent: 'center', alignItems: 'center', overflow: 'hidden', borderBottomLeftRadius: '16px', borderBottomRightRadius: '16px' }}>
+                      <img src={item.image_url.split(',')[0]} style={{ width: '100%', height: '100%', objectFit: 'cover' }} />
+                    </div>
+
+                    <div style={{ padding: '12px', display: 'flex', flexDirection: 'column', flex: 1, background: 'rgba(0,0,0,0.2)' }}>
+                      <div style={{ color: '#fbbf24', fontSize: '18px', fontWeight: '800' }}>{item.price?.toLocaleString()} <span style={{fontSize: '10px'}}>so'm</span></div>
+                      <p style={{ color: 'white', fontSize: '12px', margin: '6px 0', height: '2.8em', overflow: 'hidden', lineHeight: '1.4', opacity: 0.9 }}>{item.name}</p>
+                      
+                      <button 
+                        tabIndex={-1}
+                        onClick={(e) => {
+                          e.stopPropagation(); 
+                          const defaultSize = item.sizes ? item.sizes.split(',')[0].trim() : '';
+                          const defaultColor = item.colors ? item.colors.split(',')[0].trim() : '';
+                          const newItem = { ...item, qty: 1, chosenSize: defaultSize, chosenColor: defaultColor, addedAt: new Date() };
+                          setCart((prev) => [...prev, newItem]);
+                        }}
+                        style={{ 
+                          marginTop: 'auto', width: '100%', padding: '10px', 
+                          background: 'linear-gradient(90deg, #fbbf24 0%, #f59e0b 100%)', 
+                          color: '#050b14', border: 'none', borderRadius: '12px', 
+                          fontSize: '11px', fontWeight: '900', cursor: 'pointer', 
+                          textTransform: 'uppercase', boxShadow: '0 5px 15px rgba(251, 191, 36, 0.3)',
+                          WebkitTapHighlightColor: 'transparent', outline: 'none'
+                        }}>
+                        BUYURTMA BERISH
+                      </button>
                     </div>
                   </div>
                 ))}
@@ -378,3 +407,4 @@ export default function Home() {
     </main>
   );
 }
+
