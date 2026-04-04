@@ -155,9 +155,9 @@ export default function Home() {
                 <div onClick={() => setSelectedProduct(null)} style={{ width: '50px', height: '5px', background: 'rgba(255,255,255,0.5)', borderRadius: '10px', margin: '15px auto', cursor: 'pointer', flexShrink: 0 }}></div>
                 <button tabIndex={-1} onClick={() => setSelectedProduct(null)} style={{ position: 'absolute', top: '20px', right: '20px', zIndex: 10, background: 'rgba(255,255,255,0.15)', backdropFilter: 'blur(20px)', border: '1px solid rgba(255,255,255,0.3)', borderRadius: '50%', width: '38px', height: '38px', color: 'white', fontSize: '18px', display: 'flex', alignItems: 'center', justifyContent: 'center', WebkitTapHighlightColor: 'transparent', outline: 'none' }}>✕</button>
 
-                {/* ✅ RASM BLOKI BALANDLIGI 40VH DAN 28VH GA QISQARTIRILDI VA SHIM PASTIDAGI BO'SH JOY YO'QOTILDI */}
-                <div style={{ position: 'relative', width: '100%', height: '28vh', display: 'flex', justifyContent: 'center', alignItems: 'center', padding: '10px 25px 0 25px', flexShrink: 0, background: '#DCDCDC', borderTopLeftRadius: '20px', borderTopRightRadius: '20px', boxShadow: 'inset 0 0 40px rgba(0,0,0,0.1)' }}>
-                  <img src={productImages[selectedImageIndex]} style={{ maxWidth: '100%', maxHeight: '100%', borderRadius: '16px', boxShadow: '0 15px 35px rgba(0,0,0,0.5)', objectFit: 'contain' }} />
+                {/* ✅ KIYIM RASMI BLOKI - BALANDLIGI OSHIRILDI (35VH) VA RASM MASSHABI KATTALASHTIRILDI */}
+                <div style={{ position: 'relative', width: '100%', height: '35vh', display: 'flex', justifyContent: 'center', alignItems: 'center', padding: '5px 15px', flexShrink: 0, background: '#DCDCDC', borderTopLeftRadius: '20px', borderTopRightRadius: '20px', boxShadow: 'inset 0 0 40px rgba(0,0,0,0.1)' }}>
+                  <img src={productImages[selectedImageIndex]} style={{ width: '100%', height: '100%', borderRadius: '12px', boxShadow: '0 10px 30px rgba(0,0,0,0.3)', objectFit: 'contain', transform: 'scale(1.05)' }} />
                 </div>
 
                 <div style={{ padding: '15px 25px', color: 'white', flexShrink: 0 }}>
