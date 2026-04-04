@@ -13,6 +13,7 @@ export default function Home() {
   const [activeTab, setActiveTab] = useState('Home');
   const [items, setItems] = useState<any[]>([]);
   const [cart, setCart] = useState<any[]>([]); 
+  const [favorites, setFavorites] = useState<any[]>([]); // Yoqtirganlar uchun state
   const [selectedProduct, setSelectedProduct] = useState<any>(null);
   const [count, setCount] = useState(1);
   
@@ -35,6 +36,19 @@ export default function Home() {
     };
     setCart((prev) => [...prev, newItem]);
     setSelectedProduct(null);
+  };
+
+  // ✅ Yoqtirganlarga qo'shish funksiyasi
+  const toggleFavorite = (e: React.MouseEvent, product: any) => {
+    e.stopPropagation(); // Kartani ochilib ketishidan saqlaydi
+    setFavorites((prev) => {
+      const isExist = prev.find((fav) => fav.id === product.id);
+      if (isExist) {
+        return prev.filter((fav) => fav.id !== product.id);
+      } else {
+        return [...prev, product];
+      }
+    });
   };
 
   // Ma'lumotlarni bazadan olish
@@ -93,6 +107,7 @@ export default function Home() {
           <div style={{ display: 'grid', gridTemplateColumns: 'repeat(2, 1fr)', gap: '15px', animation: 'fadeIn 0.3s ease' }}>
             {items.map((item) => {
               const firstImage = item.image_url ? item.image_url.split(',')[0] : '';
+              const isLiked = favorites.some((fav) => fav.id === item.id);
               return (
                 <div key={item.id} 
                   tabIndex={-1}
@@ -101,8 +116,24 @@ export default function Home() {
                     setSelectedSize(item.sizes ? item.sizes.split(',')[0].trim() : '');
                     setSelectedColor(item.colors ? item.colors.split(',')[0].trim() : '');
                   }} 
-                  style={{ background: 'rgba(255, 255, 255, 0.03)', backdropFilter: 'blur(15px) saturate(180%)', borderRadius: '18px', border: '1px solid rgba(255,255,255,0.15)', overflow: 'hidden', display: 'flex', flexDirection: 'column', boxShadow: '0 15px 35px rgba(0,0,0,0.4)', cursor: 'pointer', WebkitTapHighlightColor: 'transparent' }}>
+                  style={{ background: 'rgba(255, 255, 255, 0.03)', backdropFilter: 'blur(15px) saturate(180%)', borderRadius: '18px', border: '1px solid rgba(255,255,255,0.15)', overflow: 'hidden', display: 'flex', flexDirection: 'column', boxShadow: '0 15px 35px rgba(0,0,0,0.4)', cursor: 'pointer', WebkitTapHighlightColor: 'transparent', position: 'relative' }}>
                   
+                  {/* ✅ LIQUID GLASS HEART BUTTON */}
+                  <div 
+                    onClick={(e) => toggleFavorite(e, item)}
+                    style={{ 
+                      position: 'absolute', top: '10px', right: '10px', zIndex: 20, 
+                      width: '32px', height: '32px', borderRadius: '10px',
+                      background: 'rgba(255, 255, 255, 0.15)', backdropFilter: 'blur(12px)',
+                      border: '1px solid rgba(255, 255, 255, 0.25)',
+                      display: 'flex', alignItems: 'center', justifyContent: 'center',
+                      boxShadow: '0 4px 15px rgba(0,0,0,0.2)', transition: '0.3s'
+                    }}>
+                    <svg width="18" height="18" viewBox="0 0 24 24" fill={isLiked ? "#ef4444" : "none"} stroke={isLiked ? "#ef4444" : "white"} strokeWidth="2.5">
+                      <path d="M20.84 4.61a5.5 5.5 0 0 0-7.78 0L12 5.67l-1.06-1.06a5.5 5.5 0 0 0-7.78 7.78l1.06 1.06L12 21.23l7.78-7.78 1.06-1.06a5.5 5.5 0 0 0 0-7.78z" />
+                    </svg>
+                  </div>
+
                   <div style={{ position: 'relative', width: '100%', aspectRatio: '3/4', display: 'flex', justifyContent: 'center', alignItems: 'center', overflow: 'hidden', borderBottomLeftRadius: '16px', borderBottomRightRadius: '16px' }}>
                     <img src={firstImage} style={{ width: '100%', height: '100%', objectFit: 'cover' }} />
                   </div>
@@ -137,7 +168,6 @@ export default function Home() {
           </div>
         )}
 
-        {/* Boshqa tablar (Savat, Look, etc.) saqlangan... */}
         {activeTab === 'Savat' && (
           <div style={{ color: 'white', animation: 'fadeIn 0.3s ease' }}>
              {cart.length === 0 ? (
@@ -159,7 +189,33 @@ export default function Home() {
           </div>
         )}
 
-        {activeTab === 'Yoqtirganlar' && <div style={{ color: 'white', textAlign: 'center', padding: '50px' }}>YOQTIRGANLAR BO'SH</div>}
+        {/* ✅ YOQTIRGANLAR BO'LIMI - DINAMIK RENDERING */}
+        {activeTab === 'Yoqtirganlar' && (
+          <div style={{ animation: 'fadeIn 0.3s ease' }}>
+            <h3 style={{ color: 'white', textAlign: 'center', marginBottom: '20px', fontSize: '18px' }}>YOQTIRGANLAR ({favorites.length})</h3>
+            {favorites.length === 0 ? (
+              <div style={{ color: 'white', textAlign: 'center', padding: '50px', background: 'rgba(255,255,255,0.05)', borderRadius: '25px' }}>YOQTIRGANLAR BO'SH</div>
+            ) : (
+              <div style={{ display: 'grid', gridTemplateColumns: 'repeat(2, 1fr)', gap: '15px' }}>
+                {favorites.map((item) => (
+                  <div key={item.id} 
+                    onClick={() => setSelectedProduct(item)}
+                    style={{ background: 'rgba(255, 255, 255, 0.03)', borderRadius: '18px', border: '1px solid rgba(255,255,255,0.15)', overflow: 'hidden', position: 'relative' }}>
+                    <div onClick={(e) => toggleFavorite(e, item)} style={{ position: 'absolute', top: '10px', right: '10px', zIndex: 20, width: '32px', height: '32px', borderRadius: '10px', background: 'rgba(239, 68, 68, 0.2)', backdropFilter: 'blur(10px)', border: '1px solid rgba(239, 68, 68, 0.5)', display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
+                      <svg width="18" height="18" viewBox="0 0 24 24" fill="#ef4444" stroke="#ef4444" strokeWidth="2.5"><path d="M20.84 4.61a5.5 5.5 0 0 0-7.78 0L12 5.67l-1.06-1.06a5.5 5.5 0 0 0-7.78 7.78l1.06 1.06L12 21.23l7.78-7.78 1.06-1.06a5.5 5.5 0 0 0 0-7.78z" /></svg>
+                    </div>
+                    <img src={item.image_url.split(',')[0]} style={{ width: '100%', aspectRatio: '3/4', objectFit: 'cover' }} />
+                    <div style={{ padding: '12px', background: 'rgba(0,0,0,0.2)' }}>
+                      <div style={{ color: '#fbbf24', fontSize: '16px', fontWeight: '800' }}>{item.price?.toLocaleString()} so'm</div>
+                      <p style={{ color: 'white', fontSize: '11px', marginTop: '5px', whiteSpace: 'nowrap', overflow: 'hidden', textOverflow: 'ellipsis' }}>{item.name}</p>
+                    </div>
+                  </div>
+                ))}
+              </div>
+            )}
+          </div>
+        )}
+
         {activeTab === 'Look' && <div style={{ color: '#fbbf24', textAlign: 'center', padding: '50px', fontWeight: 'bold' }}>PREMIUM LOOKS TEZ ORADA</div>}
         {activeTab === 'AI' && <div style={{ color: 'white', textAlign: 'center', padding: '50px' }}>AI YORDAMCHI TEZ ORADA</div>}
       </div>
@@ -183,7 +239,7 @@ export default function Home() {
                   <div onClick={() => setSelectedProduct(null)} style={{ width: '50px', height: '5px', background: 'rgba(255,255,255,0.5)', borderRadius: '10px', margin: '15px auto', cursor: 'pointer', flexShrink: 0 }}></div>
                   <button tabIndex={-1} onClick={() => setSelectedProduct(null)} style={{ position: 'absolute', top: '20px', right: '20px', zIndex: 10, background: 'rgba(255,255,255,0.15)', backdropFilter: 'blur(20px)', border: '1px solid rgba(255,255,255,0.3)', borderRadius: '50%', width: '38px', height: '38px', color: 'white', fontSize: '18px', display: 'flex', alignItems: 'center', justifyContent: 'center', WebkitTapHighlightColor: 'transparent', outline: 'none' }}>✕</button>
 
-                  {/* ✅ RASM BLOKI - BOSILGANDA KATTALASHADI */}
+                  {/* RASM BLOKI - BOSILGANDA KATTALASHADI */}
                   <div 
                     onClick={() => setIsFullScreen(true)}
                     style={{ position: 'relative', width: '100%', height: '28vh', display: 'flex', justifyContent: 'center', alignItems: 'center', padding: '10px 25px 0 25px', flexShrink: 0, background: '#DCDCDC', borderTopLeftRadius: '20px', borderTopRightRadius: '20px', boxShadow: 'inset 0 0 40px rgba(0,0,0,0.1)', cursor: 'zoom-in' }}>
@@ -259,7 +315,7 @@ export default function Home() {
               </div>
             </div>
 
-            {/* ✅ RASMNI TO'LIQ EKRANDA KO'RISH MODALI */}
+            {/* RASMNI TO'LIQ EKRANDA KO'RISH MODALI */}
             {isFullScreen && (
               <div 
                 onClick={() => setIsFullScreen(false)}
@@ -270,9 +326,6 @@ export default function Home() {
                   style={{ maxWidth: '95%', maxHeight: '85%', objectFit: 'contain', borderRadius: '10px', boxShadow: '0 0 50px rgba(255,255,255,0.1)' }} 
                   onClick={(e) => e.stopPropagation()} 
                 />
-                <div style={{ position: 'absolute', bottom: '50px', color: 'white', textAlign: 'center', background: 'rgba(255,255,255,0.1)', padding: '10px 20px', borderRadius: '20px', backdropFilter: 'blur(10px)' }}>
-                  Yopish uchun bosing
-                </div>
               </div>
             )}
           </>
