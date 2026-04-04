@@ -25,6 +25,21 @@ export default function Home() {
 
   const videoRef = useRef<HTMLVideoElement>(null);
 
+  // --- LOCALSTORAGE MANTIQI ---
+  // 1. Sahifa yuklanganda xotiradan ma'lumotni yuklash
+  useEffect(() => {
+    const saved = localStorage.getItem('user_favs');
+    if (saved) {
+      setFavorites(JSON.parse(saved));
+    }
+  }, []);
+
+  // 2. Har safar favorites o'zgarganda xotiraga saqlash
+  useEffect(() => {
+    localStorage.setItem('user_favs', JSON.stringify(favorites));
+  }, [favorites]);
+  // ----------------------------
+
   // Savatga qo'shish funksiyasi
   const handleAddToCart = (product: any) => {
     const newItem = { 
@@ -365,4 +380,3 @@ export default function Home() {
     </main>
   );
 }
-
