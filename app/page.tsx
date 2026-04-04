@@ -265,32 +265,30 @@ export default function Home() {
         ))}
       </nav>
 
-      {/* ✅ MILTILLASHNI YO'QOTISH VA BOSGANDAGI YORISHISHNI TA'QIQLASH */}
       <style jsx global>{`
         * {
           -webkit-tap-highlight-color: transparent !important;
           -webkit-touch-callout: none !important;
           outline: none !important;
         }
-        
-        /* 🛑 BOSILGANDA FONNI BARQAROR SAQLASH */
-        div:active, button:active, span:active {
-          background-color: inherit !important;
-          opacity: 1 !important;
-        }
 
-        *:focus, *:active, *:focus-visible {
+        *:focus, 
+        *:active, 
+        *:focus-visible {
           outline: none !important;
-          border: none !important;
           box-shadow: none !important;
+          border: none !important;
         }
 
-        a, span, div, button {
-          text-decoration: none !important;
+        @keyframes slideUp { 
+          from { transform: translateY(100%); } 
+          to { transform: translateY(0); } 
         }
 
-        @keyframes slideUp { from { transform: translateY(100%); } to { transform: translateY(0); } }
-        @keyframes fadeIn { from { opacity: 0; } to { opacity: 1; } }
+        @keyframes fadeIn { 
+          from { opacity: 0; } 
+          to { opacity: 1; } 
+        }
       `}</style>
     </main>
   );
