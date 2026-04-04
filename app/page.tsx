@@ -155,7 +155,8 @@ export default function Home() {
                 <div onClick={() => setSelectedProduct(null)} style={{ width: '50px', height: '5px', background: 'rgba(255,255,255,0.5)', borderRadius: '10px', margin: '15px auto', cursor: 'pointer', flexShrink: 0 }}></div>
                 <button tabIndex={-1} onClick={() => setSelectedProduct(null)} style={{ position: 'absolute', top: '20px', right: '20px', zIndex: 10, background: 'rgba(255,255,255,0.15)', backdropFilter: 'blur(20px)', border: '1px solid rgba(255,255,255,0.3)', borderRadius: '50%', width: '38px', height: '38px', color: 'white', fontSize: '18px', display: 'flex', alignItems: 'center', justifyContent: 'center', WebkitTapHighlightColor: 'transparent', outline: 'none' }}>✕</button>
 
-                <div style={{ position: 'relative', width: '100%', height: '40vh', display: 'flex', justifyContent: 'center', alignItems: 'center', padding: '15px 25px 0 25px', flexShrink: 0, background: '#DCDCDC', borderTopLeftRadius: '20px', borderTopRightRadius: '20px', boxShadow: 'inset 0 0 40px rgba(0,0,0,0.1)' }}>
+                {/* ✅ RASM BLOKI BALANDLIGI 40VH DAN 28VH GA QISQARTIRILDI VA SHIM PASTIDAGI BO'SH JOY YO'QOTILDI */}
+                <div style={{ position: 'relative', width: '100%', height: '28vh', display: 'flex', justifyContent: 'center', alignItems: 'center', padding: '10px 25px 0 25px', flexShrink: 0, background: '#DCDCDC', borderTopLeftRadius: '20px', borderTopRightRadius: '20px', boxShadow: 'inset 0 0 40px rgba(0,0,0,0.1)' }}>
                   <img src={productImages[selectedImageIndex]} style={{ maxWidth: '100%', maxHeight: '100%', borderRadius: '16px', boxShadow: '0 15px 35px rgba(0,0,0,0.5)', objectFit: 'contain' }} />
                 </div>
 
@@ -167,8 +168,8 @@ export default function Home() {
                   </div>
                   
                   {productImages.length > 0 && (
-                    <div style={{ marginTop: '20px' }}>
-                      <div style={{ fontSize: '13px', color: 'white', fontWeight: '700', marginBottom: '12px', letterSpacing: '0.5px' }}>
+                    <div style={{ marginTop: '15px' }}>
+                      <div style={{ fontSize: '13px', color: 'white', fontWeight: '700', marginBottom: '10px', letterSpacing: '0.5px' }}>
                         <span style={{color: 'rgba(255,255,255,0.5)'}}>RANG: </span> 
                         {productColors[selectedImageIndex] || `Maxsus Rang`}
                       </div>
@@ -179,7 +180,7 @@ export default function Home() {
                             tabIndex={-1} 
                             onClick={() => { setSelectedImageIndex(idx); setSelectedColor(productColors[idx] || `Maxsus Rang`); }} 
                             style={{ 
-                              minWidth: '65px', width: '65px', aspectRatio: '3/4', height: 'auto', borderRadius: '12px', 
+                              minWidth: '60px', width: '60px', aspectRatio: '3/4', height: 'auto', borderRadius: '12px', 
                               border: selectedImageIndex === idx ? '2px solid #fbbf24' : '1px solid rgba(255,255,255,0.2)', 
                               overflow: 'hidden', cursor: 'pointer', 
                               background: 'rgba(255,255,255,0.08)', backdropFilter: 'blur(15px)',
@@ -195,17 +196,17 @@ export default function Home() {
                   )}
 
                   {productSizes.length > 0 && productSizes[0] !== '' && (
-                    <div style={{ marginTop: '20px' }}>
-                      <div style={{ fontSize: '12px', color: 'rgba(255,255,255,0.5)', fontWeight: '800', marginBottom: '12px', letterSpacing: '1px' }}>O'LCHAMLAR:</div>
-                      <div style={{ display: 'flex', gap: '12px', flexWrap: 'wrap' }}>
+                    <div style={{ marginTop: '15px' }}>
+                      <div style={{ fontSize: '12px', color: 'rgba(255,255,255,0.5)', fontWeight: '800', marginBottom: '10px', letterSpacing: '1px' }}>O'LCHAMLAR:</div>
+                      <div style={{ display: 'flex', gap: '10px', flexWrap: 'wrap' }}>
                         {productSizes.map((size: string, i: number) => (
                           <div key={i} onClick={() => setSelectedSize(size)} 
                             tabIndex={-1} 
-                            style={{ width: '50px', height: '50px', borderRadius: '16px', 
+                            style={{ width: '48px', height: '48px', borderRadius: '14px', 
                               background: selectedSize === size ? '#fbbf24' : 'rgba(255,255,255,0.08)', 
                               backdropFilter: 'blur(15px)',
                               color: selectedSize === size ? '#050b14' : 'white', 
-                              display: 'flex', alignItems: 'center', justifyContent: 'center', fontSize: '16px', fontWeight: '900', 
+                              display: 'flex', alignItems: 'center', justifyContent: 'center', fontSize: '15px', fontWeight: '900', 
                               border: '1px solid', borderColor: selectedSize === size ? '#fbbf24' : 'rgba(255,255,255,0.3)', 
                               cursor: 'pointer', transition: 'all 0.3s ease',
                               boxShadow: selectedSize === size ? '0 10px 20px rgba(251, 191, 36, 0.3)' : 'none',
@@ -218,14 +219,14 @@ export default function Home() {
                     </div>
                   )}
 
-                  <div style={{ marginTop: '25px', display: 'flex', gap: '15px', alignItems: 'center' }}>
-                    <div style={{ display: 'flex', alignItems: 'center', gap: '15px', background: 'rgba(255,255,255,0.08)', backdropFilter: 'blur(25px)', borderRadius: '20px', padding: '5px', border: '1px solid rgba(255,255,255,0.2)' }}>
-                      <button tabIndex={-1} onClick={() => count > 1 && setCount(count-1)} style={{ border: 'none', background: 'none', color: 'white', fontSize: '24px', width: '50px', height: '50px', WebkitTapHighlightColor: 'transparent', outline: 'none' }}>−</button>
-                      <span style={{ minWidth: '20px', textAlign: 'center', fontWeight: '900', fontSize: '20px' }}>{count}</span>
-                      <button tabIndex={-1} onClick={() => setCount(count+1)} style={{ border: 'none', background: 'none', color: 'white', fontSize: '24px', width: '50px', height: '50px', WebkitTapHighlightColor: 'transparent', outline: 'none' }}>+</button>
+                  <div style={{ marginTop: '20px', display: 'flex', gap: '15px', alignItems: 'center' }}>
+                    <div style={{ display: 'flex', alignItems: 'center', gap: '10px', background: 'rgba(255,255,255,0.08)', backdropFilter: 'blur(25px)', borderRadius: '18px', padding: '4px', border: '1px solid rgba(255,255,255,0.2)' }}>
+                      <button tabIndex={-1} onClick={() => count > 1 && setCount(count-1)} style={{ border: 'none', background: 'none', color: 'white', fontSize: '22px', width: '45px', height: '45px', WebkitTapHighlightColor: 'transparent', outline: 'none' }}>−</button>
+                      <span style={{ minWidth: '18px', textAlign: 'center', fontWeight: '900', fontSize: '18px' }}>{count}</span>
+                      <button tabIndex={-1} onClick={() => setCount(count+1)} style={{ border: 'none', background: 'none', color: 'white', fontSize: '22px', width: '45px', height: '45px', WebkitTapHighlightColor: 'transparent', outline: 'none' }}>+</button>
                     </div>
                     <button tabIndex={-1} onClick={() => handleAddToCart(selectedProduct)} 
-                      style={{ flex: 1, height: '60px', background: 'linear-gradient(90deg, #fbbf24 0%, #f59e0b 100%)', color: '#050b14', border: 'none', borderRadius: '20px', fontWeight: '900', fontSize: '15px', letterSpacing: '1px', boxShadow: '0 15px 35px rgba(251, 191, 36, 0.4)', transition: 'all 0.3s', WebkitTapHighlightColor: 'transparent', outline: 'none' }}>
+                      style={{ flex: 1, height: '55px', background: 'linear-gradient(90deg, #fbbf24 0%, #f59e0b 100%)', color: '#050b14', border: 'none', borderRadius: '18px', fontWeight: '900', fontSize: '14px', letterSpacing: '1px', boxShadow: '0 15px 35px rgba(251, 191, 36, 0.4)', transition: 'all 0.3s', WebkitTapHighlightColor: 'transparent', outline: 'none' }}>
                       SAVATGA QO'SHISH
                     </button>
                   </div>
