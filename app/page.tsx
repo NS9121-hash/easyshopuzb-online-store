@@ -23,6 +23,12 @@ export default function Home() {
   const [selectedColor, setSelectedColor] = useState('');
   const [isFullScreen, setIsFullScreen] = useState(false); // Rasmni to'liq ko'rish uchun
 
+  // --- AI VTON UCHUN QO'SHILGAN YANGI STATE-LAR ---
+  const [userImage, setUserImage] = useState<string | null>(null);
+  const [clothImage, setClothImage] = useState<string | null>(null);
+  const [isProcessing, setIsProcessing] = useState(false);
+  const [aiResult, setAiResult] = useState<string | null>(null);
+
   const videoRef = useRef<HTMLVideoElement>(null);
 
   // --- LOCALSTORAGE MANTIQI ---
@@ -62,6 +68,34 @@ export default function Home() {
         return [...prev, product];
       }
     });
+  };
+
+  // --- AI FUNKSIYALARI (QO'SHILDI) ---
+  const handleImageUpload = (e: React.ChangeEvent<HTMLInputElement>, type: 'user' | 'cloth') => {
+    const file = e.target.files?.[0];
+    if (file) {
+      const reader = new FileReader();
+      reader.onloadend = () => {
+        if (type === 'user') setUserImage(reader.result as string);
+        else setClothImage(reader.result as string);
+      };
+      reader.readAsDataURL(file);
+    }
+  };
+
+  const handleAIGeneration = async () => {
+    if (!userImage || !clothImage) return alert("Rasmlarni yuklang!");
+    setIsProcessing(true);
+    try {
+      const res = await fetch('/api/vton', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ user_image: userImage, cloth_image: clothImage }),
+      });
+      const result = await res.json();
+      if (result.success) setAiResult(result.data.candidates[0].content.parts[0].text);
+    } catch (e) { alert("Xato yuz berdi!"); }
+    finally { setIsProcessing(false); }
   };
 
   // Ma'lumotlarni bazadan olish
@@ -181,7 +215,7 @@ export default function Home() {
           </div>
         )}
 
-        {/* ✅ LOOK BO'LIMI (ENDI TO'LIQ FUNKSIONAL) */}
+        {/* ✅ LOOK BO'LIMI */}
         {activeTab === 'Look' && (
           <div style={{ display: 'grid', gridTemplateColumns: 'repeat(2, 1fr)', gap: '15px', animation: 'fadeIn 0.3s ease' }}>
             {items
@@ -213,7 +247,6 @@ export default function Home() {
                     <div style={{ color: '#fbbf24', fontSize: '18px', fontWeight: '800' }}>{item.price?.toLocaleString()} <span style={{fontSize: '10px'}}>so'm</span></div>
                     <p style={{ color: 'white', fontSize: '12px', margin: '6px 0', height: '2.8em', overflow: 'hidden', lineHeight: '1.4', opacity: 0.9 }}>{item.name}</p>
                     
-                    {/* ✅ Look bo'limi tugmasi ham savatga qo'shadigan qilindi */}
                     <button 
                       tabIndex={-1}
                       onClick={(e) => {
@@ -300,7 +333,28 @@ export default function Home() {
           </div>
         )}
 
-        {activeTab === 'AI' && <div style={{ color: 'white', textAlign: 'center', padding: '50px' }}>AI YORDAMCHI TEZ ORADA</div>}
+        {/* ✅ AI YORDAMCHI (ENDI TO'LIQ INTERFEYS BILAN) */}
+        {activeTab === 'AI' && (
+          <div style={{ width: '100%', animation: 'fadeIn 0.3s ease', display: 'flex', flexDirection: 'column', gap: '20px' }}>
+            <div style={{ background: 'rgba(255, 255, 255, 0.05)', backdropFilter: 'blur(20px)', borderRadius: '30px', padding: '25px', border: '1px solid rgba(255,255,255,0.15)', textAlign: 'center' }}>
+              <h3 style={{ color: '#fbbf24', fontSize: '20px', fontWeight: '900', marginBottom: '10px' }}>AI KIYIB KO'RISH</h3>
+              <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '15px', marginBottom: '20px' }}>
+                <div style={{ background: 'rgba(255,255,255,0.05)', borderRadius: '20px', aspectRatio: '1/1', border: '2px dashed rgba(255,255,255,0.2)', position: 'relative', overflow: 'hidden', display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
+                   {userImage ? <img src={userImage} style={{width:'100%', height:'100%', objectFit:'cover'}} /> : <span style={{fontSize:'10px', color:'white'}}>RASMINGIZ</span>}
+                   <input type="file" accept="image/*" onChange={(e) => handleImageUpload(e, 'user')} style={{position:'absolute', inset:0, opacity:0}} />
+                </div>
+                <div style={{ background: 'rgba(255,255,255,0.05)', borderRadius: '20px', aspectRatio: '1/1', border: '2px dashed rgba(255,255,255,0.2)', position: 'relative', overflow: 'hidden', display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
+                   {clothImage ? <img src={clothImage} style={{width:'100%', height:'100%', objectFit:'cover'}} /> : <span style={{fontSize:'10px', color:'white'}}>KIYIM</span>}
+                   <input type="file" accept="image/*" onChange={(e) => handleImageUpload(e, 'cloth')} style={{position:'absolute', inset:0, opacity:0}} />
+                </div>
+              </div>
+              <button onClick={handleAIGeneration} style={{ width: '100%', padding: '15px', background: '#fbbf24', borderRadius: '15px', fontWeight: '900', border: 'none' }}>
+                {isProcessing ? "KUTING..." : "KIYIB KO'RISH"}
+              </button>
+            </div>
+            {aiResult && <div style={{ color: 'white', padding: '15px', background: 'rgba(255,255,255,0.1)', borderRadius: '15px' }}>{aiResult}</div>}
+          </div>
+        )}
       </div>
 
       {/* MAHSULOT DETALLARI MODALI */}
