@@ -116,11 +116,11 @@ export default function Home() {
           </div>
         )}
 
-        {/* ✅ KIYIMLAR BO'LIMI (FILTRLANGAN) */}
+        {/* ✅ KIYIMLAR BO'LIMI */}
         {activeTab === 'Kiyimlar' && (
           <div style={{ display: 'grid', gridTemplateColumns: 'repeat(2, 1fr)', gap: '15px', animation: 'fadeIn 0.3s ease' }}>
             {items
-              .filter(item => item.type === 'clothing' || !item.type) // ✨ FAQAT KIYIMLAR
+              .filter(item => item.type === 'clothing' || !item.type) 
               .map((item) => {
               const firstImage = item.image_url ? item.image_url.split(',')[0] : '';
               const isLiked = favorites.some((fav) => fav.id === item.id);
@@ -181,11 +181,11 @@ export default function Home() {
           </div>
         )}
 
-        {/* ✅ LOOK BO'LIMI (FILTRLANGAN) */}
+        {/* ✅ LOOK BO'LIMI (ENDI TO'LIQ FUNKSIONAL) */}
         {activeTab === 'Look' && (
           <div style={{ display: 'grid', gridTemplateColumns: 'repeat(2, 1fr)', gap: '15px', animation: 'fadeIn 0.3s ease' }}>
             {items
-              .filter(item => item.type === 'look') // ✨ FAQAT LOOKLAR
+              .filter(item => item.type === 'look') 
               .map((item) => {
               const firstImage = item.image_url ? item.image_url.split(',')[0] : '';
               const isLiked = favorites.some((fav) => fav.id === item.id);
@@ -212,7 +212,27 @@ export default function Home() {
                   <div style={{ padding: '12px', display: 'flex', flexDirection: 'column', flex: 1, background: 'rgba(0,0,0,0.2)' }}>
                     <div style={{ color: '#fbbf24', fontSize: '18px', fontWeight: '800' }}>{item.price?.toLocaleString()} <span style={{fontSize: '10px'}}>so'm</span></div>
                     <p style={{ color: 'white', fontSize: '12px', margin: '6px 0', height: '2.8em', overflow: 'hidden', lineHeight: '1.4', opacity: 0.9 }}>{item.name}</p>
-                    <button style={{ marginTop: 'auto', width: '100%', padding: '10px', background: 'linear-gradient(90deg, #fbbf24 0%, #f59e0b 100%)', color: '#050b14', border: 'none', borderRadius: '12px', fontSize: '11px', fontWeight: '900' }}>BUYURTMA BERISH</button>
+                    
+                    {/* ✅ Look bo'limi tugmasi ham savatga qo'shadigan qilindi */}
+                    <button 
+                      tabIndex={-1}
+                      onClick={(e) => {
+                        e.stopPropagation(); 
+                        const defaultSize = item.sizes ? item.sizes.split(',')[0].trim() : '';
+                        const defaultColor = item.colors ? item.colors.split(',')[0].trim() : '';
+                        const newItem = { ...item, qty: 1, chosenSize: defaultSize, chosenColor: defaultColor, addedAt: new Date() };
+                        setCart((prev) => [...prev, newItem]);
+                      }}
+                      style={{ 
+                        marginTop: 'auto', width: '100%', padding: '10px', 
+                        background: 'linear-gradient(90deg, #fbbf24 0%, #f59e0b 100%)', 
+                        color: '#050b14', border: 'none', borderRadius: '12px', 
+                        fontSize: '11px', fontWeight: '900', cursor: 'pointer', 
+                        textTransform: 'uppercase', boxShadow: '0 5px 15px rgba(251, 191, 36, 0.3)',
+                        WebkitTapHighlightColor: 'transparent', outline: 'none'
+                      }}>
+                      BUYURTMA BERISH
+                    </button>
                   </div>
                 </div>
               );
