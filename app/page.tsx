@@ -26,7 +26,6 @@ export default function Home() {
   const videoRef = useRef<HTMLVideoElement>(null);
 
   // --- LOCALSTORAGE MANTIQI ---
-  // 1. Sahifa yuklanganda xotiradan ma'lumotni yuklash
   useEffect(() => {
     const saved = localStorage.getItem('user_favs');
     if (saved) {
@@ -34,7 +33,6 @@ export default function Home() {
     }
   }, []);
 
-  // 2. Har safar favorites o'zgarganda xotiraga saqlash
   useEffect(() => {
     localStorage.setItem('user_favs', JSON.stringify(favorites));
   }, [favorites]);
@@ -55,7 +53,7 @@ export default function Home() {
 
   // ✅ Yoqtirganlarga qo'shish funksiyasi
   const toggleFavorite = (e: React.MouseEvent, product: any) => {
-    e.stopPropagation(); // Kartani ochilib ketishidan saqlaydi
+    e.stopPropagation(); 
     setFavorites((prev) => {
       const isExist = prev.find((fav) => fav.id === product.id);
       if (isExist) {
@@ -118,9 +116,12 @@ export default function Home() {
           </div>
         )}
 
+        {/* ✅ KIYIMLAR BO'LIMI (FILTRLANGAN) */}
         {activeTab === 'Kiyimlar' && (
           <div style={{ display: 'grid', gridTemplateColumns: 'repeat(2, 1fr)', gap: '15px', animation: 'fadeIn 0.3s ease' }}>
-            {items.map((item) => {
+            {items
+              .filter(item => item.type === 'clothing' || !item.type) // ✨ FAQAT KIYIMLAR
+              .map((item) => {
               const firstImage = item.image_url ? item.image_url.split(',')[0] : '';
               const isLiked = favorites.some((fav) => fav.id === item.id);
               return (
@@ -133,7 +134,6 @@ export default function Home() {
                   }} 
                   style={{ background: 'rgba(255, 255, 255, 0.03)', backdropFilter: 'blur(15px) saturate(180%)', borderRadius: '18px', border: '1px solid rgba(255,255,255,0.15)', overflow: 'hidden', display: 'flex', flexDirection: 'column', boxShadow: '0 15px 35px rgba(0,0,0,0.4)', cursor: 'pointer', WebkitTapHighlightColor: 'transparent', position: 'relative' }}>
                   
-                  {/* ✅ HEART BUTTON WITHOUT FRAME */}
                   <div 
                     onClick={(e) => toggleFavorite(e, item)}
                     style={{ 
@@ -181,6 +181,48 @@ export default function Home() {
           </div>
         )}
 
+        {/* ✅ LOOK BO'LIMI (FILTRLANGAN) */}
+        {activeTab === 'Look' && (
+          <div style={{ display: 'grid', gridTemplateColumns: 'repeat(2, 1fr)', gap: '15px', animation: 'fadeIn 0.3s ease' }}>
+            {items
+              .filter(item => item.type === 'look') // ✨ FAQAT LOOKLAR
+              .map((item) => {
+              const firstImage = item.image_url ? item.image_url.split(',')[0] : '';
+              const isLiked = favorites.some((fav) => fav.id === item.id);
+              return (
+                <div key={item.id} 
+                  tabIndex={-1}
+                  onClick={() => { 
+                    setSelectedProduct(item); setCount(1); setSelectedImageIndex(0); 
+                    setSelectedSize(item.sizes ? item.sizes.split(',')[0].trim() : '');
+                    setSelectedColor(item.colors ? item.colors.split(',')[0].trim() : '');
+                  }} 
+                  style={{ background: 'rgba(255, 255, 255, 0.03)', backdropFilter: 'blur(15px) saturate(180%)', borderRadius: '18px', border: '1px solid rgba(255,255,255,0.15)', overflow: 'hidden', display: 'flex', flexDirection: 'column', boxShadow: '0 15px 35px rgba(0,0,0,0.4)', cursor: 'pointer', WebkitTapHighlightColor: 'transparent', position: 'relative' }}>
+                  
+                  <div onClick={(e) => toggleFavorite(e, item)} style={{ position: 'absolute', top: '10px', right: '10px', zIndex: 20 }}>
+                    <svg width="22" height="22" viewBox="0 0 24 24" fill={isLiked ? "#ef4444" : "none"} stroke={isLiked ? "#ef4444" : "white"} strokeWidth="2.5" style={{ filter: 'drop-shadow(0 2px 5px rgba(0,0,0,0.5))' }}>
+                      <path d="M20.84 4.61a5.5 5.5 0 0 0-7.78 0L12 5.67l-1.06-1.06a5.5 5.5 0 0 0-7.78 7.78l1.06 1.06L12 21.23l7.78-7.78 1.06-1.06a5.5 5.5 0 0 0 0-7.78z" />
+                    </svg>
+                  </div>
+
+                  <div style={{ position: 'relative', width: '100%', aspectRatio: '3/4', display: 'flex', justifyContent: 'center', alignItems: 'center', overflow: 'hidden', borderBottomLeftRadius: '16px', borderBottomRightRadius: '16px' }}>
+                    <img src={firstImage} style={{ width: '100%', height: '100%', objectFit: 'cover' }} />
+                  </div>
+                  
+                  <div style={{ padding: '12px', display: 'flex', flexDirection: 'column', flex: 1, background: 'rgba(0,0,0,0.2)' }}>
+                    <div style={{ color: '#fbbf24', fontSize: '18px', fontWeight: '800' }}>{item.price?.toLocaleString()} <span style={{fontSize: '10px'}}>so'm</span></div>
+                    <p style={{ color: 'white', fontSize: '12px', margin: '6px 0', height: '2.8em', overflow: 'hidden', lineHeight: '1.4', opacity: 0.9 }}>{item.name}</p>
+                    <button style={{ marginTop: 'auto', width: '100%', padding: '10px', background: 'linear-gradient(90deg, #fbbf24 0%, #f59e0b 100%)', color: '#050b14', border: 'none', borderRadius: '12px', fontSize: '11px', fontWeight: '900' }}>BUYURTMA BERISH</button>
+                  </div>
+                </div>
+              );
+            })}
+            {items.filter(item => item.type === 'look').length === 0 && (
+               <div style={{ gridColumn: '1/-1', color: 'rgba(255,255,255,0.4)', textAlign: 'center', padding: '50px', fontWeight: '800', border: '1.5px dashed rgba(255,255,255,0.1)', borderRadius: '25px' }}>HOZIRCHA LOOKLAR MAVJUD EMAS</div>
+            )}
+          </div>
+        )}
+
         {activeTab === 'Savat' && (
           <div style={{ color: 'white', animation: 'fadeIn 0.3s ease' }}>
              {cart.length === 0 ? (
@@ -202,7 +244,6 @@ export default function Home() {
           </div>
         )}
 
-        {/* ✅ YOQTIRGANLAR BO'LIMI */}
         {activeTab === 'Yoqtirganlar' && (
           <div style={{ animation: 'fadeIn 0.3s ease' }}>
             <h3 style={{ color: 'white', textAlign: 'center', marginBottom: '20px', fontSize: '18px' }}>YOQTIRGANLAR ({favorites.length})</h3>
@@ -230,26 +271,7 @@ export default function Home() {
                     <div style={{ padding: '12px', display: 'flex', flexDirection: 'column', flex: 1, background: 'rgba(0,0,0,0.2)' }}>
                       <div style={{ color: '#fbbf24', fontSize: '18px', fontWeight: '800' }}>{item.price?.toLocaleString()} <span style={{fontSize: '10px'}}>so'm</span></div>
                       <p style={{ color: 'white', fontSize: '12px', margin: '6px 0', height: '2.8em', overflow: 'hidden', lineHeight: '1.4', opacity: 0.9 }}>{item.name}</p>
-                      
-                      <button 
-                        tabIndex={-1}
-                        onClick={(e) => {
-                          e.stopPropagation(); 
-                          const defaultSize = item.sizes ? item.sizes.split(',')[0].trim() : '';
-                          const defaultColor = item.colors ? item.colors.split(',')[0].trim() : '';
-                          const newItem = { ...item, qty: 1, chosenSize: defaultSize, chosenColor: defaultColor, addedAt: new Date() };
-                          setCart((prev) => [...prev, newItem]);
-                        }}
-                        style={{ 
-                          marginTop: 'auto', width: '100%', padding: '10px', 
-                          background: 'linear-gradient(90deg, #fbbf24 0%, #f59e0b 100%)', 
-                          color: '#050b14', border: 'none', borderRadius: '12px', 
-                          fontSize: '11px', fontWeight: '900', cursor: 'pointer', 
-                          textTransform: 'uppercase', boxShadow: '0 5px 15px rgba(251, 191, 36, 0.3)',
-                          WebkitTapHighlightColor: 'transparent', outline: 'none'
-                        }}>
-                        BUYURTMA BERISH
-                      </button>
+                      <button style={{ marginTop: 'auto', width: '100%', padding: '10px', background: 'linear-gradient(90deg, #fbbf24 0%, #f59e0b 100%)', color: '#050b14', border: 'none', borderRadius: '12px', fontSize: '11px', fontWeight: '900' }}>BUYURTMA BERISH</button>
                     </div>
                   </div>
                 ))}
@@ -258,7 +280,6 @@ export default function Home() {
           </div>
         )}
 
-        {activeTab === 'Look' && <div style={{ color: '#fbbf24', textAlign: 'center', padding: '50px', fontWeight: 'bold' }}>PREMIUM LOOKS TEZ ORADA</div>}
         {activeTab === 'AI' && <div style={{ color: 'white', textAlign: 'center', padding: '50px' }}>AI YORDAMCHI TEZ ORADA</div>}
       </div>
 
