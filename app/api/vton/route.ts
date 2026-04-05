@@ -9,11 +9,38 @@ export async function POST(req: Request) {
       return NextResponse.json({ success: false, error: "Ikkala rasm ham yuklanishi shart!" });
     }
 
-    // 2. Sizning Gemini API kalitingiz
+    // --- HUGGING FACE INTEGRATSIYASI (YANGI QO'SHILGAN QISM) ---
+    // Bu qism kiyimni haqiqatdan almashtirib, rasm qaytaradi
+    const hfToken = "Hf_DVMKPBqeRvwDNMDsFcxbsaudiHmpsZqTqX";
+    const hfUrl = "https://api-inference.huggingface.co/models/Kwai-Kolors/Kolors-Virtual-Try-On";
+
+    const hfResponse = await fetch(hfUrl, {
+      headers: {
+        Authorization: `Bearer ${hfToken}`,
+        "Content-Type": "application/json",
+      },
+      method: "POST",
+      body: JSON.stringify({
+        inputs: {
+          person_image: user_image.split(",")[1],
+          garment_image: cloth_image.split(",")[1],
+        }
+      }),
+    });
+
+    let generatedImageBase64 = null;
+    if (hfResponse.ok) {
+      const blob = await hfResponse.blob();
+      const buffer = Buffer.from(await blob.arrayBuffer());
+      generatedImageBase64 = `data:image/jpeg;base64,${buffer.toString('base64')}`;
+    }
+    // -------------------------------------------------------
+
+    // 2. Sizning Gemini API kalitingiz (O'zgartirilmagan)
     const apiKey = "AIzaSyCtiwB1m3mMpvjjp-scLZCImkoF0RTqR_k";
     const url = `https://generativelanguage.googleapis.com/v1beta/models/gemini-1.5-pro:generateContent?key=${apiKey}`;
 
-    // 3. AI uchun aniq ko'rsatma (Siz aytgan yuz va fonga tegmaslik sharti bilan)
+    // 3. AI uchun aniq ko'rsatma (O'zgartirilmagan)
     const promptText = `
       TASK: High-Fidelity Virtual Try-On.
       INSTRUCTIONS:
@@ -24,7 +51,7 @@ export async function POST(req: Request) {
       NEGATIVE: change face, blurry, distorted body, extra limbs, cartoon, low resolution, face swap.
     `;
 
-    // 4. Gemini API ga so'rov yuborish
+    // 4. Gemini API ga so'rov yuborish (O'zgartirilmagan)
     const response = await fetch(url, {
       method: "POST",
       headers: { "Content-Type": "application/json" },
@@ -35,7 +62,7 @@ export async function POST(req: Request) {
             { 
               inlineData: { 
                 mimeType: "image/jpeg", 
-                data: user_image.split(",")[1] // Base64'dan faqat ma'lumot qismini olamiz
+                data: user_image.split(",")[1] 
               } 
             },
             { 
@@ -51,11 +78,18 @@ export async function POST(req: Request) {
 
     const data = await response.json();
 
-    // 5. Natijani qaytarish
+    // 5. Natijani qaytarish (Batafsil va birlashtirilgan holatda)
     if (data.candidates && data.candidates[0].content.parts[0].text) {
       return NextResponse.json({ 
         success: true, 
-        data: data 
+        data: data, // Gemini'dan kelgan matnli tahlil
+        image_url: generatedImageBase64 // Hugging Face'dan kelgan haqiqiy rasm
+      });
+    } else if (generatedImageBase64) {
+      // Agar Gemini'dan xato kelsa-yu, rasm tayyor bo'lsa, baribir natijani qaytaramiz
+      return NextResponse.json({ 
+        success: true, 
+        image_url: generatedImageBase64 
       });
     } else {
       return NextResponse.json({ 
@@ -72,4 +106,3 @@ export async function POST(req: Request) {
     });
   }
 }
-
