@@ -93,9 +93,18 @@ export default function Home() {
         body: JSON.stringify({ user_image: userImage, cloth_image: clothImage }),
       });
       const result = await res.json();
-      if (result.success) setAiResult(result.data.candidates[0].content.parts[0].text);
-    } catch (e) { alert("Xato yuz berdi!"); }
-    finally { setIsProcessing(false); }
+      
+      // ENDI BU YERDA MATN EMAS, RASYM URL-ni SET QILAMIZ
+      if (result.success && result.image_url) {
+        setAiResult(result.image_url); 
+      } else {
+        alert(result.error || "Xato yuz berdi!");
+      }
+    } catch (e) { 
+      alert("Xato yuz berdi!"); 
+    } finally { 
+      setIsProcessing(false); 
+    }
   };
 
   // Ma'lumotlarni bazadan olish
@@ -348,11 +357,21 @@ export default function Home() {
                    <input type="file" accept="image/*" onChange={(e) => handleImageUpload(e, 'cloth')} style={{position:'absolute', inset:0, opacity:0}} />
                 </div>
               </div>
-              <button onClick={handleAIGeneration} style={{ width: '100%', padding: '15px', background: '#fbbf24', borderRadius: '15px', fontWeight: '900', border: 'none' }}>
+              <button onClick={handleAIGeneration} style={{ width: '100%', padding: '15px', background: '#fbbf24', borderRadius: '15px', fontWeight: '900', border: 'none', color: '#050b14', cursor: 'pointer' }}>
                 {isProcessing ? "KUTING..." : "KIYIB KO'RISH"}
               </button>
             </div>
-            {aiResult && <div style={{ color: 'white', padding: '15px', background: 'rgba(255,255,255,0.1)', borderRadius: '15px' }}>{aiResult}</div>}
+
+            {/* NATIJA RASYMINI KO'RSATISH */}
+            {aiResult && (
+              <div style={{ textAlign: 'center', background: 'rgba(255, 255, 255, 0.05)', borderRadius: '30px', padding: '20px', border: '1.5px solid #fbbf24' }}>
+                <p style={{ color: '#fbbf24', fontSize: '14px', fontWeight: '900', marginBottom: '15px' }}>TAYYOR BOLD'I:</p>
+                <img src={aiResult} alt="AI Result" style={{ width: '100%', borderRadius: '20px', boxShadow: '0 10px 30px rgba(0,0,0,0.5)' }} />
+                <a href={aiResult} download="easyshop-ai.jpg" style={{ display: 'inline-block', marginTop: '15px', color: '#fbbf24', fontSize: '12px', fontWeight: '700', textDecoration: 'none', borderBottom: '1px solid #fbbf24' }}>
+                  RASMNI SAQLASH
+                </a>
+              </div>
+            )}
           </div>
         )}
       </div>
