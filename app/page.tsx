@@ -34,27 +34,61 @@ export default function Home() {
   // --- LOCALSTORAGE MANTIQI ---
   useEffect(() => {
     const saved = localStorage.getItem('user_favs');
+    const savedCart = localStorage.getItem('user_cart');
     if (saved) {
       setFavorites(JSON.parse(saved));
+    }
+    if (savedCart) {
+      setCart(JSON.parse(savedCart));
     }
   }, []);
 
   useEffect(() => {
     localStorage.setItem('user_favs', JSON.stringify(favorites));
-  }, [favorites]);
+    localStorage.setItem('user_cart', JSON.stringify(cart));
+  }, [favorites, cart]);
   // ----------------------------
 
-  // Savatga qo'shish funksiyasi
+  // ✅ SAVATGA QO'SHISH FUNKSIYASI (GURUHLASH MANTIQI BILAN)
   const handleAddToCart = (product: any) => {
-    const newItem = { 
-      ...product, 
-      qty: count, 
-      chosenSize: selectedSize, 
-      chosenColor: selectedColor, 
-      addedAt: new Date() 
-    };
-    setCart((prev) => [...prev, newItem]);
+    const chosenSize = selectedSize || (product.sizes ? product.sizes.split(',')[0].trim() : '');
+    const chosenColor = selectedColor || (product.colors ? product.colors.split(',')[0].trim() : '');
+
+    setCart((prev) => {
+      const existingItemIndex = prev.findIndex(
+        (item) => item.id === product.id && item.chosenSize === chosenSize && item.chosenColor === chosenColor
+      );
+
+      if (existingItemIndex > -1) {
+        const updatedCart = [...prev];
+        updatedCart[existingItemIndex].qty += count;
+        return updatedCart;
+      }
+
+      const newItem = { 
+        ...product, 
+        qty: count, 
+        chosenSize, 
+        chosenColor, 
+        addedAt: new Date() 
+      };
+      return [...prev, newItem];
+    });
     setSelectedProduct(null);
+    setCount(1);
+  };
+
+  // ✅ SAVATDAGI MAHSULOT SONINI O'ZGARTIRISH
+  const updateCartQty = (index: number, delta: number) => {
+    setCart((prev) => {
+      const newCart = [...prev];
+      const newQty = newCart[index].qty + delta;
+      if (newQty > 0) {
+        newCart[index].qty = newQty;
+        return newCart;
+      }
+      return prev.filter((_, i) => i !== index);
+    });
   };
 
   // ✅ Yoqtirganlarga qo'shish funksiyasi
@@ -94,7 +128,6 @@ export default function Home() {
       });
       const result = await res.json();
       
-      // ENDI BU YERDA MATN EMAS, RASYM URL-ni SET QILAMIZ
       if (result.success && result.image_url) {
         setAiResult(result.image_url); 
       } else {
@@ -134,6 +167,7 @@ export default function Home() {
   }, []);
 
   const totalCartItems = cart.reduce((total, item) => total + item.qty, 0);
+  const totalCartPrice = cart.reduce((total, item) => total + (item.price * item.qty), 0);
 
   return (
     <main style={{ position: 'relative', minHeight: '100dvh', width: '100dvw', overflowX: 'hidden', backgroundColor: '#050b14', display: 'flex', flexDirection: 'column', alignItems: 'center', fontFamily: 'system-ui, -apple-system, sans-serif', padding: '40px 0 120px 0', boxSizing: 'border-box' }}>
@@ -204,8 +238,8 @@ export default function Home() {
                         e.stopPropagation(); 
                         const defaultSize = item.sizes ? item.sizes.split(',')[0].trim() : '';
                         const defaultColor = item.colors ? item.colors.split(',')[0].trim() : '';
-                        const newItem = { ...item, qty: 1, chosenSize: defaultSize, chosenColor: defaultColor, addedAt: new Date() };
-                        setCart((prev) => [...prev, newItem]);
+                        // Avtomatik guruhlash uchun funksiyani chaqiramiz
+                        handleAddToCart(item);
                       }}
                       style={{ 
                         marginTop: 'auto', width: '100%', padding: '10px', 
@@ -260,10 +294,7 @@ export default function Home() {
                       tabIndex={-1}
                       onClick={(e) => {
                         e.stopPropagation(); 
-                        const defaultSize = item.sizes ? item.sizes.split(',')[0].trim() : '';
-                        const defaultColor = item.colors ? item.colors.split(',')[0].trim() : '';
-                        const newItem = { ...item, qty: 1, chosenSize: defaultSize, chosenColor: defaultColor, addedAt: new Date() };
-                        setCart((prev) => [...prev, newItem]);
+                        handleAddToCart(item);
                       }}
                       style={{ 
                         marginTop: 'auto', width: '100%', padding: '10px', 
@@ -285,22 +316,41 @@ export default function Home() {
           </div>
         )}
 
+        {/* ✅ SAVAT BO'LIMI (YANGILANGAN) */}
         {activeTab === 'Savat' && (
-          <div style={{ color: 'white', animation: 'fadeIn 0.3s ease' }}>
+          <div style={{ color: 'white', animation: 'fadeIn 0.3s ease', paddingBottom: '120px' }}>
              {cart.length === 0 ? (
                <div style={{ textAlign: 'center', padding: '50px', background: 'rgba(255, 255, 255, 0.05)', borderRadius: '30px', backdropFilter: 'blur(20px)' }}>SAVATCHANGIZ BO'SH</div>
              ) : (
                <div style={{ display: 'flex', flexDirection: 'column', gap: '15px' }}>
                  {cart.map((c, i) => (
-                   <div key={i} style={{ display: 'flex', gap: '15px', background: 'rgba(255, 255, 255, 0.05)', padding: '15px', borderRadius: '18px', border: '1px solid rgba(255,255,255,0.15)', alignItems: 'center' }}>
-                     <img src={c.image_url.split(',')[0]} style={{ width: '65px', height: '65px', borderRadius: '12px', objectFit: 'cover' }} />
+                   <div key={i} style={{ display: 'flex', gap: '15px', background: 'rgba(255, 255, 255, 0.07)', padding: '15px', borderRadius: '18px', border: '1px solid rgba(255,255,255,0.15)', alignItems: 'center' }}>
+                     <img src={c.image_url.split(',')[0]} style={{ width: '65px', height: '80px', borderRadius: '12px', objectFit: 'cover' }} />
                      <div style={{ flex: 1 }}>
                        <div style={{ fontSize: '14px', fontWeight: '700' }}>{c.name}</div>
                        <div style={{ fontSize: '10px', color: 'rgba(255,255,255,0.5)', marginTop: '2px' }}>{c.chosenColor} | {c.chosenSize}</div>
-                       <div style={{ fontSize: '12px', color: '#fbbf24', marginTop: '4px', fontWeight: '800' }}>{c.price.toLocaleString()} so'm  <span style={{color: 'white', opacity: 0.5}}>x {c.qty}</span></div>
+                       <div style={{ fontSize: '12px', color: '#fbbf24', marginTop: '4px', fontWeight: '800' }}>{c.price.toLocaleString()} so'm</div>
+                       
+                       <div style={{ display: 'flex', alignItems: 'center', gap: '12px', marginTop: '10px' }}>
+                          <div style={{ display: 'flex', alignItems: 'center', background: 'rgba(255,255,255,0.1)', borderRadius: '10px', padding: '2px' }}>
+                             <button onClick={() => updateCartQty(i, -1)} style={{ border: 'none', background: 'none', color: 'white', width: '30px', height: '30px' }}>−</button>
+                             <span style={{ fontSize: '13px', fontWeight: 'bold', minWidth: '20px', textAlign: 'center' }}>{c.qty}</span>
+                             <button onClick={() => updateCartQty(i, 1)} style={{ border: 'none', background: 'none', color: 'white', width: '30px', height: '30px' }}>+</button>
+                          </div>
+                          <button onClick={() => updateCartQty(i, -c.qty)} style={{ background: 'none', border: 'none', color: '#ef4444', fontSize: '11px', fontWeight: '700' }}>O'CHIRISH</button>
+                       </div>
                      </div>
                    </div>
                  ))}
+                 
+                 {/* ✅ RASMIYLASHTIRISH STICKY PANEL (QO'SHILDI) */}
+                 <div style={{ position: 'fixed', bottom: '110px', left: '50%', transform: 'translateX(-50%)', width: '90%', maxWidth: '460px', background: 'rgba(15, 23, 42, 0.85)', backdropFilter: 'blur(20px)', padding: '15px 20px', borderRadius: '25px', border: '1px solid rgba(255,255,255,0.2)', zIndex: 101, display: 'flex', justifyContent: 'space-between', alignItems: 'center', boxShadow: '0 -10px 40px rgba(0,0,0,0.5)' }}>
+                    <div>
+                        <div style={{ fontSize: '10px', color: 'rgba(255,255,255,0.6)', fontWeight: '700' }}>JAMI SUMMA:</div>
+                        <div style={{ fontSize: '18px', fontWeight: '900', color: '#fbbf24' }}>{totalCartPrice.toLocaleString()} so'm</div>
+                    </div>
+                    <button style={{ padding: '14px 22px', background: 'linear-gradient(90deg, #fbbf24 0%, #f59e0b 100%)', color: '#050b14', border: 'none', borderRadius: '15px', fontWeight: '900', fontSize: '13px', boxShadow: '0 10px 20px rgba(251, 191, 36, 0.3)' }}>RASMIYLASHTIRISH ({totalCartItems})</button>
+                 </div>
                </div>
              )}
           </div>
@@ -342,7 +392,7 @@ export default function Home() {
           </div>
         )}
 
-        {/* ✅ AI YORDAMCHI (ENDI TO'LIQ INTERFEYS BILAN) */}
+        {/* ✅ AI YORDAMCHI */}
         {activeTab === 'AI' && (
           <div style={{ width: '100%', animation: 'fadeIn 0.3s ease', display: 'flex', flexDirection: 'column', gap: '20px' }}>
             <div style={{ background: 'rgba(255, 255, 255, 0.05)', backdropFilter: 'blur(20px)', borderRadius: '30px', padding: '25px', border: '1px solid rgba(255,255,255,0.15)', textAlign: 'center' }}>
@@ -362,7 +412,6 @@ export default function Home() {
               </button>
             </div>
 
-            {/* NATIJA RASYMINI KO'RSATISH */}
             {aiResult && (
               <div style={{ textAlign: 'center', background: 'rgba(255, 255, 255, 0.05)', borderRadius: '30px', padding: '20px', border: '1.5px solid #fbbf24' }}>
                 <p style={{ color: '#fbbf24', fontSize: '14px', fontWeight: '900', marginBottom: '15px' }}>TAYYOR BOLD'I:</p>
