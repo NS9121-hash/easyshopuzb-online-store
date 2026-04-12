@@ -205,7 +205,9 @@ export default function Home() {
                 <div key={item.id} 
                   tabIndex={-1}
                   onClick={() => { 
-                    setSelectedProduct(item); setCount(1); setSelectedImageIndex(0); 
+                    setSelectedProduct(item); 
+                    setCount(1); 
+                    setSelectedImageIndex(0); 
                     setSelectedSize(item.sizes ? item.sizes.split(',')[0].trim() : '');
                     setSelectedColor(item.colors ? item.colors.split(',')[0].trim() : '');
                   }} 
@@ -236,10 +238,11 @@ export default function Home() {
                       tabIndex={-1}
                       onClick={(e) => {
                         e.stopPropagation(); 
-                        const defaultSize = item.sizes ? item.sizes.split(',')[0].trim() : '';
-                        const defaultColor = item.colors ? item.colors.split(',')[0].trim() : '';
-                        // Avtomatik guruhlash uchun funksiyani chaqiramiz
-                        handleAddToCart(item);
+                        setSelectedProduct(item);
+                        setCount(1);
+                        setSelectedImageIndex(0);
+                        setSelectedSize(item.sizes ? item.sizes.split(',')[0].trim() : '');
+                        setSelectedColor(item.colors ? item.colors.split(',')[0].trim() : '');
                       }}
                       style={{ 
                         marginTop: 'auto', width: '100%', padding: '10px', 
@@ -270,7 +273,9 @@ export default function Home() {
                 <div key={item.id} 
                   tabIndex={-1}
                   onClick={() => { 
-                    setSelectedProduct(item); setCount(1); setSelectedImageIndex(0); 
+                    setSelectedProduct(item); 
+                    setCount(1); 
+                    setSelectedImageIndex(0); 
                     setSelectedSize(item.sizes ? item.sizes.split(',')[0].trim() : '');
                     setSelectedColor(item.colors ? item.colors.split(',')[0].trim() : '');
                   }} 
@@ -294,7 +299,11 @@ export default function Home() {
                       tabIndex={-1}
                       onClick={(e) => {
                         e.stopPropagation(); 
-                        handleAddToCart(item);
+                        setSelectedProduct(item);
+                        setCount(1);
+                        setSelectedImageIndex(0);
+                        setSelectedSize(item.sizes ? item.sizes.split(',')[0].trim() : '');
+                        setSelectedColor(item.colors ? item.colors.split(',')[0].trim() : '');
                       }}
                       style={{ 
                         marginTop: 'auto', width: '100%', padding: '10px', 
@@ -366,7 +375,9 @@ export default function Home() {
                 {favorites.map((item) => (
                   <div key={item.id} 
                     onClick={() => {
-                      setSelectedProduct(item); setCount(1); setSelectedImageIndex(0); 
+                      setSelectedProduct(item); 
+                      setCount(1); 
+                      setSelectedImageIndex(0); 
                       setSelectedSize(item.sizes ? item.sizes.split(',')[0].trim() : '');
                       setSelectedColor(item.colors ? item.colors.split(',')[0].trim() : '');
                     }}
@@ -383,7 +394,16 @@ export default function Home() {
                     <div style={{ padding: '12px', display: 'flex', flexDirection: 'column', flex: 1, background: 'rgba(0,0,0,0.2)' }}>
                       <div style={{ color: '#fbbf24', fontSize: '18px', fontWeight: '800' }}>{item.price?.toLocaleString()} <span style={{fontSize: '10px'}}>so'm</span></div>
                       <p style={{ color: 'white', fontSize: '12px', margin: '6px 0', height: '2.8em', overflow: 'hidden', lineHeight: '1.4', opacity: 0.9 }}>{item.name}</p>
-                      <button style={{ marginTop: 'auto', width: '100%', padding: '10px', background: 'linear-gradient(90deg, #fbbf24 0%, #f59e0b 100%)', color: '#050b14', border: 'none', borderRadius: '12px', fontSize: '11px', fontWeight: '900' }}>BUYURTMA BERISH</button>
+                      <button 
+                        onClick={(e) => {
+                          e.stopPropagation();
+                          setSelectedProduct(item);
+                          setCount(1);
+                          setSelectedImageIndex(0);
+                        }}
+                        style={{ marginTop: 'auto', width: '100%', padding: '10px', background: 'linear-gradient(90deg, #fbbf24 0%, #f59e0b 100%)', color: '#050b14', border: 'none', borderRadius: '12px', fontSize: '11px', fontWeight: '900' }}>
+                        BUYURTMA BERISH
+                      </button>
                     </div>
                   </div>
                 ))}
@@ -576,3 +596,4 @@ export default function Home() {
     </main>
   );
 }
+
