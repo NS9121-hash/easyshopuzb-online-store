@@ -49,14 +49,19 @@ export default function Home() {
   }, [favorites, cart]);
   // ----------------------------
 
-  // ✅ SAVATGA QO'SHISH FUNKSIYASI (GURUHLASH MANTIQI BILAN)
-  const handleAddToCart = (product: any) => {
+  // ✅ SAVATGA QO'SHISH FUNKSIYASI (RANGGA QARAB RASMNI TO'G'IRLASH)
+  const handleAddToCart = (product: any, imgIndex: number = 0) => {
     const chosenSize = selectedSize || (product.sizes ? product.sizes.split(',')[0].trim() : '');
     const chosenColor = selectedColor || (product.colors ? product.colors.split(',')[0].trim() : '');
+    
+    // Tanlangan rangga mos rasmni aniqlash
+    const allImages = product.image_url ? product.image_url.split(',') : [];
+    const chosenImage = allImages[imgIndex] || allImages[0];
 
     setCart((prev) => {
+      // Endi tekshirishda rasm ham bir xilligini tekshiramiz (turli ranglar alohida tushishi uchun)
       const existingItemIndex = prev.findIndex(
-        (item) => item.id === product.id && item.chosenSize === chosenSize && item.chosenColor === chosenColor
+        (item) => item.id === product.id && item.chosenSize === chosenSize && item.chosenColor === chosenColor && item.chosenImage === chosenImage
       );
 
       if (existingItemIndex > -1) {
@@ -70,6 +75,7 @@ export default function Home() {
         qty: count, 
         chosenSize, 
         chosenColor, 
+        chosenImage, // SAVAT UCHUN MAXSUS TANLANGAN RASM
         addedAt: new Date() 
       };
       return [...prev, newItem];
@@ -236,10 +242,7 @@ export default function Home() {
                       tabIndex={-1}
                       onClick={(e) => {
                         e.stopPropagation(); 
-                        const defaultSize = item.sizes ? item.sizes.split(',')[0].trim() : '';
-                        const defaultColor = item.colors ? item.colors.split(',')[0].trim() : '';
-                        // Avtomatik guruhlash uchun funksiyani chaqiramiz
-                        handleAddToCart(item);
+                        handleAddToCart(item, 0); // Asosiy kiyimlar ro'yxatida birinchi rasmni yuboradi
                       }}
                       style={{ 
                         marginTop: 'auto', width: '100%', padding: '10px', 
@@ -294,7 +297,7 @@ export default function Home() {
                       tabIndex={-1}
                       onClick={(e) => {
                         e.stopPropagation(); 
-                        handleAddToCart(item);
+                        handleAddToCart(item, 0);
                       }}
                       style={{ 
                         marginTop: 'auto', width: '100%', padding: '10px', 
@@ -316,7 +319,7 @@ export default function Home() {
           </div>
         )}
 
-        {/* ✅ SAVAT BO'LIMI (YANGILANGAN) */}
+        {/* ✅ SAVAT BO'LIMI (YANGILANGAN RASM CHIQARISH BILAN) */}
         {activeTab === 'Savat' && (
           <div style={{ color: 'white', animation: 'fadeIn 0.3s ease', paddingBottom: '120px' }}>
              {cart.length === 0 ? (
@@ -325,7 +328,8 @@ export default function Home() {
                <div style={{ display: 'flex', flexDirection: 'column', gap: '15px' }}>
                  {cart.map((c, i) => (
                    <div key={i} style={{ display: 'flex', gap: '15px', background: 'rgba(255, 255, 255, 0.07)', padding: '15px', borderRadius: '18px', border: '1px solid rgba(255,255,255,0.15)', alignItems: 'center' }}>
-                     <img src={c.image_url.split(',')[0]} style={{ width: '65px', height: '80px', borderRadius: '12px', objectFit: 'cover' }} />
+                     {/* TANLANGAN RANGGA MOS RASMNI CHIQARISH */}
+                     <img src={c.chosenImage} style={{ width: '65px', height: '80px', borderRadius: '12px', objectFit: 'cover' }} />
                      <div style={{ flex: 1 }}>
                        <div style={{ fontSize: '14px', fontWeight: '700' }}>{c.name}</div>
                        <div style={{ fontSize: '10px', color: 'rgba(255,255,255,0.5)', marginTop: '2px' }}>{c.chosenColor} | {c.chosenSize}</div>
@@ -343,7 +347,7 @@ export default function Home() {
                    </div>
                  ))}
                  
-                 {/* ✅ RASMIYLASHTIRISH STICKY PANEL (QO'SHILDI) */}
+                 {/* ✅ RASMIYLASHTIRISH STICKY PANEL */}
                  <div style={{ position: 'fixed', bottom: '110px', left: '50%', transform: 'translateX(-50%)', width: '90%', maxWidth: '460px', background: 'rgba(15, 23, 42, 0.85)', backdropFilter: 'blur(20px)', padding: '15px 20px', borderRadius: '25px', border: '1px solid rgba(255,255,255,0.2)', zIndex: 101, display: 'flex', justifyContent: 'space-between', alignItems: 'center', boxShadow: '0 -10px 40px rgba(0,0,0,0.5)' }}>
                     <div>
                         <div style={{ fontSize: '10px', color: 'rgba(255,255,255,0.6)', fontWeight: '700' }}>JAMI SUMMA:</div>
@@ -425,7 +429,7 @@ export default function Home() {
         )}
       </div>
 
-      {/* MAHSULOT DETALLARI MODALI */}
+      {/* MAHSULOT DETALLARI MODALI (YANGILANGAN SAVATGA QO'SHISH BILAN) */}
       {selectedProduct && (() => {
         const productImages = selectedProduct.image_url ? selectedProduct.image_url.split(',') : [];
         const productSizes = selectedProduct.sizes ? selectedProduct.sizes.split(',').map((s:string) => s.trim()) : [];
@@ -468,7 +472,10 @@ export default function Home() {
                         <div style={{ display: 'flex', gap: '12px', overflowX: 'auto', paddingBottom: '10px', scrollbarWidth: 'none' }}>
                           {productImages.map((img: string, idx: number) => (
                             <div key={idx} 
-                              onClick={() => { setSelectedImageIndex(idx); setSelectedColor(productColors[idx] || `Maxsus Rang`); }} 
+                              onClick={() => { 
+                                setSelectedImageIndex(idx); 
+                                setSelectedColor(productColors[idx] || `Maxsus Rang`); 
+                              }} 
                               style={{ 
                                 minWidth: '60px', width: '60px', aspectRatio: '3/4', borderRadius: '12px', 
                                 border: selectedImageIndex === idx ? '2px solid #fbbf24' : '1px solid rgba(255,255,255,0.2)', 
@@ -506,7 +513,8 @@ export default function Home() {
                         <span style={{ minWidth: '18px', textAlign: 'center', fontWeight: '900', fontSize: '18px' }}>{count}</span>
                         <button onClick={() => setCount(count+1)} style={{ border: 'none', background: 'none', color: 'white', fontSize: '22px', width: '45px', height: '45px' }}>+</button>
                       </div>
-                      <button onClick={() => handleAddToCart(selectedProduct)} 
+                      {/* SAVATGA QO'SHIShDA TANLANGAN INDEKSNI YUBORAMIZ */}
+                      <button onClick={() => handleAddToCart(selectedProduct, selectedImageIndex)} 
                         style={{ flex: 1, height: '55px', background: 'linear-gradient(90deg, #fbbf24 0%, #f59e0b 100%)', color: '#050b14', border: 'none', borderRadius: '18px', fontWeight: '900', fontSize: '14px', boxShadow: '0 15px 35px rgba(251, 191, 36, 0.4)' }}>
                         SAVATGA QO'SHISH
                       </button>
