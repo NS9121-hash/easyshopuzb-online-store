@@ -29,6 +29,10 @@ const firebaseConfig = {
 const app = getApps().length > 0 ? getApp() : initializeApp(firebaseConfig)
 const db = getFirestore(app)
 
+function sleep(ms: number) {
+  return new Promise((res) => setTimeout(res, ms))
+}
+
 export default function Home() {
   const [activeTab, setActiveTab] = useState('Home')
   const [items, setItems] = useState<any[]>([])
@@ -46,6 +50,9 @@ export default function Home() {
   const [clothImage, setClothImage] = useState<string | null>(null)
   const [isProcessing, setIsProcessing] = useState(false)
   const [aiResult, setAiResult] = useState<string | null>(null)
+  // vtonStatus: idle | loading | model_loading | failed
+  const [vtonStatus, setVtonStatus] = useState<'idle' | 'loading' | 'model_loading' | 'failed'>('idle')
+  const [vtonRetryCount, setVtonRetryCount] = useState(0)
 
   const [loading, setLoading] = useState(false)
   const [loadingMore, setLoadingMore] = useState(false)
@@ -165,6 +172,100 @@ export default function Home() {
   const totalCartItems = cart.reduce((t, i) => t + (i.qty || 1), 0)
   const totalCartPrice = cart.reduce((t, i) => t + (Number(i.price || 0) * (i.qty || 1)), 0)
 
+  // VTON handler with 1 automatic retry on 503 (20s delay)
+  const handleAIGeneration = useCallback(async () => {
+    if (!userImage || !clothImage) {
+      alert("Iltimos, ikkala rasmni ham yuklang!")
+      return
+    }
+
+    setIsProcessing(true)
+    setVtonStatus('loading')
+    setVtonRetryCount(0)
+    setAiResult(null)
+
+    const callVton = async () => {
+      try {
+        const res = await fetch('/api/vton', {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({ user_image: userImage, cloth_image: clothImage }),
+        })
+
+        if (res.status === 503) {
+          return { status: 503 }
+        }
+
+        if (!res.ok) {
+          const text = await res.text().catch(() => '')
+          console.error('VTON upstream error', res.status, text)
+          return { status: res.status }
+        }
+
+        const data = await res.json()
+        return { status: 200, data }
+      } catch (err) {
+        console.error('VTON fetch error', err)
+        return { status: 500 }
+      }
+    }
+
+    // first attempt
+    const first = await callVton()
+    if (first.status === 200 && first.data?.image_url) {
+      setAiResult(first.data.image_url)
+      setVtonStatus('idle')
+      setIsProcessing(false)
+      return
+    }
+
+    if (first.status === 503) {
+      // model loading - automatic one retry after 20s
+      setVtonStatus('model_loading')
+      setVtonRetryCount(1)
+
+      // wait 20s then retry
+      await sleep(20000)
+      const second = await callVton()
+      if (second.status === 200 && second.data?.image_url) {
+        setAiResult(second.data.image_url)
+        setVtonStatus('idle')
+        setIsProcessing(false)
+        return
+      }
+
+      // still failing
+      setVtonStatus('failed')
+      setIsProcessing(false)
+      return
+    }
+
+    // other failures
+    setVtonStatus('failed')
+    setIsProcessing(false)
+  }, [userImage, clothImage])
+
+  const manualRetry = async () => {
+    setVtonStatus('loading')
+    setIsProcessing(true)
+    setVtonRetryCount((c) => c + 1)
+    const res = await fetch('/api/vton', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({ user_image: userImage, cloth_image: clothImage }),
+    })
+    if (res.ok) {
+      const data = await res.json()
+      if (data?.image_url) setAiResult(data.image_url)
+      setVtonStatus('idle')
+    } else if (res.status === 503) {
+      setVtonStatus('model_loading')
+    } else {
+      setVtonStatus('failed')
+    }
+    setIsProcessing(false)
+  }
+
   return (
     <main style={{ position: 'relative', minHeight: '100dvh', width: '100dvw', overflowX: 'hidden', backgroundColor: '#050b14', display: 'flex', flexDirection: 'column', alignItems: 'center', fontFamily: 'system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif', padding: '40px 0 120px 0', boxSizing: 'border-box' }}>
 
@@ -197,6 +298,45 @@ export default function Home() {
         </div>
 
         <div ref={loadMoreRef} style={{ height: 24 }} />
+
+        {/* AI panel - improved VTON UX */}
+        <div style={{ marginTop: 18 }}>
+          <h3 style={{ color: '#fbbf24' }}>Virtual kiyib ko'rish (AI)</h3>
+          <div style={{ display: 'flex', gap: 12, marginTop: 12 }}>
+            <div style={{ width: 180, height: 240, background: '#0b1220', borderRadius: 12, position: 'relative', overflow: 'hidden' }}>
+              {userImage ? <img src={userImage} style={{ width: '100%', height: '100%', objectFit: 'cover' }} /> : <div style={{ color: '#94a3b8', display: 'flex', alignItems: 'center', justifyContent: 'center', height: '100%' }}>Sizning rasm</div>}
+              <input type="file" accept="image/*" onChange={(e) => {
+                const file = e.target.files?.[0]; if (file) { const r = new FileReader(); r.onloadend = () => setUserImage(r.result as string); r.readAsDataURL(file) }
+              }} style={{ position: 'absolute', inset: 0, opacity: 0, cursor: 'pointer' }} />
+            </div>
+
+            <div style={{ width: 180, height: 240, background: '#0b1220', borderRadius: 12, position: 'relative', overflow: 'hidden' }}>
+              {clothImage ? <img src={clothImage} style={{ width: '100%', height: '100%', objectFit: 'cover' }} /> : <div style={{ color: '#94a3b8', display: 'flex', alignItems: 'center', justifyContent: 'center', height: '100%' }}>Kiyim rasm</div>}
+              <input type="file" accept="image/*" onChange={(e) => {
+                const file = e.target.files?.[0]; if (file) { const r = new FileReader(); r.onloadend = () => setClothImage(r.result as string); r.readAsDataURL(file) }
+              }} style={{ position: 'absolute', inset: 0, opacity: 0, cursor: 'pointer' }} />
+            </div>
+
+            <div style={{ flex: 1 }}>
+              <div style={{ display: 'flex', gap: 8 }}>
+                <button onClick={handleAIGeneration} disabled={isProcessing} style={{ padding: 12, background: '#fbbf24', borderRadius: 12, border: 'none', fontWeight: 800 }}>{isProcessing ? 'AI ishlamoqda...' : 'Hisoblash'}</button>
+                {vtonStatus === 'model_loading' && <div style={{ padding: 12, background: '#111827', borderRadius: 12, color: '#f59e0b' }}>Model yuklanmoqda — avtomatik 20s keyin qayta uriniladi...</div>}
+                {vtonStatus === 'failed' && <button onClick={manualRetry} style={{ padding: 12, background: '#ef4444', borderRadius: 12, border: 'none', color: 'white', fontWeight: 800 }}>Qayta urinib ko'rish</button>}
+              </div>
+
+              <div style={{ marginTop: 12 }}>
+                {isProcessing && vtonStatus === 'loading' && <div style={{ color: 'white' }}>AI ishlayapti — sabr qiling...</div>}
+                {vtonStatus === 'model_loading' && <div style={{ color: '#fbbf24' }}>Model hali yuklanmoqda. Bir necha soniyadan keyin avtomatik qayta uriniladi.</div>}
+                {vtonStatus === 'failed' && <div style={{ color: '#ef4444' }}>AI xizmatiga ulanishda xato yuz berdi. Iltimos qayta urinib ko'ring.</div>}
+                {aiResult && (
+                  <div style={{ marginTop: 12, borderRadius: 12, overflow: 'hidden', border: '1px solid rgba(255,255,255,0.06)', width: 360 }}>
+                    <img src={aiResult} style={{ width: '100%', height: 'auto', display: 'block' }} />
+                  </div>
+                )}
+              </div>
+            </div>
+          </div>
+        </div>
 
       </div>
 
