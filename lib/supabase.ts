@@ -1,22 +1,5 @@
-import { createClient } from '@supabase/supabase-js'
+// Legacy Supabase wrapper removed.
+// This project now uses Firebase (Firestore + Storage) and firebase-admin for server-side operations.
+// If any remaining code imports from lib/supabase.ts, please migrate imports to firebase client or admin as needed.
 
-const supabaseUrl = process.env.NEXT_PUBLIC_SUPABASE_URL || ''
-const supabaseAnonKey = process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY || ''
-
-export const supabase = createClient(supabaseUrl, supabaseAnonKey)
-
-export type Product = {
-  id: string
-  image_url: string
-  price: number
-  created_at: string
-}
-
-export type Order = {
-  id: string
-  customer_name: string
-  phone: string
-  address: string
-  telegram_username: string
-  created_at: string
-}
+export const deprecatedMessage = 'Supabase integration removed. Use Firebase instead.'

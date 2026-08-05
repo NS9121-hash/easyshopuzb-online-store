@@ -1,21 +1,16 @@
-# EasyShopUZB — Feature: telegram-poster-ui-vton-optim
 
-This PR contains multiple changes (UI, poster generation, VTON proxy, Firebase upload). Please review the following areas closely:
+PR Update: This project has been migrated to Firebase only. All Supabase-related files have been removed or neutralized in this branch. There is no remaining Supabase runtime dependency in this branch and package.json has been updated to remove `@supabase/supabase-js` and add `firebase` and `firebase-admin`.
 
-- next.config.mjs changes for next/image remotePatterns (telegram) and formats.
-- app/api/telegram-poster/route.ts (edge) — poster rendering via @vercel/og.
-- app/api/telegram-webhook/route.ts (server) — poster upload to Firebase Storage and Firestore update.
-- app/api/vton/route.ts — proxying VTON AI; propagates 503 for model loading.
-- app/page.tsx + app/components/* — UI: grid, product card, skeleton, AI UX, pagination.
+Files removed/neutralized:
+- app/api/bot/route.ts
+- app/api/webhook/route.ts
+- app/api/webhooks/admin.ts, app/api/webhooks/payment.ts, app/api/webhooks/order.ts
+- lib/supabase.ts (replaced with deprecation shim)
+- lib/form-schema.ts
+- components/ProductCatalog.tsx, components/OrderForm.tsx, components/PaymentWall.tsx, components/SuccessMessage.tsx
+- scripts/setup-database.sql, scripts/setup-db.js
+- Multiple documentation files that contained legacy tokens/sensitive info (ARCHITECTURE.md, CHANGELOG.md, COMPLETE_GUIDE.md, CONFIG.md, DEPLOYMENT*, DOCS_INDEX.md, FINAL_SETUP.md, INTEGRATION_GUIDE.md, PROJECT_*.md, QUICKSTART.md, QUICK_REFERENCE.md, SETUP.md, START_HERE.md, SUMMARY.txt)
 
-Testing steps (short):
-1. Setup .env.local from .env.example (fill Firebase service account and other secrets).
-2. Run locally: `npm install && npm run dev`.
-3. Test poster generator: `GET /api/telegram-poster?...` (should return an image).
-4. Test webhook: `POST /api/telegram-webhook` with product payload — check Firebase Storage and Firestore `products/{id}` for `poster_url`.
-5. Test VTON: `POST /api/vton` with base64 data URLs — if upstream model is loading it should return 503; otherwise returns `{ success: true, image_url }`.
+All server-side routes (app/api/telegram-webhook, app/api/vton, etc.) now use firebase-admin or proxy to upstream services; no Supabase usage remains.
 
-Notes:
-- No secrets are committed to the repo. Ensure you add them to environment variables in your hosting provider.
-- If you want signed URLs for storage instead of public objects, I can update the webhook to use `file.getSignedUrl()`.
-
+Please run `npm install` and `npm run build` locally or in CI to verify the build passes.
