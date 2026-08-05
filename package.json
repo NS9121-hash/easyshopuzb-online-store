@@ -9,7 +9,6 @@
     "lint": "eslint ."
   },
   "dependencies": {
-    "@supabase/supabase-js": "^2.45.0",
     "@hookform/resolvers": "^3.9.1",
     "@vercel/analytics": "1.6.1",
     "@radix-ui/react-accordion": "1.2.12",
@@ -61,7 +60,10 @@
     "zod": "^3.24.1",
     "three": "^0.160.0",
     "@types/three": "^0.160.0",
-    "three-stdlib": "^2.29.0"
+    "three-stdlib": "^2.29.0",
+    "@vercel/og": "^1.0.0",
+    "firebase": "^9.22.1",
+    "firebase-admin": "^11.10.1"
   },
   "devDependencies": {
     "@tailwindcss/postcss": "^4.2.0",
