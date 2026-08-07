@@ -1,48 +1,25 @@
-const ADMIN_BOT_TOKEN = process.env.ADMIN_BOT_TOKEN || ''
-const PAYMENT_BOT_TOKEN = process.env.PAYMENT_BOT_TOKEN || ''
-const ORDER_BOT_TOKEN = process.env.ORDER_BOT_TOKEN || ''
+export type BotKind = 'catalog' | 'order' | 'payment'
 
-export const sendTelegramMessage = async (botToken: string, chatId: string, text: string) => {
-  try {
-    const response = await fetch(`https://api.telegram.org/bot${botToken}/sendMessage`, {
-      method: 'POST',
-      headers: {
-        'Content-Type': 'application/json',
-      },
-      body: JSON.stringify({
-        chat_id: chatId,
-        text,
-        parse_mode: 'HTML',
-      }),
-    })
-    return response.ok
-  } catch (error) {
-    console.error('Error sending Telegram message:', error)
-    return false
-  }
+const config = {
+  catalog: { token: process.env.CATALOG_BOT_TOKEN, admin: process.env.CATALOG_ADMIN_CHAT_ID },
+  order: { token: process.env.ORDER_BOT_TOKEN, admin: process.env.ORDER_ADMIN_CHAT_ID },
+  payment: { token: process.env.PAYMENT_BOT_TOKEN, admin: process.env.PAYMENT_ADMIN_CHAT_ID },
+} as const
+
+export function botConfig(kind: BotKind) {
+  const value = config[kind]
+  if (!value.token) throw new Error(`${kind} Telegram bot token is not configured`)
+  return value
 }
 
-export const sendOrderNotification = async (
-  chatId: string,
-  customerName: string,
-  phone: string,
-  address: string,
-  telegramUsername: string
-) => {
-  const message = `
-<b>📦 New Order Received</b>
-
-<b>Customer:</b> ${customerName}
-<b>Phone:</b> ${phone}
-<b>Address:</b> ${address}
-<b>Telegram:</b> @${telegramUsername}
-
-Please process this order.
-  `.trim()
-
-  return sendTelegramMessage(ORDER_BOT_TOKEN, chatId, message)
+export async function telegram(kind: BotKind, method: string, body: Record<string, unknown>) {
+  const { token } = botConfig(kind)
+  const response = await fetch(`https://api.telegram.org/bot${token}/${method}`, { method: 'POST', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify(body) })
+  return response.json()
 }
 
-export const getTelegramLoginUrl = (username: string) => {
-  return `https://t.me/${username}`
+export async function sendTelegramMessage(kind: BotKind, chatId: string | number, text: string, replyMarkup?: unknown) {
+  return telegram(kind, 'sendMessage', { chat_id: chatId, text, parse_mode: 'HTML', ...(replyMarkup ? { reply_markup: replyMarkup } : {}) })
 }
+
+export const getTelegramLoginUrl = (username: string) => `https://t.me/${username.replace(/^@/, '')}`

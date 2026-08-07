@@ -9,7 +9,7 @@ import { Input } from '@/components/ui/input'
 import { Textarea } from '@/components/ui/textarea'
 import { Field, FieldLabel, FieldError, FieldGroup } from '@/components/ui/field'
 import { Spinner } from '@/components/ui/spinner'
-import { Product } from '@/lib/supabase'
+import { Product } from '@/lib/types'
 import { orderFormSchema, OrderFormData } from '@/lib/form-schema'
 
 interface OrderFormProps {
@@ -45,6 +45,7 @@ export function OrderForm({ isOpen, onClose, product, onSuccess }: OrderFormProp
           address: data.address,
           telegram_username: data.telegramUsername,
           product_id: product.id,
+          product_name: product.name || 'Mahsulot',
         }),
       })
 

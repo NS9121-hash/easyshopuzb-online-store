@@ -1,136 +1,35 @@
-import { NextRequest, NextResponse } from 'next/server'
-import { createClient } from '@supabase/supabase-js'
+import { NextResponse } from 'next/server'
+import { FieldValue } from 'firebase-admin/firestore'
+import { db } from '@/lib/firebase-admin'
+import { botConfig, sendTelegramMessage } from '@/lib/telegram'
 
-const supabase = createClient(
-  process.env.NEXT_PUBLIC_SUPABASE_URL || '',
-  process.env.SUPABASE_SERVICE_ROLE_KEY || process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY || ''
-)
+function validPhone(value: string) { return /^\+?[0-9\s()-]{7,}$/.test(value) }
 
-const ORDER_BOT_TOKEN = process.env.ORDER_BOT_TOKEN || ''
-
-export async function POST(request: NextRequest) {
+export async function POST(request: Request) {
   try {
     const body = await request.json()
-    const { customer_name, phone, address, telegram_username } = body
-
-    // Validate required fields
-    if (!customer_name || !phone || !address || !telegram_username) {
-      return NextResponse.json(
-        { error: 'Missing required fields' },
-        { status: 400 }
-      )
-    }
-
-    // Validate phone format (basic check)
-    if (!phone.match(/^\+?[0-9]{6,}$/)) {
-      return NextResponse.json(
-        { error: 'Invalid phone format' },
-        { status: 400 }
-      )
-    }
-
-    // Validate telegram username
-    if (!telegram_username.match(/^@?[a-zA-Z0-9_]{5,}$/)) {
-      return NextResponse.json(
-        { error: 'Invalid Telegram username' },
-        { status: 400 }
-      )
-    }
-
-    // Store order in Supabase
-    const { data, error } = await supabase
-      .from('orders')
-      .insert({
-        customer_name,
-        phone,
-        address,
-        telegram_username,
-        payment_status: 'pending',
-        order_status: 'new',
-      })
-      .select()
-
-    if (error) {
-      console.error('Database error:', error)
-      return NextResponse.json(
-        { error: 'Failed to save order' },
-        { status: 500 }
-      )
-    }
-
-    // Send notification to Telegram admin
-    if (ORDER_BOT_TOKEN) {
-      try {
-        const message = `
-📦 New Order Received!
-
-👤 Customer: ${customer_name}
-📱 Phone: ${phone}
-📍 Address: ${address}
-💬 Telegram: ${telegram_username}
-
-Status: Pending Payment
-`.trim()
-
-        await fetch(`https://api.telegram.org/bot${ORDER_BOT_TOKEN}/sendMessage`, {
-          method: 'POST',
-          headers: { 'Content-Type': 'application/json' },
-          body: JSON.stringify({
-            chat_id: process.env.ADMIN_CHAT_ID,
-            text: message,
-            parse_mode: 'HTML',
-          }),
-        })
-      } catch (notifyError) {
-        console.error('Error sending notification:', notifyError)
-        // Don't fail the order if notification fails
-      }
-    }
-
-    return NextResponse.json(
-      { 
-        success: true,
-        message: 'Order placed successfully',
-        order: data ? data[0] : null
-      },
-      { status: 201 }
-    )
+    const { customer_name, phone, address, telegram_username, product_id, product_name, quantity = 1, size, color } = body
+    if (!customer_name || !phone || !address || !telegram_username || !product_name) return NextResponse.json({ error: 'Required fields are missing' }, { status: 400 })
+    if (!validPhone(phone)) return NextResponse.json({ error: 'Invalid phone format' }, { status: 400 })
+    const ref = await db.collection('orders').add({ customer_name, phone, address, telegram_username, product_id: product_id || null, product_name, quantity, size: size || null, color: color || null, payment_status: 'pending', order_status: 'new', createdAt: FieldValue.serverTimestamp() })
+    const { admin } = botConfig('order')
+    if (admin) await sendTelegramMessage('order', admin, `<b>Yangi buyurtma #${ref.id}</b>\n\n<b>Mijoz:</b> ${customer_name}\n<b>Telefon:</b> ${phone}\n<b>Manzil:</b> ${address}\n<b>Telegram:</b> ${telegram_username}\n<b>Tovar:</b> ${product_name}\n<b>Soni:</b> ${quantity}\n<b>O‘lcham:</b> ${size || '-'}\n<b>Rang:</b> ${color || '-'}`)
+    return NextResponse.json({ success: true, order: { id: ref.id, product_name, customer_name, payment_status: 'pending' } }, { status: 201 })
   } catch (error) {
-    console.error('Orders API error:', error)
-    return NextResponse.json(
-      { error: 'Internal server error' },
-      { status: 500 }
-    )
+    console.error('[orders:post]', error)
+    return NextResponse.json({ error: 'Failed to save order' }, { status: 500 })
   }
 }
 
-export async function GET(request: NextRequest) {
+export async function GET(request: Request) {
   try {
-    const { searchParams } = new URL(request.url)
-    const status = searchParams.get('status')
-
-    let query = supabase.from('orders').select('*')
-
-    if (status) {
-      query = query.eq('order_status', status)
-    }
-
-    const { data: orders, error } = await query.order('created_at', { ascending: false })
-
-    if (error) {
-      console.error('Error fetching orders:', error)
-      return NextResponse.json(
-        { error: 'Failed to fetch orders' },
-        { status: 500 }
-      )
-    }
-
-    return NextResponse.json({ orders }, { status: 200 })
+    const status = new URL(request.url).searchParams.get('status')
+    let query: FirebaseFirestore.Query = db.collection('orders').orderBy('createdAt', 'desc')
+    if (status) query = query.where('order_status', '==', status)
+    const snapshot = await query.get()
+    return NextResponse.json({ orders: snapshot.docs.map((doc) => ({ id: doc.id, ...doc.data() })) })
   } catch (error) {
-    console.error('Orders GET error:', error)
-    return NextResponse.json(
-      { error: 'Internal server error' },
-      { status: 500 }
-    )
+    console.error('[orders:get]', error)
+    return NextResponse.json({ error: 'Failed to fetch orders' }, { status: 500 })
   }
 }

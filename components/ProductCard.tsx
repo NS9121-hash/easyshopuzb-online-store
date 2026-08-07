@@ -1,6 +1,6 @@
 'use client'
 
-import { Product } from '@/lib/supabase'
+import { Product } from '@/lib/types'
 import { Button } from '@/components/ui/button'
 import Image from 'next/image'
 

@@ -1,7 +1,7 @@
 'use client'
 
 import { useEffect, useState } from 'react'
-import { Product, supabase } from '@/lib/supabase'
+import { Product } from '@/lib/types'
 import { ProductCard } from './ProductCard'
 import { Empty } from '@/components/ui/empty'
 
@@ -15,43 +15,11 @@ export function ProductCatalog({ onBuy, isBlurred = false }: ProductCatalogProps
   const [isLoading, setIsLoading] = useState(true)
 
   useEffect(() => {
-    const fetchProducts = async () => {
-      try {
-        const { data, error } = await supabase
-          .from('products')
-          .select('*')
-          .order('created_at', { ascending: false })
-
-        if (error) throw error
-        setProducts(data || [])
-      } catch (error) {
-        console.error('Error fetching products:', error)
-      } finally {
-        setIsLoading(false)
-      }
-    }
-
-    fetchProducts()
-
-    // Subscribe to real-time updates
-    const subscription = supabase
-      .channel('products')
-      .on('postgres_changes', { event: '*', schema: 'public', table: 'products' }, (payload) => {
-        if (payload.eventType === 'INSERT') {
-          setProducts((prev) => [payload.new as Product, ...prev])
-        } else if (payload.eventType === 'DELETE') {
-          setProducts((prev) => prev.filter((p) => p.id !== payload.old.id))
-        } else if (payload.eventType === 'UPDATE') {
-          setProducts((prev) =>
-            prev.map((p) => (p.id === payload.new.id ? (payload.new as Product) : p))
-          )
-        }
-      })
-      .subscribe()
-
-    return () => {
-      subscription.unsubscribe()
-    }
+    fetch('/api/products')
+      .then((response) => response.json())
+      .then((payload) => setProducts(payload.products || []))
+      .catch((error) => console.error('Error fetching products:', error))
+      .finally(() => setIsLoading(false))
   }, [])
 
   if (isLoading && !isBlurred) {
@@ -69,10 +37,10 @@ export function ProductCatalog({ onBuy, isBlurred = false }: ProductCatalogProps
 
   if (products.length === 0 && !isBlurred) {
     return (
-      <Empty
-        title="No products yet"
-        description="Check back soon for our latest collection"
-      />
+      <Empty>
+        <p className="text-lg font-medium">No products yet</p>
+        <p className="text-sm text-muted-foreground">Check back soon for our latest collection</p>
+      </Empty>
     )
   }
 

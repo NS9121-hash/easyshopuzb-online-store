@@ -1,32 +1,20 @@
-import { NextRequest, NextResponse } from 'next/server'
-import { createClient } from '@supabase/supabase-js'
+import { NextResponse } from 'next/server'
+import { db } from '@/lib/firebase-admin'
 
-const supabase = createClient(
-  process.env.NEXT_PUBLIC_SUPABASE_URL || '',
-  process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY || ''
-)
-
-export async function GET(request: NextRequest) {
+export async function GET() {
   try {
-    const { data: products, error } = await supabase
-      .from('products')
-      .select('*')
-      .order('created_at', { ascending: false })
-
-    if (error) {
-      console.error('Error fetching products:', error)
-      return NextResponse.json(
-        { error: 'Failed to fetch products' },
-        { status: 500 }
-      )
-    }
-
-    return NextResponse.json({ products }, { status: 200 })
+    const snapshot = await db.collection('products').orderBy('createdAt', 'desc').get()
+    const products = snapshot.docs.map((doc) => ({ id: doc.id, ...doc.data() }))
+    return NextResponse.json({ products })
   } catch (error) {
-    console.error('Products API error:', error)
-    return NextResponse.json(
-      { error: 'Internal server error' },
-      { status: 500 }
-    )
+    console.error('[products]', error)
+    return NextResponse.json({ error: 'Failed to fetch products' }, { status: 500 })
   }
+}
+
+export async function PATCH(request: Request) {
+  const { id, type } = await request.json()
+  if (!id || !['clothing', 'look'].includes(type)) return NextResponse.json({ error: 'Invalid product update' }, { status: 400 })
+  await db.collection('products').doc(id).update({ type, updatedAt: new Date() })
+  return NextResponse.json({ success: true })
 }
