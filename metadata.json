@@ -1,0 +1,6 @@
+{
+  "name": "EASYSHOP UZB",
+  "description": "EASYSHOP UZB online clothing store with product catalog, Telegram webhook integrations, and virtual try-on features.",
+  "requestFramePermissions": [],
+  "majorCapabilities": ["MAJOR_CAPABILITY_SERVER_SIDE_GEMINI_API"]
+}

@@ -1,7 +1,7 @@
 export async function POST(req: Request) {
-    const BOT_TOKEN = "8581890098:AAH4P8sovYinYqjMRVMpfQSHecfp7km6O0k";
-    const SUPABASE_URL = "https://muwjzycdzavfmasbnsl.supabase.co";
-    const SUPABASE_ANON_KEY = "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6Im11d2p6eWNkemF2Zm1hc2Juc2JsIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NzQyNjI5MDMsImV4cCI6MjA4OTgzODkwM30.z-TZQXxK_ERd3c9e7U4jCes_bwMOFVM8g5kJ1RejZQU";
+    const BOT_TOKEN = process.env.ADMIN_BOT_TOKEN || process.env.ORDER_BOT_TOKEN || "8581890098:AAH4P8sovYinYqjMRVMpfQSHecfp7km6O0k";
+    const SUPABASE_URL = process.env.NEXT_PUBLIC_SUPABASE_URL || "https://muwjzycdzavfmasbnsl.supabase.co";
+    const SUPABASE_ANON_KEY = process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY || "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6Im11d2p6eWNkemF2Zm1hc2Juc2JsIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NzQyNjI5MDMsImV4cCI6MjA4OTgzODkwM30.z-TZQXxK_ERd3c9e7U4jCes_bwMOFVM8g5kJ1RejZQU";
 
     try {
         const body = await req.json();

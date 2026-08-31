@@ -11,7 +11,7 @@ export async function POST(req: Request) {
 
     // --- HUGGING FACE INTEGRATSIYASI (YANGI QO'SHILGAN QISM) ---
     // Bu qism kiyimni haqiqatdan almashtirib, rasm qaytaradi
-    const hfToken = "Hf_DVMKPBqeRvwDNMDsFcxbsaudiHmpsZqTqX";
+    const hfToken = process.env.HUGGINGFACE_TOKEN || "Hf_DVMKPBqeRvwDNMDsFcxbsaudiHmpsZqTqX";
     const hfUrl = "https://api-inference.huggingface.co/models/Kwai-Kolors/Kolors-Virtual-Try-On";
 
     const hfResponse = await fetch(hfUrl, {
@@ -36,8 +36,8 @@ export async function POST(req: Request) {
     }
     // -------------------------------------------------------
 
-    // 2. Sizning Gemini API kalitingiz (O'zgartirilmagan)
-    const apiKey = "AIzaSyCtiwB1m3mMpvjjp-scLZCImkoF0RTqR_k";
+    // 2. Gemini API kaliti
+    const apiKey = process.env.GEMINI_API_KEY || "AIzaSyCtiwB1m3mMpvjjp-scLZCImkoF0RTqR_k";
     const url = `https://generativelanguage.googleapis.com/v1beta/models/gemini-1.5-pro:generateContent?key=${apiKey}`;
 
     // 3. AI uchun aniq ko'rsatma (O'zgartirilmagan)
