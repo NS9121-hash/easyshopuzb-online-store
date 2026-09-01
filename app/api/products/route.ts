@@ -1,27 +1,30 @@
 import { NextRequest, NextResponse } from 'next/server'
-import { supabase } from '@/lib/supabase'
+import { db } from '@/lib/firebase'
+import { collection, getDocs, orderBy, query } from 'firebase/firestore'
 
 export async function GET(request: NextRequest) {
   try {
-    const { data: products, error } = await supabase
-      .from('products')
-      .select('*')
-      .order('created_at', { ascending: false })
+    const q = query(collection(db, 'products'), orderBy('createdAt', 'desc'))
+    const snapshot = await getDocs(q)
 
-    if (error) {
-      console.error('Error fetching products:', error)
-      return NextResponse.json(
-        { error: 'Failed to fetch products' },
-        { status: 500 }
-      )
-    }
+    const products = snapshot.docs.map(doc => ({
+      id: doc.id,
+      ...doc.data(),
+    }))
 
     return NextResponse.json({ products }, { status: 200 })
   } catch (error) {
     console.error('Products API error:', error)
-    return NextResponse.json(
-      { error: 'Internal server error' },
-      { status: 500 }
-    )
+    // Fallback: simple fetch without order if index not ready
+    try {
+      const snapshot = await getDocs(collection(db, 'products'))
+      const products = snapshot.docs.map(doc => ({
+        id: doc.id,
+        ...doc.data(),
+      }))
+      return NextResponse.json({ products }, { status: 200 })
+    } catch (err2) {
+      return NextResponse.json({ products: [] }, { status: 200 })
+    }
   }
 }

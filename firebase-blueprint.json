@@ -1,0 +1,60 @@
+{
+  "entities": {
+    "products": {
+      "title": "Products",
+      "description": "Store products added by admin via Telegram bot",
+      "type": "object",
+      "properties": {
+        "name": { "type": "string" },
+        "category": { "type": "string" },
+        "type": { "type": "string", "enum": ["clothing", "look"] },
+        "price": { "type": "number" },
+        "image": { "type": "string" },
+        "images": { "type": "array", "items": { "type": "string" } },
+        "sizes": { "type": "array", "items": { "type": "string" } },
+        "description": { "type": "string" },
+        "telegramMessageId": { "type": "string" },
+        "telegramChatId": { "type": "string" },
+        "createdAt": { "type": "string" },
+        "updatedAt": { "type": "string" }
+      },
+      "required": ["name", "price", "category", "type"]
+    },
+    "orders": {
+      "title": "Orders",
+      "description": "Customer orders",
+      "type": "object",
+      "properties": {
+        "orderNumber": { "type": "string" },
+        "customerName": { "type": "string" },
+        "customerPhone": { "type": "string" },
+        "customerAddress": { "type": "string" },
+        "telegramUsername": { "type": "string" },
+        "userId": { "type": "string" },
+        "items": { "type": "array" },
+        "totalPrice": { "type": "number" },
+        "paymentStatus": { "type": "string" },
+        "status": { "type": "string", "enum": ["QABUL_QILINDI", "YETKAZILMOQDA", "YETKAZILDI", "BEKOR_QILINDI"] },
+        "statusHistory": { "type": "array" },
+        "createdAt": { "type": "string" },
+        "updatedAt": { "type": "string" }
+      },
+      "required": ["orderNumber", "customerName", "customerPhone", "totalPrice", "status"]
+    },
+    "support_messages": {
+      "title": "Support Messages",
+      "description": "Support chat messages between customer and admin",
+      "type": "object",
+      "properties": {
+        "userId": { "type": "string" },
+        "userName": { "type": "string" },
+        "userPhone": { "type": "string" },
+        "sender": { "type": "string", "enum": ["USER", "ADMIN"] },
+        "text": { "type": "string" },
+        "telegramMessageId": { "type": "string" },
+        "createdAt": { "type": "string" }
+      },
+      "required": ["userId", "sender", "text", "createdAt"]
+    }
+  }
+}

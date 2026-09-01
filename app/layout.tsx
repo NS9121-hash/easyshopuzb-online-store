@@ -1,38 +1,14 @@
-import type { Metadata, Viewport } from 'next'
-import { Geist, Geist_Mono } from 'next/font/google'
-import { Analytics } from '@vercel/analytics/next'
+import type { Metadata } from 'next'
 import './globals.css'
 
-const _geist = Geist({ subsets: ["latin"] });
-const _geistMono = Geist_Mono({ subsets: ["latin"] });
-
-export const viewport: Viewport = {
-  width: 'device-width',
-  initialScale: 1,
-  maximumScale: 1,
-  themeColor: '#faf8f5',
-}
+export const dynamic = 'force-dynamic'
 
 export const metadata: Metadata = {
-  title: 'EASYSHOP UZB - Premium Clothing Store',
-  description: 'Discover elegant and stylish clothing from EASYSHOP UZB. Premium quality clothing with direct shipping.',
-  generator: 'v0.app',
-  icons: {
-    icon: [
-      {
-        url: '/icon-light-32x32.png',
-        media: '(prefers-color-scheme: light)',
-      },
-      {
-        url: '/icon-dark-32x32.png',
-        media: '(prefers-color-scheme: dark)',
-      },
-      {
-        url: '/icon.svg',
-        type: 'image/svg+xml',
-      },
-    ],
-    apple: '/apple-icon.png',
+  title: "EASYSHOP UZB",
+  description: "EASYSHOP UZB online clothing store with product catalog, Telegram webhook integrations, and virtual try-on features.",
+  openGraph: {
+    title: "EASYSHOP UZB",
+    description: "EASYSHOP UZB online clothing store with product catalog, Telegram webhook integrations, and virtual try-on features.",
   },
 }
 
@@ -42,11 +18,12 @@ export default function RootLayout({
   children: React.ReactNode
 }>) {
   return (
-    <html lang="en" className="bg-background">
-      <body className="font-sans antialiased">
+    <html lang="uz">
+      <body className="font-sans antialiased bg-[#070b14] text-white">
         {children}
-        <Analytics />
       </body>
     </html>
   )
 }
+
+
