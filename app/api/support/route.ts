@@ -1,8 +1,9 @@
 import { NextRequest, NextResponse } from 'next/server'
 import { db } from '@/lib/firebase'
-import { collection, addDoc } from 'firebase/firestore'
+import { collection, addDoc, getDocs } from 'firebase/firestore'
 import {
   SUPPORT_BOT_TOKEN,
+  ADMIN_BOT_TOKEN,
   ADMIN_CHAT_ID,
   sendTelegramMessage,
 } from '@/lib/telegram'
@@ -27,25 +28,47 @@ export async function POST(request: NextRequest) {
       createdAt: nowIso,
     })
 
-    // 2️⃣ Forward to Telegram Support Bot
-    const botToken = SUPPORT_BOT_TOKEN || process.env.SUPPORT_BOT_TOKEN || process.env.ADMIN_BOT_TOKEN || ''
-    const targetChatId = ADMIN_CHAT_ID || process.env.ADMIN_CHAT_ID || ''
+    // 2️⃣ Forward to Telegram Support Bot & Admin Chats
+    const botToken = SUPPORT_BOT_TOKEN || process.env.SUPPORT_BOT_TOKEN || ADMIN_BOT_TOKEN || process.env.ADMIN_BOT_TOKEN || ''
 
-    if (botToken && targetChatId) {
+    if (botToken) {
       const msgText = `
-💬 <b>YANGI SAVOL / MUROJAAT</b>
+💬 <b>YANGI SAVOL / MUROJAAT (EASYSHOP SUPPORT)</b>
 ━━━━━━━━━━━━━━━━━━━━
 👤 <b>Mijoz:</b> ${userName || 'Noma\'lum'}
 📞 <b>Telefon:</b> <code>${userPhone || 'Mavjud emas'}</code>
 🆔 <b>Mijoz ID:</b> <code>${userId}</code>
+⏰ <b>Vaqt:</b> ${new Date().toLocaleTimeString('uz-UZ')}
 ━━━━━━━━━━━━━━━━━━━━
-📝 <b>Savol:</b>
+📝 <b>Savol / Murojaat:</b>
 ${text}
 ━━━━━━━━━━━━━━━━━━━━
 👉 <i>Ushbu xabarga <b>REPLY (Javob berish)</b> qilib yozsangiz, javobingiz avtomatik tarzda mijozning saytdagi chatiga yetib boradi!</i>
       `.trim()
 
-      await sendTelegramMessage(botToken, targetChatId, msgText)
+      const targetChatIds = new Set<string>()
+      
+      if (ADMIN_CHAT_ID) targetChatIds.add(String(ADMIN_CHAT_ID))
+      if (process.env.ADMIN_CHAT_ID) targetChatIds.add(String(process.env.ADMIN_CHAT_ID))
+
+      // Also get any dynamic support chats stored in Firestore
+      try {
+        const snap = await getDocs(collection(db, 'support_chats'))
+        snap.forEach(docSnap => {
+          const cId = docSnap.data().chatId
+          if (cId) targetChatIds.add(String(cId))
+        })
+      } catch {
+        // ignore
+      }
+
+      for (const cId of targetChatIds) {
+        try {
+          await sendTelegramMessage(botToken, cId, msgText)
+        } catch (e) {
+          console.error('[Support Send Error]:', e)
+        }
+      }
     }
 
     return NextResponse.json({ success: true, messageId: docRef.id })
@@ -54,3 +77,4 @@ ${text}
     return NextResponse.json({ error: 'Xabarni yuborishda xatolik' }, { status: 500 })
   }
 }
+

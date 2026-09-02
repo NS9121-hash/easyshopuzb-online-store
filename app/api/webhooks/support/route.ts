@@ -1,15 +1,16 @@
 import { NextRequest, NextResponse } from 'next/server'
 import { db } from '@/lib/firebase'
-import { collection, addDoc } from 'firebase/firestore'
+import { collection, addDoc, doc, setDoc } from 'firebase/firestore'
 import {
   SUPPORT_BOT_TOKEN,
+  ADMIN_BOT_TOKEN,
   sendTelegramMessage,
 } from '@/lib/telegram'
 
 export async function POST(request: NextRequest) {
   try {
     const update = await request.json()
-    const botToken = SUPPORT_BOT_TOKEN || process.env.SUPPORT_BOT_TOKEN || process.env.ADMIN_BOT_TOKEN || ''
+    const botToken = SUPPORT_BOT_TOKEN || process.env.SUPPORT_BOT_TOKEN || ADMIN_BOT_TOKEN || process.env.ADMIN_BOT_TOKEN || ''
 
     if (!botToken) {
       return NextResponse.json({ ok: true })
@@ -19,6 +20,18 @@ export async function POST(request: NextRequest) {
       const msg = update.message
       const chatId = msg.chat.id
       const text = (msg.text || '').trim()
+
+      // Save this chat as an active support operator in Firestore
+      try {
+        await setDoc(doc(db, 'support_chats', String(chatId)), {
+          chatId: String(chatId),
+          firstName: msg.from?.first_name || '',
+          username: msg.from?.username || '',
+          lastActive: new Date().toISOString(),
+        }, { merge: true })
+      } catch (e) {
+        console.error('[Support Chat Register Error]:', e)
+      }
 
       // 🔹 Check if this is an Admin replying to a customer message
       if (msg.reply_to_message && text) {
@@ -53,8 +66,9 @@ export async function POST(request: NextRequest) {
         await sendTelegramMessage(
           botToken,
           chatId,
-          `💬 <b>EASYSHOP_UZB Qo'llab-quvvatlash (Support) Boti</b>\n\nSayt foydalanuvchilaridan kelgan barcha savollar ushbu botga keladi.\n\nMijozga javob berish uchun uning savoliga <b>REPLY</b> qilib javobingizni yozing.`
+          `💬 <b>EASYSHOP_UZB Qo'llab-quvvatlash (Support) Boti faol!</b>\n\n✅ Sizning ID (${chatId}) qo'llab-quvvatlash xizmati operatori sifatida biriktirildi.\n\nSayt foydalanuvchilaridan kelgan barcha savollar ushbu botga keladi.\n\nMijozga javob berish uchun uning savoliga <b>REPLY (Javob berish)</b> qilib javobingizni yozing.`
         )
+        return NextResponse.json({ ok: true })
       }
     }
 
@@ -64,3 +78,4 @@ export async function POST(request: NextRequest) {
     return NextResponse.json({ ok: true, error: String(error) })
   }
 }
+
