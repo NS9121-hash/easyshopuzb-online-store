@@ -1,20 +1,21 @@
 import { NextResponse } from 'next/server'
-import { db } from '@/lib/firebase-admin'
+import { createServerSupabaseClient } from '@/lib/supabase/server'
 
 export async function GET() {
   try {
-    const snapshot = await db.collection('products').orderBy('createdAt', 'desc').get()
-    const products = snapshot.docs.map((doc) => ({ id: doc.id, ...doc.data() }))
-    return NextResponse.json({ products })
+    const { data, error } = await createServerSupabaseClient().from('products').select('*').order('created_at', { ascending: false })
+    if (error) throw error
+    return NextResponse.json({ products: data ?? [] })
   } catch (error) {
     console.error('[products]', error)
-    return NextResponse.json({ error: 'Failed to fetch products' }, { status: 500 })
+    return NextResponse.json({ error: 'Mahsulotlarni olishda xatolik' }, { status: 500 })
   }
 }
 
 export async function PATCH(request: Request) {
-  const { id, type } = await request.json()
-  if (!id || !['clothing', 'look'].includes(type)) return NextResponse.json({ error: 'Invalid product update' }, { status: 400 })
-  await db.collection('products').doc(id).update({ type, updatedAt: new Date() })
+  const body = await request.json()
+  if (!body.id || !['kiyimlar', 'look'].includes(body.section)) return NextResponse.json({ error: 'Noto‘g‘ri ma’lumot' }, { status: 400 })
+  const { error } = await createServerSupabaseClient().from('products').update({ section: body.section }).eq('id', body.id)
+  if (error) return NextResponse.json({ error: 'Mahsulotni yangilab bo‘lmadi' }, { status: 500 })
   return NextResponse.json({ success: true })
 }
